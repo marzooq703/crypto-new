@@ -21,16 +21,12 @@ const Listbox = dynamic(() => import('@/components/ui/list-box'));
 
 const tradeMenu = [
   {
-    name: 'Swap',
-    value: routes.swap,
+    name: 'Buy',
+    value: routes.buy,
   },
   {
-    name: 'Liquidity',
-    value: routes.liquidity,
-  },
-  {
-    name: 'Vote',
-    value: routes.vote,
+    name: 'Sell',
+    value: routes.sell,
   },
 ];
 
@@ -44,7 +40,7 @@ function ActiveNavLink({ href, title, isActive, className }: any) {
       }}
       className={cn(
         'relative z-[1] inline-flex items-center px-3 py-1.5',
-        className
+        className,
       )}
       activeClassName="font-medium text-white"
     >
