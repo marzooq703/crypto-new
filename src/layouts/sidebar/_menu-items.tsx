@@ -55,21 +55,21 @@ export const defaultMenuItems = [
   //   icon: <FarmIcon />,
   //   href: routes.farms,
   // },
+  // {
+  //   name: 'Swap',
+  //   icon: <ExchangeIcon />,
+  //   href: routes.swap,
+  // },
   {
-    name: 'Swap',
+    name: 'Buy',
     icon: <ExchangeIcon />,
-    href: routes.swap,
+    href: routes.buy,
   },
-  // {
-  //   name: 'Buy',
-  //   icon: <ExchangeIcon />,
-  //   href: routes.buy,
-  // },
-  // {
-  //   name: 'Sell',
-  //   icon: <ExchangeIcon />,
-  //   href: routes.sell,
-  // },
+  {
+    name: 'Sell',
+    icon: <ExchangeIcon />,
+    href: routes.sell,
+  },
   // {
   //   name: 'Liquidity',
   //   icon: <PoolIcon />,

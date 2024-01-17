@@ -5,17 +5,50 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
-
-// import icons
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Fix import statement
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
 
+const auth = getAuth(); // Ensure that auth is initialized
+
 export default function SignUpForm() {
   const [state, setState] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  function handleSubmit(e: any) {
+  console.log('first:', firstName);
+  console.log('last:', lastName);
+  console.log('Email:', email);
+  console.log('Password:', password);
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
-    console.log(e);
+
+    try {
+      const auth = getAuth();
+      // Call Firebase authentication function to create a new user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      // Access the user information if needed
+      const user = userCredential.user;
+      console.log('User signed up:', user);
+
+      // Clear any previous error messages
+      setErrorMessage('');
+
+      // You can add additional logic or redirect the user to another page upon successful signup
+    } catch (error: any) {
+      console.error('Error signing up:', error.message);
+      // Handle the error, display a message, or take other actions as needed
+      setErrorMessage(error.message);
+    }
   }
 
   return (
@@ -25,23 +58,27 @@ export default function SignUpForm() {
           type="text"
           placeholder="First Name"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <Input
           type="text"
           placeholder="Last Name"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          onChange={(e) => setLastName(e.target.value)}
         />
       </div>
       <Input
         type="email"
         placeholder="Email"
         inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+        onChange={(e) => setEmail(e.target.value)}
       />
       <div className="relative">
         <Input
           type={state ? 'text' : 'password'}
           placeholder="Password"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          onChange={(e) => setPassword(e.target.value)}
         />
         <span
           className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
@@ -79,6 +116,7 @@ export default function SignUpForm() {
       >
         sign up
       </Button>
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
     </form>
   );
 }
