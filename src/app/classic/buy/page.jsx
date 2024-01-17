@@ -4,6 +4,7 @@ import { useState } from 'react';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import CoinInput from '@/components/ui/coin-input';
+import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import { SwapIcon } from '@/components/icons/swap-icon';
 import Trade from '@/components/ui/trade';
@@ -21,14 +22,14 @@ const BuyCrypto = () => {
               toggleCoin ? 'flex-col-reverse' : 'flex-col',
             )}
           >
-            <CoinInput
+            <CoinInput2
               label={'From'}
               exchangeRate={0.0}
               defaultCoinIndex={0}
               getCoinValue={(data) => console.log('From coin value:', data)}
             />
             <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600">
-              <Button
+              {/* <Button
                 size="mini"
                 color="gray"
                 shape="circle"
@@ -36,7 +37,7 @@ const BuyCrypto = () => {
                 onClick={() => setToggleCoin(!toggleCoin)}
               >
                 <SwapIcon className="h-auto w-3" />
-              </Button>
+              </Button> */}
             </div>
             <CoinInput
               label={'To'}
@@ -60,7 +61,7 @@ const BuyCrypto = () => {
           fullWidth={true}
           className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
         >
-          SWAP
+          BUY
         </Button>
       </Trade>
     </div>
