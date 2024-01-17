@@ -21,16 +21,12 @@ const Listbox = dynamic(() => import('@/components/ui/list-box'));
 
 const tradeMenu = [
   {
-    name: 'Swap',
-    value: routes.swap,
+    name: 'Buy',
+    value: routes.buy,
   },
   {
-    name: 'Liquidity',
-    value: routes.liquidity,
-  },
-  {
-    name: 'Vote',
-    value: routes.vote,
+    name: 'Sell',
+    value: routes.sell,
   },
 ];
 
@@ -44,7 +40,7 @@ function ActiveNavLink({ href, title, isActive, className }: any) {
       }}
       className={cn(
         'relative z-[1] inline-flex items-center px-3 py-1.5',
-        className
+        className,
       )}
       activeClassName="font-medium text-white"
     >
@@ -108,7 +104,10 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
               </button>
             </Listbox>
           )}
-          <div className="hidden items-center justify-between text-gray-600 dark:text-gray-400 sm:flex">
+          <div
+            className="hidden items-center justify-center  text-gray-600 dark:text-gray-400 sm:flex"
+            style={{ marginLeft: '0' }}
+          >
             {tradeMenu.map((item) => (
               <ActiveNavLink
                 key={item.name}
@@ -117,24 +116,24 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
                 isActive={item.value === pathname}
               />
             ))}
-            <AnchorLink
+            {/* <AnchorLink
               href={{
                 pathname:
                   layout === LAYOUT_OPTIONS.MODERN ? '/' : routes.home + layout,
               }}
               className="inline-flex items-center gap-1.5 px-3 py-1.5"
             >
-              Charts
+              Chartsdddd
               <ExportIcon className="h-auto w-2.5" />
-            </AnchorLink>
-            <Button
+            </AnchorLink> */}
+            {/* <Button
               variant="transparent"
               shape="circle"
               size="small"
               className="dark:text-white"
             >
               <RangeIcon />
-            </Button>
+            </Button> */}
           </div>
         </nav>
         <AnimatePresence mode={'wait'}>

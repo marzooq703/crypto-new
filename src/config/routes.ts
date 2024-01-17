@@ -3,7 +3,7 @@ const routes = {
   minimal: '/minimal',
   livePricing: '/live-pricing',
   retro: '/retro',
-  swap: '/swap',
+  swap: '/buy',
   buy: '/buy',
   sell: '/sell',
   liquidity: '/liquidity',
