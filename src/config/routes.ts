@@ -4,6 +4,8 @@ const routes = {
   livePricing: '/live-pricing',
   retro: '/retro',
   swap: '/swap',
+  buy: '/buy',
+  sell: '/sell',
   liquidity: '/liquidity',
   liquidityPosition: '/liquidity-position',
   farms: '/farms',

@@ -23,72 +23,82 @@ export const defaultMenuItems = [
     icon: <LivePricing />,
     href: routes.livePricing,
   },
+  // {
+  //   name: 'Trading Bot',
+  //   icon: <TradingBotIcon />,
+  //   href: routes.tradingBot,
+  // },
+  // {
+  //   name: 'NFTs',
+  //   icon: <CompassIcon />,
+  //   href: routes.search,
+  //   dropdownItems: [
+  //     {
+  //       name: 'Explore NFTs',
+  //       icon: <CompassIcon />,
+  //       href: routes.search,
+  //     },
+  //     {
+  //       name: 'Create NFT',
+  //       icon: <PlusCircle />,
+  //       href: routes.createNft,
+  //     },
+  //     {
+  //       name: 'NFT Details',
+  //       icon: <DiskIcon />,
+  //       href: routes.nftDetails,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: 'Farm',
+  //   icon: <FarmIcon />,
+  //   href: routes.farms,
+  // },
+  // {
+  //   name: 'Swap',
+  //   icon: <ExchangeIcon />,
+  //   href: routes.swap,
+  // },
   {
-    name: 'Trading Bot',
-    icon: <TradingBotIcon />,
-    href: routes.tradingBot,
-  },
-  {
-    name: 'NFTs',
-    icon: <CompassIcon />,
-    href: routes.search,
-    dropdownItems: [
-      {
-        name: 'Explore NFTs',
-        icon: <CompassIcon />,
-        href: routes.search,
-      },
-      {
-        name: 'Create NFT',
-        icon: <PlusCircle />,
-        href: routes.createNft,
-      },
-      {
-        name: 'NFT Details',
-        icon: <DiskIcon />,
-        href: routes.nftDetails,
-      },
-    ],
-  },
-  {
-    name: 'Farm',
-    icon: <FarmIcon />,
-    href: routes.farms,
-  },
-  {
-    name: 'Swap',
+    name: 'Buy',
     icon: <ExchangeIcon />,
-    href: routes.swap,
+    href: routes.buy,
   },
   {
-    name: 'Liquidity',
-    icon: <PoolIcon />,
-    href: routes.liquidity,
+    name: 'Sell',
+    icon: <ExchangeIcon />,
+    href: routes.sell,
   },
+  // {
+  //   name: 'Liquidity',
+  //   icon: <PoolIcon />,
+  //   href: routes.liquidity,
+  // },
   {
     name: 'Profile',
     icon: <ProfileIcon />,
     href: routes.profile,
   },
-  {
-    name: 'Vote',
-    icon: <VoteIcon />,
-    href: routes.vote,
-    dropdownItems: [
-      {
-        name: 'Explore',
-        href: routes.vote,
-      },
-      {
-        name: 'Vote with criptic',
-        href: routes.proposals,
-      },
-      {
-        name: 'Create proposal',
-        href: routes.createProposal,
-      },
-    ],
-  },
+  // {
+  //   name: 'Vote',
+  //   icon: <VoteIcon />,
+  //   href: routes.vote,
+  //   dropdownItems: [
+  //     {
+  //       name: 'Explore',
+  //       href: routes.vote,
+  //     },
+  //     {
+  //       name: 'Vote with criptic',
+  //       href: routes.proposals,
+  //     },
+  //     {
+  //       name: 'Create proposal',
+  //       href: routes.createProposal,
+  //     },
+  //   ],
+  // },
   {
     name: 'Authentication',
     icon: <LockIcon className="w-[18px]" />,

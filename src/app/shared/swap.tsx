@@ -17,7 +17,7 @@ const SwapPage = () => {
           <div
             className={cn(
               'relative flex gap-3',
-              toggleCoin ? 'flex-col-reverse' : 'flex-col'
+              toggleCoin ? 'flex-col-reverse' : 'flex-col',
             )}
           >
             <CoinInput
