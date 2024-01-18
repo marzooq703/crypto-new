@@ -9,27 +9,47 @@ import Input from '@/components/ui/forms/input';
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import routes from '@/config/routes';
+import { auth } from '../../lib/firebase';
 
 export default function SignInForm() {
   const [state, setState] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  console.log('auth', auth);
 
-  function handleSubmit(e: any) {
+  const signIn = (e: any) => {
     e.preventDefault();
-  }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
+
+  // function handleSubmit(e: any) {
+  //   e.preventDefault();
+  // }
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+    <form noValidate onSubmit={signIn} className="grid grid-cols-1 gap-4">
       <Input
         type="email"
         placeholder="Enter your email"
         inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <div className="relative">
         <Input
           type={state ? 'text' : 'password'}
           placeholder="Password"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <span
           className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
