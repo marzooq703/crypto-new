@@ -5,13 +5,36 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
+import { auth } from '../../lib/firebase';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+type SignUpStatus = 'success' | 'failed' | null;
 
 export default function SignUpForm() {
   const [state, setState] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
+
+  const signUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        setSignUpStatus('success');
+        // navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+        setSignUpStatus('failed');
+      });
+  };
 
   function handleSubmit(e: any) {
     e.preventDefault();
@@ -19,29 +42,46 @@ export default function SignUpForm() {
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+    <form noValidate onSubmit={signUp} className="grid grid-cols-1 gap-4">
+      {/* Display success or failure message */}
+      {signUpStatus === 'success' && (
+        <div className="text-green-500">Sign-in successful!</div>
+      )}
+      {signUpStatus === 'failed' && (
+        <div className="text-red-500">
+          Sign-in failed. Please check your credentials.
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
         <Input
           type="text"
           placeholder="First Name"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <Input
           type="text"
           placeholder="Last Name"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
         />
       </div>
       <Input
         type="email"
         placeholder="Email"
         inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <div className="relative">
         <Input
           type={state ? 'text' : 'password'}
           placeholder="Password"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <span
           className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
@@ -68,7 +108,7 @@ export default function SignUpForm() {
           </>
         }
         labelPlacement="end"
-        labelClassName="ml-1.5 text-[#4B5563] !text-xs dark:text-gray-300 tracking-[0.5px] !leading-7"
+        labelClassName="ml-1.5 text-[#4B5563] !t   ext-xs dark:text-gray-300 tracking-[0.5px] !leading-7"
         containerClassName="!items-start"
         inputClassName="mt-1 focus:!ring-offset-[1px]"
         size="sm"
