@@ -5,7 +5,7 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
@@ -17,11 +17,12 @@ import { auth } from '../../lib/firebase';
 type SignInStatus = 'success' | 'failed' | null;
 
 export default function SignInForm() {
+  const router = useRouter();
+
   const [state, setState] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signInStatus, setSignInStatus] = useState<SignInStatus>(null); // Track sign-in status
-  // const navigate = useNavigate();
 
   const signIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ export default function SignInForm() {
       .then((userCredential) => {
         console.log(userCredential);
         setSignInStatus('success');
-        // navigate('/');
+        router.push('/classic');
       })
       .catch((error) => {
         console.log(error);

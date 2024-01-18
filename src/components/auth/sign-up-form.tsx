@@ -6,6 +6,7 @@ import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import { auth } from '../../lib/firebase';
+import { useRouter } from 'next/navigation';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
@@ -15,6 +16,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 type SignUpStatus = 'success' | 'failed' | null;
 
 export default function SignUpForm() {
+  const router = useRouter();
+
   const [state, setState] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -28,7 +31,7 @@ export default function SignUpForm() {
       .then((userCredential) => {
         console.log(userCredential);
         setSignUpStatus('success');
-        // navigate('/');
+        router.push('/classic');
       })
       .catch((error) => {
         console.log(error);
