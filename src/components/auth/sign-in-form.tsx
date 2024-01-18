@@ -5,31 +5,69 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
+import { useRouter } from 'next/navigation';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import routes from '@/config/routes';
+import { auth } from '../../lib/firebase';
+
+type SignInStatus = 'success' | 'failed' | null;
 
 export default function SignInForm() {
-  const [state, setState] = useState(false);
+  const router = useRouter();
 
-  function handleSubmit(e: any) {
+  const [state, setState] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [signInStatus, setSignInStatus] = useState<SignInStatus>(null); // Track sign-in status
+
+  const signIn = (e: React.FormEvent) => {
     e.preventDefault();
-  }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        setSignInStatus('success');
+        router.push('/classic');
+      })
+      .catch((error) => {
+        console.log(error);
+        setSignInStatus('failed');
+      });
+  };
+
+  // function handleSubmit(e: any) {
+  //   e.preventDefault();
+  // }
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+    <form noValidate onSubmit={signIn} className="grid grid-cols-1 gap-4">
+      {/* Display success or failure message */}
+      {signInStatus === 'success' && (
+        <div className="text-green-500">Sign-in successful!</div>
+      )}
+      {signInStatus === 'failed' && (
+        <div className="text-red-500">
+          Sign-in failed. Please check your credentials.
+        </div>
+      )}
+
       <Input
         type="email"
         placeholder="Enter your email"
         inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <div className="relative">
         <Input
           type={state ? 'text' : 'password'}
           placeholder="Password"
           inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <span
           className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
