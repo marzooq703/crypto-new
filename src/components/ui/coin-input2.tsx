@@ -53,7 +53,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
             className="flex items-center font-medium outline-none dark:text-gray-100"
           >
             {/* Replace with INR icon */}
-            <span>₹</span>
+            <span>INR (₹)</span>
             <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5" />
           </button>
         </div>
@@ -68,7 +68,10 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
             {...rest}
           />
           <span className="font-xs px-3 text-gray-400">
-            = ${exchangeRate ? exchangeRate : '0.00'}
+            = $
+            {exchangeRate
+              ? (parseFloat(value) * exchangeRate).toFixed(2)
+              : '0.00'}
           </span>
         </div>
       </div>

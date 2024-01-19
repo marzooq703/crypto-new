@@ -51,7 +51,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 md:justify-start ltr:md:text-left rtl:md:text-right xl:mt-12 xl:gap-8 xl:py-6">
+        {/* <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 md:justify-start ltr:md:text-left rtl:md:text-right xl:mt-12 xl:gap-8 xl:py-6">
           <div>
             <div className="mb-1.5 text-lg font-medium tracking-tighter text-gray-900 dark:text-white">
               {authorData?.following}
@@ -74,7 +74,7 @@ export default function Profile() {
           >
             Follow
           </Button>
-        </div>
+        </div> */}
         <div className="border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 ltr:md:text-left rtl:md:text-right xl:py-6">
           <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
             Followed by
