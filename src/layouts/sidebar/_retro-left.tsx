@@ -76,7 +76,7 @@ export default function Sidebar({ className }: { className?: string }) {
               />
             ))}
           </div>
-          <div className="relative mt-20 hidden flex-col rounded-lg bg-gray-200 p-6 dark:bg-[#333E59] lg:flex">
+          {/* <div className="relative mt-20 hidden flex-col rounded-lg bg-gray-200 p-6 dark:bg-[#333E59] lg:flex">
             <div className="-mt-12">
               <Image src={ShapeImage} alt="Shape image" width={200} />
             </div>
@@ -86,7 +86,7 @@ export default function Sidebar({ className }: { className?: string }) {
             <button className="h-12 rounded-lg bg-brand text-white">
               Try Now{' '}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </aside>
