@@ -37,7 +37,8 @@ export default function ProfileTab() {
     <Suspense fallback={<Loader variant="blink" />}>
       <ParamTab tabMenu={tabMenu}>
         <TabPanel className="focus:outline-none">
-          <div
+          <h1>Loading ....</h1>
+          {/* <div
             className={cn(
               'grid gap-4 xs:grid-cols-2 lg:grid-cols-2 lg:gap-5 xl:gap-6 3xl:grid-cols-3 4xl:grid-cols-4',
               layout === LAYOUT_OPTIONS.RETRO
@@ -51,10 +52,12 @@ export default function ProfileTab() {
                 key={`collection-key-${collection?.id}`}
               />
             ))}
-          </div>
+          </div> */}
         </TabPanel>
         <TabPanel className="focus:outline-none">
-          <div className="space-y-8 md:space-y-10 xl:space-y-12">
+          <h1>Loading ....</h1>
+
+          {/* <div className="space-y-8 md:space-y-10 xl:space-y-12">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4">
               {authorWallets?.map((wallet) => (
                 <ListCard
@@ -92,13 +95,14 @@ export default function ProfileTab() {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </TabPanel>
         <TabPanel className="focus:outline-none">
-          <div className="space-y-8 xl:space-y-9">
+          <h1>Loading ....</h1>
+          {/* <div className="space-y-8 xl:space-y-9">
             <TransactionSearchForm />
             <TransactionHistory />
-          </div>
+          </div> */}
         </TabPanel>
       </ParamTab>
     </Suspense>
