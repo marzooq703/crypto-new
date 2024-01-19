@@ -10,12 +10,12 @@ export const authorWallets = [
     logo: Wallet,
     balance: '$2,518.78',
   },
-  {
-    id: 2,
-    name: 'NFT’S',
-    logo: Nft,
-    balance: '$152.00',
-  },
+  // {
+  //   id: 2,
+  //   name: 'NFT’S',
+  //   logo: Nft,
+  //   balance: '$152.00',
+  // },
   {
     id: 3,
     name: 'DEPOSITS',
@@ -58,13 +58,13 @@ export const authorProtocols = [
     logo: Uniswap,
     balance: '$2,215.43',
   },
-  {
-    id: 4,
-    name: 'PANCAKE SWAP',
-    coinType: 'BSC',
-    logo: Pancake,
-    balance: '$2,215.43',
-  },
+  // {
+  //   id: 4,
+  //   name: 'PANCAKE SWAP',
+  //   coinType: 'BSC',
+  //   logo: Pancake,
+  //   balance: '$2,215.43',
+  // },
 ];
 
 // Profile Protocols Data
