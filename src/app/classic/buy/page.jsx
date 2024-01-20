@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import CoinInput from '@/components/ui/coin-input';
@@ -11,6 +12,11 @@ import Trade from '@/components/ui/trade';
 
 const BuyCrypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
+  const router = useRouter();
+
+  const clickBuy = () => {
+    router.push('/classic/payment');
+  };
 
   return (
     <div>
@@ -60,6 +66,7 @@ const BuyCrypto = () => {
           shape="rounded"
           fullWidth={true}
           className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+          onClick={clickBuy}
         >
           BUY
         </Button>
