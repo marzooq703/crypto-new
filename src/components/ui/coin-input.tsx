@@ -11,7 +11,7 @@ import { useLockBodyScroll } from '@/lib/hooks/use-lock-body-scroll';
 import { coinList } from '@/data/static/coin-list';
 // dynamic import
 const CoinSelectView = dynamic(
-  () => import('@/components/ui/coin-select-view')
+  () => import('@/components/ui/coin-select-view'),
 );
 
 interface CoinInputTypes extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -56,7 +56,7 @@ export default function CoinInput({
       <div
         className={cn(
           'group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600',
-          className
+          className,
         )}
       >
         <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
