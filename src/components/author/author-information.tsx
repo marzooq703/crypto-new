@@ -29,7 +29,7 @@ export default function AuthorInformation({
       </div>
 
       {/* Social */}
-      {layout !== LAYOUT_OPTIONS.RETRO && (
+      {/* {layout !== LAYOUT_OPTIONS.RETRO && (
         <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
           <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
             Social
@@ -45,12 +45,12 @@ export default function AuthorInformation({
             </AnchorLink>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* Links */}
-      <div
+      {/* <div
         className={cn(
-          'border-y  border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6'
+          'border-y  border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6',
         )}
       >
         <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
@@ -65,16 +65,16 @@ export default function AuthorInformation({
             {item?.link}
           </AnchorLink>
         ))}
-      </div>
+      </div> */}
 
       {/* Join date */}
-      {layout !== LAYOUT_OPTIONS.RETRO && (
+      {/* {layout !== LAYOUT_OPTIONS.RETRO && (
         <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
           <div className="text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
             Joined {data?.created_at}
           </div>
         </div>
-      )}
+      )} */}
       {/* Report button */}
       <Button
         color="gray"

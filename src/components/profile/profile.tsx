@@ -75,7 +75,7 @@ export default function Profile() {
             Follow
           </Button>
         </div> */}
-        <div className="border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 ltr:md:text-left rtl:md:text-right xl:py-6">
+        {/* <div className="border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 ltr:md:text-left rtl:md:text-right xl:py-6">
           <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
             Followed by
           </div>
@@ -105,7 +105,7 @@ export default function Profile() {
               View All
             </AnchorLink>
           </div>
-        </div>
+        </div> */}
         <AuthorInformation className="hidden md:block" data={authorData} />
       </div>
       <div className="grow pb-9 pt-6 md:-mt-2.5 md:pb-0 md:pt-1.5 md:ltr:pl-7 md:rtl:pr-7 lg:ltr:pl-10 lg:rtl:pr-10 3xl:ltr:pl-14 3xl:rtl:pr-14">
