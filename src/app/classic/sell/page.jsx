@@ -166,6 +166,8 @@ const SellCrypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
 
+  const router = useRouter();
+
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
