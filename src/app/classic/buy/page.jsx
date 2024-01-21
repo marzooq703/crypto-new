@@ -12,6 +12,11 @@ import Trade from '@/components/ui/trade';
 
 const BuyCrypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
+
+  const handleNetworkChange = (e) => {
+    setSelectedNetwork(e.target.value);
+  };
   const router = useRouter();
 
   const clickBuy = () => {
@@ -22,6 +27,28 @@ const BuyCrypto = () => {
     <div>
       <Trade>
         <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
+          <div className="flex items-center mb-4">
+            <label className="mr-2 font-semibold text-gray-700">Chains:</label>
+            <select
+              value={selectedNetwork}
+              onChange={handleNetworkChange}
+              className="px-5 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+            >
+              <option value="erc20">ERC-20</option>
+              <option value="bep20">BEP-20</option>
+              <option value="matic">Matic-20</option>
+            </select>
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              {/* You can place your dropdown icon here */}
+              <svg
+                className="h-4 w-4 fill-current text-gray-600 dark:text-gray-300"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 12l-5-5 1.5-1.5L10 9l3.5-3.5L16 7z" />
+              </svg>
+            </div>
+          </div>
           <div
             className={cn(
               'relative flex gap-3',
