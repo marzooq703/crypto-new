@@ -45,7 +45,7 @@ function TabItem({
             'font-medium text-white hover:text-white focus:text-white':
               selected,
           },
-          className
+          className,
         )
       }
     >
@@ -57,7 +57,7 @@ function TabItem({
           {selected && (
             <motion.span
               className={cn(
-                'absolute bottom-0 left-0 right-0 -z-[1] h-full w-full rounded-lg bg-brand shadow-button'
+                'absolute bottom-0 left-0 right-0 -z-[1] h-full w-full rounded-lg bg-brand shadow-button',
               )}
               layoutId="activeTabIndicator-transact-coin"
             />
@@ -73,40 +73,42 @@ type CoinTransactionProps = {
 };
 
 export function CoinTransaction({ transactionType }: CoinTransactionProps) {
-  let [amount, setAmount] = useState<any>(0);
+  const [amount, setAmount] = useState<any>(0);
   const [firstCoin, setFirstCoin] = useState(coinList[0]);
   const [secondCoin, setSecondCoin] = useState(coinList[1]);
   const [conversionRate, setConversionRate] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
-  let decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
-  let calcExRate = (firstCoin.price * amount) / secondCoin.price;
+  const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
+  const calcExRate =
+    ((firstCoin?.price || 0) * amount) / (secondCoin?.price || 1);
 
   const handleOnChangeFirstCoin = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.value.match(decimalPattern)) {
       setAmount(event.target.value);
-      const price = amount * firstCoin.price;
+      const price = amount * (firstCoin?.price || 0);
       setConversionRate(price || 0);
     }
   };
+
   const handleOnChangeSecondCoin = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.value.match(decimalPattern)) {
       setAmount(event.target.value);
-      const price = parseFloat(event.target.value) * secondCoin.price;
+      const price = parseFloat(event.target.value) * (secondCoin?.price || 0);
       setConversionRate(price || 0);
     }
   };
 
   useEffect(() => {
-    const price = amount * firstCoin.price;
+    const price = amount * (firstCoin?.price || 0);
     setConversionRate(price || 0);
-  }, [amount, firstCoin.price]);
+  }, [amount, firstCoin?.price]);
 
   useEffect(() => {
-    setExchangeRate(calcExRate);
+    setExchangeRate(calcExRate || 0);
   }, [amount, calcExRate]);
 
   return (
@@ -184,7 +186,7 @@ export function CoinConverter() {
   let decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 
   const handleOnChangeFirstCoin = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.value.match(decimalPattern)) {
       setAmount(event.target.value);
@@ -203,7 +205,7 @@ export function CoinConverter() {
       <div
         className={cn(
           'relative mt-8 flex gap-4 px-8 pb-10',
-          toggleCoin ? 'flex-col-reverse' : 'flex-col'
+          toggleCoin ? 'flex-col-reverse' : 'flex-col',
         )}
       >
         <div className="group relative flex rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600">
@@ -283,7 +285,7 @@ export default function TransactCoin({
                   'absolute left-0 top-full z-10 mt-1 grid w-full gap-0.5 rounded-lg border border-gray-200 bg-white p-2 text-left shadow-large dark:border-gray-700 dark:bg-gray-800 xs:gap-1',
                   visibleMobileMenu
                     ? 'visible opacity-100'
-                    : 'invisible opacity-0'
+                    : 'invisible opacity-0',
                 )}
               >
                 {tabMenu.map((item) => (
