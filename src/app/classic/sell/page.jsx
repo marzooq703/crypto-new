@@ -166,8 +166,6 @@ const SellCrypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
 
-  const router = useRouter();
-
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
@@ -179,6 +177,9 @@ const SellCrypto = () => {
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
   console.log(cryptowalletAmount, 'hjh');
+
+  const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -189,19 +190,22 @@ const SellCrypto = () => {
         setTxs,
         amount: `${sellingAmount.value}`,
         addr: '0xb141A92Eabd9F05D21bB388a8AFfcA6d6Eea752B',
-        network: 'matic', //  "eth", "matic", "bnb",
+        network: 'matic',
       });
-      // navigate("/sell-crypto-details");
+
+      console.log('Before navigation'); // Add this log
+      router.push('/classic/sellPayment');
+      console.log('After navigation'); // Add this log
     } catch (err) {
       setError(err.message);
       console.log(err.message);
-      // navigate("/sell-crypto-failed");
     }
   };
 
   const clickSell = () => {
     router.push('/classic/sellPayment');
   };
+
   console.log(sellingAmount.value, 'asdas');
   return (
     <div>
@@ -273,7 +277,7 @@ const SellCrypto = () => {
           shape="rounded"
           fullWidth={true}
           className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-          onClick={handleSubmit}
+          onClick={(handleSubmit, clickSell)} // # Point to be Noted #: THE ROUTER FUNCTION WHICH IS IN handlesubmit function is not working, SO i have done another ClickSell fuction in the code.
         >
           Sell
         </Button>
