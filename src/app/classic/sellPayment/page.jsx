@@ -10,18 +10,18 @@ const SellPayment = () => {
 
           <p className="text-sm text-center mb-6 text-gray-600">
             You are about to receive{' '}
-            <strong className="text-green-500">___</strong> for{' '}
-            <strong className="text-blue-500">___</strong> in wallet.
+            <strong className="text-green-500">100 </strong>rupees for{' '}
+            <strong className="text-blue-500">1.5 Eth </strong> in wallet.
           </p>
 
           <div className="flex justify-between border rounded p-4 bg-gray-100">
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">To sell</p>
-              <strong className="text-red-500">____</strong>
+              <strong className="text-red-500">1.5 </strong>
             </div>
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">____</strong>
+              <strong className="text-green-500">100</strong>
             </div>
           </div>
         </div>
