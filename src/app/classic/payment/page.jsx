@@ -1,10 +1,21 @@
+'use client';
+
 import QRCode from 'react-qr-code';
+import { useEffect, useState } from 'react';
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
 // const MySwal = withReactContent(Swal);
 
 const BuyPayment = () => {
+  const [coinValue, setCoinValue] = useState({});
+
+  useEffect(() => {
+    let storedValue = {};
+    storedValue = JSON.parse(localStorage.getItem('datas'));
+    setCoinValue(storedValue);
+  }, []); // Note the correct placement of the dependency array here
+
   //   const handlePayButtonClick = () => {
   // Simulating a payment success or failure
   //     const paymentSuccess = true; // Set to false to simulate a failure
@@ -36,7 +47,8 @@ const BuyPayment = () => {
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
           <strong className="text-blue-500">1.5 Eth</strong> for{' '}
-          <strong className="text-green-500">100 rupees</strong> in wallet.
+          <strong className="text-green-500">{coinValue.value} rupees</strong>{' '}
+          in wallet.
         </p>
 
         {/* Medium size box showing two things */}
@@ -44,7 +56,7 @@ const BuyPayment = () => {
           {/* Left side: To pay __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">To pay</p>
-            <strong className="text-red-500">100</strong>
+            <strong className="text-red-500">{coinValue.value}</strong>
           </div>
 
           {/* Right side: You get __ */}
