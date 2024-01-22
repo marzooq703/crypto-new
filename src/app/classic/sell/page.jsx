@@ -277,7 +277,7 @@ const SellCrypto = () => {
           shape="rounded"
           fullWidth={true}
           className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-          onClick={(handleSubmit, clickSell)} // # Point to be Noted #: THE ROUTER FUNCTION WHICH IS IN handlesubmit function is not working, SO i have done another ClickSell fuction in the code.
+          onClick={handleSubmit} // # Point to be Noted #: THE ROUTER FUNCTION WHICH IS IN handlesubmit function is not working, SO i have done another ClickSell fuction in the code.
         >
           Sell
         </Button>
