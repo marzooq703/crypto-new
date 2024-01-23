@@ -20,11 +20,33 @@ const BuyCrypto = () => {
   const router = useRouter();
 
   const clickBuy = () => {
-    router.push('/classic/payment');
+    const coinInput2Value = localStorage.getItem('datas');
+
+    // Check if the value is not 0, undefined, or null
+    if (
+      coinInput2Value !== null &&
+      coinInput2Value !== undefined &&
+      coinInput2Value !== '0'
+    ) {
+      // Proceed with the redirection logic
+      router.push('/classic/payment');
+    } else {
+      // Show an error popup
+      alert('Error: Invalid CoinInput2 value. Please provide a valid value.');
+      // You might want to display a more user-friendly error message or use a modal popup
+    }
   };
 
   const handleCoinValue = (data) => {
-    localStorage.setItem('datas', JSON.stringify(data));
+    // Check if data is not null, undefined, or 0
+    if (data !== null && data !== undefined && data !== 0) {
+      // Store data in localStorage
+      localStorage.setItem('datas', JSON.stringify(data));
+    } else {
+      // Show error message
+      console.error('Error: Please provide a valid value');
+      // You might want to display a more user-friendly error message or use a modal popup
+    }
   };
 
   return (
