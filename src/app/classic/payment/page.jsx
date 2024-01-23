@@ -11,10 +11,37 @@ const BuyPayment = () => {
   const [coinValue, setCoinValue] = useState({});
 
   useEffect(() => {
-    let storedValue = {};
-    storedValue = JSON.parse(localStorage.getItem('datas'));
+    let storedValue = JSON.parse(localStorage.getItem('datas')) || {};
     setCoinValue(storedValue);
   }, []); // Note the correct placement of the dependency array here
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // Remove 'datas' from local storage when the URL changes
+      localStorage.removeItem('datas');
+    };
+
+    // Subscribe to the event when the component mounts
+    window.addEventListener('beforeunload', handleRouteChange);
+
+    // Unsubscribe from the event when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', handleRouteChange);
+    };
+  }, []);
+
+  // Additional check to prevent 0, null, or undefined
+  if (
+    coinValue.value === 0 ||
+    coinValue.value === null ||
+    coinValue.value === undefined
+  ) {
+    return (
+      <div className="max-w-screen-xl mx-auto mt-8 text-red-600">
+        Error: Invalid CoinValue. Please provide a valid value.
+      </div>
+    );
+  }
 
   //   const handlePayButtonClick = () => {
   // Simulating a payment success or failure
@@ -47,7 +74,9 @@ const BuyPayment = () => {
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
           <strong className="text-blue-500">1.5 Eth</strong> for{' '}
-          <strong className="text-green-500">{coinValue.value} rupees</strong>{' '}
+          <strong className="text-green-500">
+            {coinValue.value || 0}rupees
+          </strong>{' '}
           in wallet.
         </p>
 
@@ -56,7 +85,7 @@ const BuyPayment = () => {
           {/* Left side: To pay __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">To pay</p>
-            <strong className="text-red-500">{coinValue.value}</strong>
+            <strong className="text-red-500">{coinValue.value || 0}</strong>
           </div>
 
           {/* Right side: You get __ */}
