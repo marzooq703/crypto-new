@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
+import { useRouter } from 'next/navigation';
 const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
   try {
     if (!window.ethereum) {
@@ -31,7 +32,7 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
     }
   } catch (err) {
     setError(err);
-    console.log(err.message);
+    console.error(err.message);
     throw err;
   }
 };
@@ -159,9 +160,18 @@ const SellPayment = () => {
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [error, setError] = useState(null);
   const [, setTxs] = useState([]);
+  const router = useRouter();
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
   console.log(cryptowalletAmount, 'hjh');
+
+  useEffect(() => {
+    // Fetch the query parameter value when component mounts
+    const { amount } = router.query || {};
+    if (amount) {
+      setSellingAmount(amount);
+    }
+  }, [router.query]);
 
   const handlePayButtonClick = async (e) => {
     e.preventDefault();
@@ -171,16 +181,17 @@ const SellPayment = () => {
       await startPayment({
         setError,
         setTxs,
-        amount: `${sellingAmount.value}`,
+        amount: sellingAmount,
         addr: '0xb141A92Eabd9F05D21bB388a8AFfcA6d6Eea752B',
         network: 'matic',
       });
     } catch (err) {
       setError(err.message);
-
       alert(`Error: ${err.message}`);
     }
   };
+
+  console.log(sellingAmount, 'asdas');
 
   console.log(sellingAmount.value, 'asdas');
 
@@ -194,8 +205,9 @@ const SellPayment = () => {
 
           <p className="text-sm text-center mb-6 text-gray-600">
             You are about to receive{' '}
-            <strong className="text-green-500">100 </strong>rupees for{' '}
-            <strong className="text-blue-500">1.5 Eth </strong> in wallet.
+            <strong className="text-green-500">{sellingAmount.value}</strong>
+            rupees for <strong className="text-blue-500">1.5 Eth </strong> in
+            wallet.
           </p>
 
           <div className="flex justify-between border rounded p-4 bg-gray-100">
@@ -205,7 +217,7 @@ const SellPayment = () => {
             </div>
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">100</strong>
+              <strong className="text-green-500">{sellingAmount.value}</strong>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import Trade from '@/components/ui/trade';
 const SellCrypto = () => {
   const [toggleCoin, setToggleCoin] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
-  const [sellingAmount, setSellingAmount] = useState({});
+  const [sellingAmount, setSellingAmount] = useState('');
   const [toCoinValue, setToCoinValue] = useState({});
 
   const router = useRouter();
@@ -30,7 +30,10 @@ const SellCrypto = () => {
   };
 
   const handleSubmit = () => {
-    router.push('/classic/sellPayment');
+    router.push({
+      pathname: '/classic/sellPayment',
+      query: { amount: toCoinValue.value }, // Pass the value as a query parameter
+    });
   };
   console.log(sellingAmount.value, 'asdas');
   return (
