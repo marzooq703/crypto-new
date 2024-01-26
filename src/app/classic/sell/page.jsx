@@ -7,28 +7,34 @@ import Button from '@/components/ui/button';
 import CoinInput2 from '@/components/ui/coin-input2';
 import CoinInput from '@/components/ui/coin-input';
 import TransactionInfo from '@/components/ui/transaction-info';
-import { SwapIcon } from '@/components/icons/swap-icon';
 import Trade from '@/components/ui/trade';
-import { ethers } from 'ethers';
-import Web3 from 'web3';
 
 const SellCrypto = () => {
-  let [toggleCoin, setToggleCoin] = useState(false);
+  const [toggleCoin, setToggleCoin] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
+  const [sellingAmount, setSellingAmount] = useState('');
+  const [toCoinValue, setToCoinValue] = useState({});
+
+  const router = useRouter();
 
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
 
-  const [sellingAmount, setSellingAmount] = useState({});
-  const [cryptoAmount, setCryptoAmount] = useState({});
-
-  const router = useRouter();
-
-  const handleSubmit = () => {
-    router.push('/classic/sellPayment');
+  const handleCoinInputChange = (data) => {
+    setSellingAmount(data);
   };
 
+  const handleCoinInput2Change = (data) => {
+    setToCoinValue(data);
+  };
+
+  const handleSubmit = () => {
+    router.push({
+      pathname: '/classic/sellPayment',
+      query: { amount: toCoinValue.value }, // Pass the value as a query parameter
+    });
+  };
   console.log(sellingAmount.value, 'asdas');
   return (
     <div>
@@ -66,7 +72,7 @@ const SellCrypto = () => {
               label={'From'}
               exchangeRate={0.0}
               defaultCoinIndex={0}
-              getCoinValue={(data) => setSellingAmount(data)}
+              getCoinValue={handleCoinInputChange}
             />
             <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600">
               {/* <Button
@@ -83,7 +89,7 @@ const SellCrypto = () => {
               label={'To'}
               exchangeRate={0.0}
               defaultCoinIndex={1}
-              getCoinValue={(data) => console.log('To coin value:', data)}
+              getCoinValue={handleCoinInput2Change}
             />
           </div>
         </div>
