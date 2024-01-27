@@ -1,10 +1,48 @@
+'use client';
+
 import QRCode from 'react-qr-code';
+import { useEffect, useState } from 'react';
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
 // const MySwal = withReactContent(Swal);
 
 const BuyPayment = () => {
+  const [coinValue, setCoinValue] = useState({});
+
+  useEffect(() => {
+    let storedValue = JSON.parse(localStorage.getItem('datas')) || {};
+    setCoinValue(storedValue);
+  }, []); // Note the correct placement of the dependency array here
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // Remove 'datas' from local storage when the URL changes
+      localStorage.removeItem('datas');
+    };
+
+    // Subscribe to the event when the component mounts
+    window.addEventListener('beforeunload', handleRouteChange);
+
+    // Unsubscribe from the event when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', handleRouteChange);
+    };
+  }, []);
+
+  // Additional check to prevent 0, null, or undefined
+  if (
+    coinValue.value === 0 ||
+    coinValue.value === null ||
+    coinValue.value === undefined
+  ) {
+    return (
+      <div className="max-w-screen-xl mx-auto mt-8 text-red-600">
+        Error: Invalid CoinValue. Please provide a valid value.
+      </div>
+    );
+  }
+
   //   const handlePayButtonClick = () => {
   // Simulating a payment success or failure
   //     const paymentSuccess = true; // Set to false to simulate a failure
@@ -35,8 +73,11 @@ const BuyPayment = () => {
         {/* Line: You are about to receive __ Eth for __ rupees in wallet */}
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
-          <strong className="text-blue-500">__ Eth</strong> for{' '}
-          <strong className="text-green-500">__ rupees</strong> in wallet.
+          <strong className="text-blue-500">1.5 Eth</strong> for{' '}
+          <strong className="text-green-500">
+            {coinValue.value || 0}rupees
+          </strong>{' '}
+          in wallet.
         </p>
 
         {/* Medium size box showing two things */}
@@ -44,13 +85,13 @@ const BuyPayment = () => {
           {/* Left side: To pay __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">To pay</p>
-            <strong className="text-red-500">__</strong>
+            <strong className="text-red-500">{coinValue.value || 0}</strong>
           </div>
 
           {/* Right side: You get __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">You get</p>
-            <strong className="text-green-500">__</strong>
+            <strong className="text-green-500">1.5</strong>
           </div>
         </div>
       </div>
@@ -132,11 +173,29 @@ const BuyPayment = () => {
         <div className="block text-md font-medium text-black text-center mt-6">
           <p>or</p>
         </div>
+        <div className="block text-md font-medium text-black text-center mt-6">
+          <a
+            target="_blank"
+            href="https://buy.stripe.com/test_5kA16SbZT3d42Lm288"
+            rel="noopener noreferrer"
+          >
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md  "
+              //   onClick={handlePayButtonClick}
+            >
+              Pay With Card
+            </button>
+          </a>
+        </div>
+        <div className="block text-md font-medium text-black text-center mt-6">
+          <p>or</p>
+        </div>
         {/* QR Code */}
         <div className="text-center mt-6">
           <label className="block text-md font-medium text-gray-600 mb-2">
-            QR Code Sample
+            Scan QR Code to Pay
           </label>
+          {/* <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" /> */}
           <QRCode value="Sample QR Code Content" />
         </div>
 

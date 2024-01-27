@@ -237,7 +237,7 @@ const SellCrypto = () => {
     console.log(usdtBalance, 'usdtBalance');
     try {
       if (sellingAmountValue > usdtBalance) {
-        window.alert('Insufficient balance. Please enter a valid amount.');
+        console.error('Insufficient balance. Please enter a valid amount.');
       } else {
         await startPayment({
           setError,
