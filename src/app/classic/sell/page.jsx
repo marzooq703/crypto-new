@@ -10,19 +10,18 @@ import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 
 const SellCrypto = () => {
-  const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
+  const [selectedNetwork, setSelectedNetwork] = useState('erc20');
+  const [toggleCoin, setToggleCoin] = useState(false);
   const [sellingAmount, setSellingAmount] = useState({});
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [inrValue, setInrValue] = useState(0);
-
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch conversion rate from an API when sellingAmount changes
     const fetchConversionRate = async () => {
       try {
         const response = await fetch(
-          'https://api.example.com/conversionRate?from=usdt&to=inr', // Need to update the API
+          'https://api.example.com/conversionRate?from=usdt&to=inr',
         );
         if (!response.ok) {
           throw new Error('Failed to fetch conversion rate');
@@ -49,21 +48,15 @@ const SellCrypto = () => {
     router.push('/classic/sellPayment');
   };
 
-  let handleCoinInputChange;
-  if (typeof window !== 'undefined') {
-    handleCoinInputChange = (data) => {
-      setSellingAmount(data);
-      localStorage.setItem('sellingAmount', JSON.stringify(data));
-    };
-  }
+  const handleCoinInputChange = (data) => {
+    setSellingAmount(data);
+    localStorage.setItem('sellingAmount', JSON.stringify(data));
+  };
 
-  let handleCoinInput2Change;
-  if (typeof window !== 'undefined') {
-    handleCoinInput2Change = (data) => {
-      setCryptoAmount(data);
-      localStorage.setItem('cryptoAmount', JSON.stringify(data));
-    };
-  }
+  const handleCoinInput2Change = (data) => {
+    setCryptoAmount(data);
+    localStorage.setItem('cryptoAmount', JSON.stringify(data));
+  };
 
   return (
     <div>
