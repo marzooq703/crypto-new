@@ -20,7 +20,10 @@ const BuyCrypto = () => {
   const router = useRouter();
 
   const clickBuy = () => {
-    const coinInput2Value = localStorage.getItem('datas');
+    let coinInput2Value;
+    if (typeof window !== undefined) {
+      coinInput2Value = localStorage.getItem('datas');
+    }
 
     // Check if the value is not 0, undefined, or null
     if (

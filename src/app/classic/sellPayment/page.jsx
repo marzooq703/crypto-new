@@ -175,7 +175,10 @@ const SellPayment = () => {
     }
 
     // Fetch the 'To' value from localStorage or any other source
-    const toValueFromStorage = localStorage.getItem('toCoinValue');
+    let toValueFromStorage;
+    if (typeof window !== undefined) {
+      toValueFromStorage = localStorage.getItem('toCoinValue');
+    }
     if (toValueFromStorage) {
       setToValue(JSON.parse(toValueFromStorage));
     }

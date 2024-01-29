@@ -49,17 +49,21 @@ const SellCrypto = () => {
     router.push('/classic/sellPayment');
   };
 
-  const handleCoinInputChange = (data) => {
-    setSellingAmount(data);
-    // Store selling amount in local storage
-    localStorage.setItem('sellingAmount', JSON.stringify(data));
-  };
+  let handleCoinInputChange;
+  if (typeof window !== 'undefined') {
+    handleCoinInputChange = (data) => {
+      setSellingAmount(data);
+      localStorage.setItem('sellingAmount', JSON.stringify(data));
+    };
+  }
 
-  const handleCoinInput2Change = (data) => {
-    setCryptoAmount(data);
-    // Store crypto amount in local storage
-    localStorage.setItem('cryptoAmount', JSON.stringify(data));
-  };
+  let handleCoinInput2Change;
+  if (typeof window !== 'undefined') {
+    handleCoinInput2Change = (data) => {
+      setCryptoAmount(data);
+      localStorage.setItem('cryptoAmount', JSON.stringify(data));
+    };
+  }
 
   return (
     <div>
