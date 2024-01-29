@@ -157,6 +157,8 @@ const getChainId = (network) => {
 
 const SellPayment = () => {
   const [sellingAmount, setSellingAmount] = useState({});
+  const [fromValue, setFromValue] = useState('');
+  const [toValue, setToValue] = useState('');
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [error, setError] = useState(null);
   const [, setTxs] = useState([]);
@@ -166,12 +168,18 @@ const SellPayment = () => {
   console.log(cryptowalletAmount, 'hjh');
 
   useEffect(() => {
-    // Fetch the query parameter value when component mounts
-    const { amount } = router.query || {};
-    if (amount) {
-      setSellingAmount(amount);
+    // Fetch the 'From' value from localStorage when component mounts
+    const fromValueFromStorage = localStorage.getItem('sellingAmount');
+    if (fromValueFromStorage) {
+      setFromValue(JSON.parse(fromValueFromStorage));
     }
-  }, [router.query]);
+
+    // Fetch the 'To' value from localStorage or any other source
+    const toValueFromStorage = localStorage.getItem('toCoinValue');
+    if (toValueFromStorage) {
+      setToValue(JSON.parse(toValueFromStorage));
+    }
+  }, []);
 
   const handlePayButtonClick = async (e) => {
     e.preventDefault();
@@ -191,10 +199,6 @@ const SellPayment = () => {
     }
   };
 
-  console.log(sellingAmount, 'asdas');
-
-  console.log(sellingAmount.value, 'asdas');
-
   return (
     <>
       <div className="max-w-screen-xl mx-auto mt-8 space-y-8">
@@ -205,19 +209,20 @@ const SellPayment = () => {
 
           <p className="text-sm text-center mb-6 text-gray-600">
             You are about to receive{' '}
-            <strong className="text-green-500">{sellingAmount.value}</strong>
-            rupees for <strong className="text-blue-500">1.5 Eth </strong> in
+            <strong className="text-green-500">{toValue.value}</strong>
+            rupees for{' '}
+            <strong className="text-blue-500">{fromValue.value}</strong> in
             wallet.
           </p>
 
           <div className="flex justify-between border rounded p-4 bg-gray-100">
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">To sell</p>
-              <strong className="text-red-500">1.5 </strong>
+              <strong className="text-red-500">{fromValue.value} </strong>
             </div>
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">{sellingAmount.value}</strong>
+              <strong className="text-green-500">{toValue.value}</strong>
             </div>
           </div>
         </div>
