@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
+import { useRouter } from 'next/navigation';
+
 const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
   try {
     if (!window.ethereum) {
@@ -35,99 +37,107 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
     throw err;
   }
 };
-
+const usdtContractAbi = [
+  {
+    constant: true,
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', type: 'string' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', type: 'string' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', type: 'uint8' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: '_spender', type: 'address' },
+      { name: '_value', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: 'success', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [{ name: '_owner', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: 'balance', type: 'uint256' }],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: '_to', type: 'address' },
+      { name: '_value', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: 'success', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      { name: '_from', type: 'address' },
+      { name: '_to', type: 'address' },
+      { name: '_value', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: 'success', type: 'bool' }],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
 const sendUSDT = async (signer, toAddress, amount) => {
   try {
     const web3 = new Web3(window.ethereum);
+    const usdtMaticContractAddress =
+      '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+    const usdtEthContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+    const usdtBnbContractAddress = '0x55d398326f99059ff775485246999027b3197955';
 
-    const usdtContractAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F';
+    // const usdtContractAddress =
+    //   network === 'matic'
+    //     ? usdtMaticContractAddress
+    //     : network === 'eth'
+    //     ? usdtEthContractAddress
+    //     : network === 'bnb'
+    //     ? usdtBnbContractAddress
+    //     : '';
 
-    const usdtContractAbi = [
-      {
-        constant: true,
-        inputs: [],
-        name: 'name',
-        outputs: [{ name: '', type: 'string' }],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: 'symbol',
-        outputs: [{ name: '', type: 'string' }],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: 'decimals',
-        outputs: [{ name: '', type: 'uint8' }],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        constant: false,
-        inputs: [
-          { name: '_spender', type: 'address' },
-          { name: '_value', type: 'uint256' },
-        ],
-        name: 'approve',
-        outputs: [{ name: 'success', type: 'bool' }],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-      {
-        constant: true,
-        inputs: [{ name: '_owner', type: 'address' }],
-        name: 'balanceOf',
-        outputs: [{ name: 'balance', type: 'uint256' }],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
-      {
-        constant: false,
-        inputs: [
-          { name: '_to', type: 'address' },
-          { name: '_value', type: 'uint256' },
-        ],
-        name: 'transfer',
-        outputs: [{ name: 'success', type: 'bool' }],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-      {
-        constant: false,
-        inputs: [
-          { name: '_from', type: 'address' },
-          { name: '_to', type: 'address' },
-          { name: '_value', type: 'uint256' },
-        ],
-        name: 'transferFrom',
-        outputs: [{ name: 'success', type: 'bool' }],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ];
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
-      usdtContractAddress,
+      usdtMaticContractAddress,
     );
 
-    const amountWei = web3.utils.toWei(amount, 'ether');
-    const amountWei1 = web3.utils.toWei(amount, 'mwei');
-
-    const gasPriceWei = await web3.eth.getGasPrice();
+    const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
+    const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
+    const gasPriceWei = await web3.eth.getGasPrice(); // Dynamically fetch current gas price
     const gasPriceHex = web3.utils.toHex(gasPriceWei);
-
     const gasLimit = 50000;
 
     await usdtContract.methods.transfer(toAddress, amountWei1).send({
@@ -141,6 +151,7 @@ const sendUSDT = async (signer, toAddress, amount) => {
     throw error;
   }
 };
+
 const getChainId = (network) => {
   switch (network) {
     case 'eth':
@@ -153,36 +164,105 @@ const getChainId = (network) => {
       throw new Error('Unsupported network');
   }
 };
-
 const SellPayment = () => {
   const [sellingAmount, setSellingAmount] = useState({});
+  const [fromValue, setFromValue] = useState('');
+  const [toValue, setToValue] = useState('');
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [error, setError] = useState(null);
   const [, setTxs] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUsdtBalance = async () => {
+      const web3 = new Web3(window.ethereum);
+
+      try {
+        if (!window.ethereum) {
+          throw new Error('No crypto wallet found. Please install MetaMask.');
+        }
+        const usdtMaticContractAddress =
+          '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+        const usdtEthContractAddress =
+          '0xdac17f958d2ee523a2206206994597c13d831ec7';
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+
+        console.log('Wallet Address:', address);
+
+        const usdtContract = new web3.eth.Contract(
+          usdtContractAbi,
+          usdtMaticContractAddress,
+        );
+
+        const usdtBalanceWei = await usdtContract.methods
+          .balanceOf(address)
+          .call();
+
+        const usdtBalance = parseFloat(
+          web3.utils.fromWei(usdtBalanceWei, 'ether'),
+        );
+        const Balance = `${usdtBalance}`.slice(0, -4);
+
+        setUsdtBalance(Balance);
+
+        console.log('Initial USDT Balance:', Balance);
+      } catch (error) {
+        console.error('Error fetching USDT balance', error.message);
+      }
+    };
+
+    fetchUsdtBalance();
+  }, []);
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
   console.log(cryptowalletAmount, 'hjh');
 
+  useEffect(() => {
+    // Fetch the 'From' value from localStorage when component mounts
+    const fromValueFromStorage = localStorage.getItem('sellingAmount');
+    if (fromValueFromStorage) {
+      setFromValue(JSON.parse(fromValueFromStorage));
+    }
+
+    // Fetch the 'To' value from localStorage or any other source
+    let toValueFromStorage;
+    if (typeof window !== undefined) {
+      toValueFromStorage = localStorage.getItem('toCoinValue');
+    }
+    if (toValueFromStorage) {
+      setToValue(JSON.parse(toValueFromStorage));
+    }
+  }, []);
+
   const handlePayButtonClick = async (e) => {
     e.preventDefault();
     setError(null);
-
+    const sellingAmountValue = parseFloat(sellingAmount.value);
+    console.log(sellingAmountValue, 'sellingAmountValue');
+    console.log(usdtBalance, 'usdtBalance');
     try {
-      await startPayment({
-        setError,
-        setTxs,
-        amount: `${sellingAmount.value}`,
-        addr: '0xb141A92Eabd9F05D21bB388a8AFfcA6d6Eea752B',
-        network: 'matic',
-      });
+      if (sellingAmountValue > usdtBalance) {
+        window.alert('Insufficient balance. Please enter a valid amount.');
+      } else {
+        await startPayment({
+          setError,
+          setTxs,
+          amount: `${'1'}`,
+          addr: '0xb141A92Eabd9F05D21bB388a8AFfcA6d6Eea752B',
+          network: 'matic', //  "eth", "matic", "bnb",
+        });
+      }
+
+      // navigate("/sell-crypto-details");
     } catch (err) {
       setError(err.message);
-
-      alert(`Error: ${err.message}`);
+      console.log(err.message);
+      // navigate("/sell-crypto-failed");
     }
   };
-
-  console.log(sellingAmount.value, 'asdas');
 
   return (
     <>
@@ -194,18 +274,20 @@ const SellPayment = () => {
 
           <p className="text-sm text-center mb-6 text-gray-600">
             You are about to receive{' '}
-            <strong className="text-green-500">100 </strong>rupees for{' '}
-            <strong className="text-blue-500">1.5 Eth </strong> in wallet.
+            <strong className="text-green-500">{toValue.value}</strong>
+            rupees for{' '}
+            <strong className="text-blue-500">{fromValue.value}</strong> in
+            wallet.
           </p>
 
           <div className="flex justify-between border rounded p-4 bg-gray-100">
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">To sell</p>
-              <strong className="text-red-500">1.5 </strong>
+              <strong className="text-red-500">{fromValue.value} </strong>
             </div>
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">100</strong>
+              <strong className="text-green-500">{toValue.value}</strong>
             </div>
           </div>
         </div>
@@ -318,6 +400,12 @@ const SellPayment = () => {
             onClick={handlePayButtonClick}
           >
             Sell
+          </button>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mt-8 w-full"
+            onClick={() => handlePayButtonClick}
+          >
+            call munna bai
           </button>
         </div>
       </div>

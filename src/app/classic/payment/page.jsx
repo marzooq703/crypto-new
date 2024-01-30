@@ -11,22 +11,31 @@ const BuyPayment = () => {
   const [coinValue, setCoinValue] = useState({});
 
   useEffect(() => {
-    let storedValue = JSON.parse(localStorage.getItem('datas')) || {};
+    let storedValue;
+    if (typeof window !== 'undefined') {
+      storedValue = JSON.parse(localStorage.getItem('datas')) || {};
+    }
     setCoinValue(storedValue);
   }, []); // Note the correct placement of the dependency array here
 
   useEffect(() => {
     const handleRouteChange = () => {
-      // Remove 'datas' from local storage when the URL changes
-      localStorage.removeItem('datas');
+      if (typeof window !== 'undefined') {
+        // Remove 'datas' from local storage when the URL changes
+        localStorage.removeItem('datas');
+      }
     };
 
-    // Subscribe to the event when the component mounts
-    window.addEventListener('beforeunload', handleRouteChange);
+    if (typeof window !== 'undefined') {
+      // Subscribe to the event when the component mounts
+      window.addEventListener('beforeunload', handleRouteChange);
+    }
 
     // Unsubscribe from the event when the component unmounts
     return () => {
-      window.removeEventListener('beforeunload', handleRouteChange);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', handleRouteChange);
+      }
     };
   }, []);
 
