@@ -401,12 +401,6 @@ const SellPayment = () => {
           >
             Sell
           </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mt-8 w-full"
-            onClick={() => handlePayButtonClick}
-          >
-            call munna bai
-          </button>
         </div>
       </div>
     </>
