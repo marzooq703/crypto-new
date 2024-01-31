@@ -12,6 +12,8 @@ import { useIsMounted } from '@/lib/hooks/use-is-mounted';
 import { useBreakpoint } from '@/lib/hooks/use-breakpoint';
 import CoinListBox from '@/components/ui/coin-listbox';
 import { SwapIcon } from '@/components/icons/swap-icon';
+import { useRouter } from 'next/navigation';
+import { useGroupBy } from 'react-table';
 
 const tabMenu = [
   {
@@ -22,14 +24,14 @@ const tabMenu = [
     title: 'Sell',
     path: 'Sell',
   },
-  {
-    title: 'Send',
-    path: 'Send',
-  },
-  {
-    title: 'Exchange',
-    path: 'Exchange',
-  },
+  // {
+  //   title: 'Send',
+  //   path: 'Send',
+  // },
+  // {
+  //   title: 'Exchange',
+  //   path: 'Exchange',
+  // },
 ];
 
 function TabItem({
@@ -111,6 +113,12 @@ export function CoinTransaction({ transactionType }: CoinTransactionProps) {
     setExchangeRate(calcExRate || 0);
   }, [amount, calcExRate]);
 
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push('/classic/buy'); // Replace '/your-desired-path' with the path you want to redirect to
+  };
+
   return (
     <>
       <div className="group relative flex rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600">
@@ -123,7 +131,7 @@ export function CoinTransaction({ transactionType }: CoinTransactionProps) {
         <input
           type="text"
           value={amount}
-          placeholder="0.0"
+          placeholder="0.0000"
           inputMode="decimal"
           onChange={handleOnChangeFirstCoin}
           className="md w-full rounded-lg border-0 text-base outline-none focus:ring-0 ltr:text-right rtl:text-left dark:bg-light-dark"
@@ -131,11 +139,11 @@ export function CoinTransaction({ transactionType }: CoinTransactionProps) {
       </div>
       <div className="relative mt-4 flex h-11 w-full items-center justify-between rounded-lg border border-gray-100 bg-body px-4 pl-3 text-sm text-gray-900 dark:border-gray-700 dark:bg-light-dark dark:text-white sm:h-13 sm:pl-4">
         <span className="relative flex items-center gap-3 font-medium">
-          <IconUSFlag className="h-6 w-6 sm:h-[30px] sm:w-[30px]" /> USD
+          <div className="h-6 w-6 sm:h-[30px] sm:w-[30px]" /> INR
         </span>
         <span className="absolute top-0 h-full w-[1px] bg-gray-100 ltr:left-24 rtl:right-24 dark:bg-gray-700" />
         <span className="text-sm sm:text-base">
-          {conversionRate.toFixed(4)}
+          {conversionRate.toFixed(0)}
         </span>
       </div>
       {transactionType === 'send' && (
@@ -171,6 +179,7 @@ export function CoinTransaction({ transactionType }: CoinTransactionProps) {
         shape="rounded"
         fullWidth={true}
         className="mt-6 uppercase xs:mt-8 xs:tracking-widest xl:px-2 2xl:px-9"
+        onClick={handleClick}
       >
         Process to wallet
       </Button>
@@ -316,12 +325,12 @@ export default function TransactCoin({
           <TabPanel className="focus:outline-none">
             <CoinTransaction transactionType="sell" />
           </TabPanel>
-          <TabPanel className="focus:outline-none">
+          {/* <TabPanel className="focus:outline-none">
             <CoinTransaction transactionType="send" />
           </TabPanel>
           <TabPanel className="focus:outline-none">
             <CoinTransaction transactionType="exchange" />
-          </TabPanel>
+          </TabPanel> */}
         </TabPanels>
       </Tab.Group>
     </div>
