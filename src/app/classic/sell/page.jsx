@@ -8,6 +8,7 @@ import CoinInput from '@/components/ui/coin-input';
 import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
+import axios from 'axios';
 
 const SellCrypto = () => {
   const [selectedNetwork, setSelectedNetwork] = useState('erc20');
@@ -17,17 +18,28 @@ const SellCrypto = () => {
   const [inrValue, setInrValue] = useState(0);
   const router = useRouter();
 
+  console.log('Inrvalue', inrValue);
   useEffect(() => {
     const fetchConversionRate = async () => {
       try {
-        const response = await fetch(
-          'https://api.example.com/conversionRate?from=usdt&to=inr',
+        // Fetch conversion rates from CoinGecko using Axios
+        const response = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price',
+          {
+            params: {
+              ids: 'tether',
+              vs_currencies: 'inr',
+            },
+          },
         );
-        if (!response.ok) {
-          throw new Error('Failed to fetch conversion rate');
+        if (
+          !response.data ||
+          !response.data.tether ||
+          !response.data.tether.inr
+        ) {
+          throw new Error('Invalid response or missing data');
         }
-        const data = await response.json();
-        const conversionRate = data.rate;
+        const conversionRate = response.data.tether.inr;
         const calculatedInrValue = sellingAmount.value * conversionRate;
         setInrValue(calculatedInrValue);
       } catch (error) {

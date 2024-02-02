@@ -101,7 +101,7 @@ export default function CoinSlider({ coins }: CoinSliderProps) {
 
   return (
     <div>
-      <Swiper
+      {/* <Swiper
         modules={[Scrollbar, A11y]}
         spaceBetween={24}
         slidesPerView={1}
@@ -125,7 +125,7 @@ export default function CoinSlider({ coins }: CoinSliderProps) {
             />
           </SwiperSlide>
         ))}
-      </Swiper>
+      </Swiper> */}
     </div>
   );
 }

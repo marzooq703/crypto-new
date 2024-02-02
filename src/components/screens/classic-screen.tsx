@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import CoinSlider from '@/components/ui/coin-card-two';
 import OverviewChart from '@/components/ui/chats/overview-chart';
 import ComparisonChart from '@/components/ui/chats/retro-comparision-chart';
@@ -7,19 +8,42 @@ import ComparisonChart from '@/components/ui/chats/retro-comparision-chart';
 import TopPools from '@/components/ui/top-pools';
 import TransactionTable from '@/components/transaction/transaction-table';
 import TopCurrencyTable from '@/components/top-currency/currency-table';
-import { coinSlideData } from '@/data/static/coin-slide-data';
+// import { coinSlideData } from '@/data/static/coin-slide-data';
 import TransactCoin from '@/components/ui/transact-coin';
 import Avatar from '@/components/ui/avatar';
 import TopupButton from '@/components/ui/topup-button';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
+import { useEffect } from 'react';
 
 export default function ClassicScreen() {
+  const [coinData, setCoinData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price',
+        );
+        const data = await response.json();
+        setCoinData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [coinData]);
+
+  useEffect(() => {
+    console.log(coinData); // Log coinData after it's updated
+  }, [coinData]);
+
   return (
     <>
       <div className="flex flex-wrap">
         <div className="mb-8 w-full sm:mb-0  dark:[&_.swiper-scrollbar>_.swiper-scrollbar-drag]:bg-body/50">
-          <CoinSlider coins={coinSlideData} />
+          <CoinSlider coins={coinData} />
         </div>
       </div>
 
