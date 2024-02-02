@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
@@ -13,6 +13,31 @@ import Trade from '@/components/ui/trade';
 const BuyCrypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
+  const [usdtValue, setUsdtValue] = useState(0);
+  const [inrValue, setInrValue] = useState(0);
+  const [exchangeRate, setExchangeRate] = useState(0);
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
+        );
+        const usdtToInrRate = response.data.tether.inr;
+        setExchangeRate(usdtToInrRate); // Set the exchange rate
+      } catch (error) {
+        console.error('Error fetching exchange rate:', error);
+      }
+    };
+
+    fetchExchangeRate();
+  }, []);
+
+  const handleInrInputChange = (event) => {
+    const value = parseFloat(event.target.value);
+    setInrValue(value);
+    setUsdtValue(value / exchangeRate); // Calculate equivalent USDT value
+  };
 
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
@@ -55,6 +80,17 @@ const BuyCrypto = () => {
   return (
     <div>
       <Trade>
+        <div>
+          <label>Enter INR Value:</label>
+          <input
+            type="number"
+            value={inrValue}
+            onChange={handleInrInputChange}
+          />
+          <label>Equivalent Value in USDT:</label>
+          <input type="number" value={usdtValue} readOnly />
+        </div>
+
         <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
           <div className="flex items-center mb-4">
             <label className="mr-2 font-semibold text-gray-700">Chains:</label>
@@ -103,7 +139,7 @@ const BuyCrypto = () => {
             </div>
             <CoinInput
               label={'To'}
-              exchangeRate={0.0}
+              // exchangeRate={0.0}
               defaultCoinIndex={1}
               getCoinValue={(data) => console.log('To coin value:', data)}
             />

@@ -82,9 +82,9 @@ export default function CoinInput({
             className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
             {...rest}
           />
-          <span className="font-xs px-3 text-gray-400">
+          {/* <span className="font-xs px-3 text-gray-400">
             = ${exchangeRate ? exchangeRate : '0.00'}
-          </span>
+          </span> */}
         </div>
       </div>
 
