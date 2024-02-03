@@ -95,21 +95,27 @@ const SellCrypto = () => {
               </svg>
             </div>
           </div>
-          <div className={cn('relative flex gap-3')}>
-            <CoinInput
-              label={'From'}
-              exchangeRate={0.0}
-              defaultCoinIndex={0}
-              getCoinValue={handleCoinInputChange}
-            />
-            <CoinInput2
-              label={'To'}
-              exchangeRate={0.0}
-              defaultCoinIndex={1}
-              value={inrValue}
-              getCoinValue={handleCoinInput2Change}
-              disabled={true}
-            />
+          <div className={cn('relative')}>
+            <div className="mb-3">
+              <CoinInput
+                label={'From'}
+                exchangeRate={0.0}
+                defaultCoinIndex={0}
+                getCoinValue={handleCoinInputChange}
+              />
+            </div>
+          </div>
+          <div className={cn('relative')}>
+            <div className="mb-3">
+              <CoinInput2
+                label={'To'}
+                exchangeRate={0.0}
+                defaultCoinIndex={1}
+                value={inrValue}
+                getCoinValue={handleCoinInput2Change}
+                disabled={true}
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 xs:gap-[18px]">

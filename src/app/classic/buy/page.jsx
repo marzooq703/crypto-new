@@ -86,18 +86,22 @@ const BuyCrypto = () => {
               </svg>
             </div>
           </div>
-          <div className={cn('relative flex gap-3')}>
-            <CoinInput2
-              label={'From'}
-              value={inrValue}
-              onChange={handleInrInputChange}
-              placeholder="Enter INR value"
-            />
-            <CoinInput
-              label={'To'}
-              value={usdtValue}
-              placeholder="USDT value"
-            />
+          <div className={cn('relative')}>
+            <div className="mb-3">
+              <CoinInput2
+                label={'From'}
+                value={inrValue}
+                onChange={handleInrInputChange}
+                placeholder="Enter INR value"
+              />
+            </div>
+            <div className="mb-3">
+              <CoinInput
+                label={'To'}
+                value={usdtValue}
+                placeholder="USDT value"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 xs:gap-[18px]">
