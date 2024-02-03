@@ -1,55 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import CoinInput from '@/components/ui/coin-input';
 import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
-import { SwapIcon } from '@/components/icons/swap-icon';
 import Trade from '@/components/ui/trade';
+import axios from 'axios';
 
 const BuyCrypto = () => {
-  let [toggleCoin, setToggleCoin] = useState(false);
-  const [selectedNetwork, setSelectedNetwork] = useState('matic'); // Default to 'matic'
+  const [selectedNetwork, setSelectedNetwork] = useState('matic');
+  const [inrValue, setInrValue] = useState('');
+  const [usdtValue, setUsdtValue] = useState(0);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchConversionRate = async () => {
+      try {
+        const response = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price',
+          {
+            params: {
+              ids: 'tether',
+              vs_currencies: 'inr',
+            },
+          },
+        );
+        if (
+          !response.data ||
+          !response.data.tether ||
+          !response.data.tether.inr
+        ) {
+          throw new Error('Invalid response or missing data');
+        }
+        const conversionRate = response.data.tether.inr;
+        const calculatedUsdtValue =
+          parseFloat(inrValue) / parseFloat(conversionRate);
+        setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
+      } catch (error) {
+        console.error('Error fetching conversion rate:', error);
+      }
+    };
+
+    if (inrValue !== '') {
+      fetchConversionRate();
+    }
+  }, [inrValue]);
 
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
-  const router = useRouter();
 
-  const clickBuy = () => {
-    let coinInput2Value;
-    if (typeof window !== undefined) {
-      coinInput2Value = localStorage.getItem('datas');
-    }
-
-    // Check if the value is not 0, undefined, or null
-    if (
-      coinInput2Value !== null &&
-      coinInput2Value !== undefined &&
-      coinInput2Value !== '0'
-    ) {
-      // Proceed with the redirection logic
-      router.push('/classic/payment');
-    } else {
-      // Show an error popup
-      alert('Error: Invalid CoinInput2 value. Please provide a valid value.');
-      // You might want to display a more user-friendly error message or use a modal popup
-    }
+  const handleSubmit = () => {
+    router.push('/classic/payment');
   };
 
-  const handleCoinValue = (data) => {
-    // Check if data is not null, undefined, or 0
-    if (data !== null && data !== undefined && data !== 0) {
-      // Store data in localStorage
-      localStorage.setItem('datas', JSON.stringify(data));
-    } else {
-      // Show error message
-      console.error('Error: Please provide a valid value');
-      // You might want to display a more user-friendly error message or use a modal popup
-    }
+  const handleInrInputChange = (e) => {
+    setInrValue(e.target.value);
   };
 
   return (
@@ -68,7 +77,6 @@ const BuyCrypto = () => {
               <option value="matic">Matic-20</option>
             </select>
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              {/* You can place your dropdown icon here */}
               <svg
                 className="h-4 w-4 fill-current text-gray-600 dark:text-gray-300"
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,34 +86,17 @@ const BuyCrypto = () => {
               </svg>
             </div>
           </div>
-          <div
-            className={cn(
-              'relative flex gap-3',
-              toggleCoin ? 'flex-col-reverse' : 'flex-col',
-            )}
-          >
+          <div className={cn('relative flex gap-3')}>
             <CoinInput2
               label={'From'}
-              exchangeRate={0.0}
-              defaultCoinIndex={0}
-              getCoinValue={handleCoinValue}
+              value={inrValue}
+              onChange={handleInrInputChange}
+              placeholder="Enter INR value"
             />
-            <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600">
-              {/* <Button
-                size="mini"
-                color="gray"
-                shape="circle"
-                variant="transparent"
-                onClick={() => setToggleCoin(!toggleCoin)}
-              >
-                <SwapIcon className="h-auto w-3" />
-              </Button> */}
-            </div>
             <CoinInput
               label={'To'}
-              exchangeRate={0.0}
-              defaultCoinIndex={1}
-              getCoinValue={(data) => console.log('To coin value:', data)}
+              value={usdtValue}
+              placeholder="USDT value"
             />
           </div>
         </div>
@@ -122,7 +113,7 @@ const BuyCrypto = () => {
           shape="rounded"
           fullWidth={true}
           className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-          onClick={clickBuy}
+          onClick={handleSubmit}
         >
           BUY
         </Button>

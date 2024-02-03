@@ -52,74 +52,76 @@ export default function CoinInput({
     setVisibleCoinList(false);
   }
   return (
-    <>
-      <div
-        className={cn(
-          'group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600',
-          className,
-        )}
-      >
-        <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
-          <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
-            {label}
-          </span>
-          <button
-            onClick={() => setVisibleCoinList(true)}
-            className="flex items-center font-medium outline-none dark:text-gray-100"
-          >
-            {selectedCoin?.icon}{' '}
-            <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
-            <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5" />
-          </button>
-        </div>
-        <div className="flex flex-1 flex-col text-right">
-          <input
-            type="text"
-            value={value}
-            placeholder="0.0"
-            inputMode="decimal"
-            onChange={handleOnChange}
-            className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
-            {...rest}
-          />
-          <span className="font-xs px-3 text-gray-400">
-            = ${exchangeRate ? exchangeRate : '0.00'}
-          </span>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {visibleCoinList && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5"
-          >
-            {/* This element is to trick the browser into centering the modal contents. */}
-            <span
-              className="inline-block h-full align-middle"
-              aria-hidden="true"
-            >
-              &#8203;
+    <div className="w-full">
+      <>
+        <div
+          className={cn(
+            'group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600',
+            className,
+          )}
+        >
+          <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
+            <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
+              {label}
             </span>
-            <motion.div
-              initial={{ scale: 1.05 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              ref={modalContainerRef}
-              className="inline-block text-left align-middle"
+            <button
+              onClick={() => setVisibleCoinList(true)}
+              className="flex items-center font-medium outline-none dark:text-gray-100"
             >
-              <CoinSelectView
-                onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}
-              />
+              {selectedCoin?.icon}{' '}
+              <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
+              <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5" />
+            </button>
+          </div>
+          <div className="flex flex-1 flex-col text-right">
+            <input
+              type="text"
+              value={value}
+              placeholder="0.0"
+              inputMode="decimal"
+              onChange={handleOnChange}
+              className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
+              {...rest}
+            />
+            <span className="font-xs px-3 text-gray-400">
+              = ${exchangeRate ? exchangeRate : '0.00'}
+            </span>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {visibleCoinList && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5"
+            >
+              {/* This element is to trick the browser into centering the modal contents. */}
+              <span
+                className="inline-block h-full align-middle"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <motion.div
+                initial={{ scale: 1.05 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                ref={modalContainerRef}
+                className="inline-block text-left align-middle"
+              >
+                <CoinSelectView
+                  onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}
+                />
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+          )}
+        </AnimatePresence>
+      </>
+    </div>
   );
 }
 
