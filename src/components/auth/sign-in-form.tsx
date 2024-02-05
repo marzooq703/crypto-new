@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
@@ -41,6 +41,17 @@ export default function SignInForm() {
   // function handleSubmit(e: any) {
   //   e.preventDefault();
   // }
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setEmail(user.email || ''); // Fill email field with user's email
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []); // Only run this effect once on component mount
 
   return (
     <form noValidate onSubmit={signIn} className="grid grid-cols-1 gap-4">

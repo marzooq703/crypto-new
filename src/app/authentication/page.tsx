@@ -1,14 +1,36 @@
+'use client';
+
+import { useEffect } from 'react';
 import Logo from '@/components/ui/logo';
-import Image from '@/components/ui/image';
+import Image from 'next/image';
 import SignInForm from '@/components/auth/sign-in-form';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import routes from '@/config/routes';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../../lib/firebase';
+import { useRouter } from 'next/navigation';
 
 // import images and icons
 import BitcoinImg from '@/assets/images/bit-coin.png';
 import GoogleIcon from '@/assets/images/google-icon.svg';
 
 export default function SignIn() {
+  const router = useRouter();
+
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      // The signed-in user info.
+      const user = result.user;
+      console.log(user);
+
+      // Redirect to the home page after successful sign-in
+      router.push('/'); // Replace '/' with your desired home page route
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="grid flex-grow grid-cols-1 gap-0 lg:grid-cols-[1fr_40%] 3xl:grid-cols-2">
       <div className="flex flex-col items-center justify-center py-14">
@@ -24,9 +46,17 @@ export default function SignIn() {
               Please login account with your info
             </p>
           </div>
-          <button className="flex w-full items-center justify-center gap-2.5 rounded-md border-2 border-[#F3F4F6] bg-[#F3F4F6] py-2 text-sm font-medium text-black transition-all hover:bg-transparent dark:border-brand dark:bg-brand dark:text-gray-300 dark:hover:bg-transparent sm:rounded-lg sm:tracking-[0.04em]">
+          <button
+            onClick={signInWithGoogle}
+            className="flex w-full items-center justify-center gap-2.5 rounded-md border-2 border-[#F3F4F6] bg-[#F3F4F6] py-2 text-sm font-medium text-black transition-all hover:bg-transparent dark:border-brand dark:bg-brand dark:text-gray-300 dark:hover:bg-transparent sm:rounded-lg sm:tracking-[0.04em]"
+          >
             <div className="relative h-5 w-5 sm:h-7 sm:w-7">
-              <Image src={GoogleIcon} alt="google-icon" fill />
+              <Image
+                src={GoogleIcon}
+                alt="google-icon"
+                width={24}
+                height={24}
+              />
             </div>
             Log in with Google
           </button>
