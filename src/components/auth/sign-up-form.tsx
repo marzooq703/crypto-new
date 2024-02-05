@@ -39,10 +39,10 @@ export default function SignUpForm() {
       });
   };
 
-  function handleSubmit(e: any) {
-    e.preventDefault();
-    console.log(e);
-  }
+  // function handleSubmit(e: any) {
+  //   e.preventDefault();
+  //   console.log(e);
+  // }
 
   return (
     <form noValidate onSubmit={signUp} className="grid grid-cols-1 gap-4">
