@@ -179,3 +179,5 @@ export default function Sidebar({ className }: { className?: string }) {
     </aside>
   );
 }
+
+export { sideBarMenuItems };

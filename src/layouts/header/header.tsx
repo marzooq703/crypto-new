@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import LogoIcon from '@/components/ui/logo-icon';
@@ -14,6 +15,8 @@ import WalletConnect from '@/components/nft/wallet-connect';
 import routes from '@/config/routes';
 import { useLayout } from '@/lib/hooks/use-layout';
 import { LAYOUT_OPTIONS } from '@/lib/constants';
+import { sideBarMenuItems } from '../sidebar/_expandable';
+import { LockIcon } from '@/components/icons/lock-icon';
 
 function NotificationButton() {
   const { layout } = useLayout();
@@ -35,10 +38,47 @@ function NotificationButton() {
   );
 }
 
+function AuthenticationDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <div className="relative">
+      <button className="dropbtn" onClick={toggleDropdown}>
+        <div className="relative flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-100 bg-white text-brand shadow-main transition-all hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none dark:border-gray-700 dark:bg-light-dark dark:text-white sm:h-12 sm:w-12">
+          <LockIcon className="h-8 w-3 sm:w-auto" />
+          {/* <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-brand shadow-light dark:bg-slate-50 sm:h-3 sm:w-3" /> */}
+        </div>
+      </button>
+      {isOpen && (
+        <div className="absolute z-10 right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+          <div className="py-1">
+            {sideBarMenuItems
+              .find((item) => item.name === 'Authentication')
+              ?.dropdownItems?.map((dropdownItem, index) => (
+                <a
+                  key={index}
+                  href={dropdownItem.href}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  {dropdownItem.name}
+                </a>
+              ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function HeaderRightArea() {
   return (
     <div className="relative order-last flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-8">
-      <NotificationButton />
+      <AuthenticationDropdown />
+      {/* <NotificationButton /> */}
       <WalletConnect />
     </div>
   );
