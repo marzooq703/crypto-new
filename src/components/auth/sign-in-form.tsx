@@ -13,6 +13,7 @@ import { EyeSlashIcon } from '@/components/icons/eyeslash';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import routes from '@/config/routes';
 import { auth } from '../../lib/firebase';
+// import GeoFencing from '../geoFencing/page';
 
 type SignInStatus = 'success' | 'failed' | null;
 
@@ -59,6 +60,7 @@ export default function SignInForm() {
   return (
     <form noValidate onSubmit={signIn} className="grid grid-cols-1 gap-4">
       {/* Display success or failure message */}
+      {/* <GeoFencing/> */}
       {signInStatus === 'success' && (
         <div className="text-green-500">Sign-in successful!</div>
       )}
