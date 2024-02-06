@@ -24,18 +24,21 @@ export default function SignInForm() {
   const [password, setPassword] = useState('');
   const [signInStatus, setSignInStatus] = useState<SignInStatus>(null); // Track sign-in status
 
-  const signIn = (e: React.FormEvent) => {
+  const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        setSignInStatus('success');
-        router.push('/classic');
-      })
-      .catch((error) => {
-        console.log(error);
-        setSignInStatus('failed');
-      });
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      console.log(userCredential);
+      setSignInStatus('success');
+      router.push('/classic');
+    } catch (error) {
+      console.error(error);
+      setSignInStatus('failed');
+    }
   };
 
   // function handleSubmit(e: any) {
