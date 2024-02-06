@@ -112,14 +112,14 @@ export const defaultMenuItems = [
         name: 'Sign up',
         href: routes.signUp,
       },
-      {
-        name: 'Reset pin',
-        href: routes.resetPin,
-      },
-      {
-        name: 'Forget password',
-        href: routes.forgetPassword,
-      },
+      // {
+      //   name: 'Reset pin',
+      //   href: routes.resetPin,
+      // },
+      // {
+      //   name: 'Forget password',
+      //   href: routes.forgetPassword,
+      // },
     ],
   },
 ];
