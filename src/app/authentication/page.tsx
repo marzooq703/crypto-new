@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from '@/components/ui/logo';
 import Image from 'next/image';
 import SignInForm from '@/components/auth/sign-in-form';
@@ -9,6 +9,7 @@ import routes from '@/config/routes';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/components/Loading/page';
 
 // import images and icons
 import BitcoinImg from '@/assets/images/bit-coin.png';
@@ -16,6 +17,7 @@ import GoogleIcon from '@/assets/images/google-icon.svg';
 
 export default function SignIn() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -31,6 +33,20 @@ export default function SignIn() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    // Simulate loading delay for demonstration purposes
+    const timeout = setTimeout(() => {
+      setLoading(false); // Hide loading screen after 2 seconds
+    }, 2000);
+
+    return () => clearTimeout(timeout); // Clear timeout on component unmount
+  }, []);
+
+  if (loading) {
+    return <LoadingScreen />; // Display loading screen while waiting
+  }
+
   return (
     <div className="grid flex-grow grid-cols-1 gap-0 lg:grid-cols-[1fr_40%] 3xl:grid-cols-2">
       <div className="flex flex-col items-center justify-center py-14">

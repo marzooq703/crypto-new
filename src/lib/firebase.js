@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth'; // Add this line
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'; // Add this line
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,4 +20,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export { auth };
+// Set up Google authentication provider
+const googleProvider = new GoogleAuthProvider();
+// Add additional scopes to request more user information
+googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
+
+// Sign in with Google
+const signInWithGoogle = () => {
+  auth
+    .signInWithPopup(googleProvider)
+    .then((result) => {
+      // Handle successful sign-in
+      const user = result.user;
+      console.log('User profile:', user);
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error('Error signing in with Google:', error);
+    });
+};
+
+export { auth, signInWithGoogle };
