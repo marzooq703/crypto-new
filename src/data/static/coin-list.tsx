@@ -7,42 +7,42 @@ import { Cardano } from '@/components/icons/cardano';
 import { Doge } from '@/components/icons/doge';
 
 export const coinList = [
-  {
-    icon: <Bitcoin />,
-    code: 'USDT',
-    name: 'USDT',
-    price: 28204.0,
-  },
+  // {
+  //   icon: <Bitcoin />,
+  //   code: 'USDT',
+  //   name: 'USDT',
+  //   price: 28204.0,
+  // },
   // {
   //   icon: <Ethereum />,
   //   code: 'ETH',
   //   name: 'Ethereum',
   //   price: 1787.3,
   // },
-  // {
-  //   icon: <Tether />,
-  //   code: 'USDT',
-  //   name: 'Tether USD',
-  //   price: 1.01,
-  // },
+  {
+    icon: <Tether />,
+    code: 'USDT',
+    name: 'Tether USD',
+    price: 1.01,
+  },
   // {
   //   icon: <Bnb />,
   //   code: 'BNB',
   //   name: 'Binance Coin',
   //   price: 338.36,
   // },
-  // {
-  //   icon: <Usdc />,
-  //   code: 'USDC',
-  //   name: 'USD Coin',
-  //   price: 1.001,
-  // },
-  // {
-  //   icon: <Cardano />,
-  //   code: 'ADA',
-  //   name: 'Cardano',
-  //   price: 0.34,
-  // },
+  {
+    icon: <Usdc />,
+    code: 'USDC',
+    name: 'USD Coin',
+    price: 1.001,
+  },
+  {
+    icon: <Cardano />,
+    code: 'FDUSD',
+    name: 'FD USD Coin',
+    price: 0.34,
+  },
   // {
   //   icon: <Doge />,
   //   code: 'DOGE',
