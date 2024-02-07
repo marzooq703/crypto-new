@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import { IconUSFlag } from '@/components/icons/icon-us-flag';
-import IconINRFlag from '@/components/icons/icon-ind-flag';
 import Button from '@/components/ui/button';
 import axios from 'axios';
 
