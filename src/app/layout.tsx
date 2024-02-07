@@ -45,8 +45,8 @@ export default function RootLayout({
         <QueryClientProvider>
           <ThemeProvider>
             <WagmiConfig>
-              <SettingsButton />
-              <SettingsDrawer />
+              {/* <SettingsButton /> */}
+              {/* <SettingsDrawer /> */}
               <Suspense fallback={null}>
                 <ModalsContainer />
                 <DrawersContainer />

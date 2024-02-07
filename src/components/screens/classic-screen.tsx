@@ -67,7 +67,7 @@ export default function ClassicScreen() {
               <TopupButton className="md:h-12 " />
             </div>
             <span className="-mx-6 block border-t border-dashed border-t-gray-200 dark:border-t-gray-700 3xl:-mx-8" />
-            <TransactCoin className="mt-6" />
+            <TransactCoin className="mt-6" transactionType="buy" />
           </div>
         </div>
         <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
