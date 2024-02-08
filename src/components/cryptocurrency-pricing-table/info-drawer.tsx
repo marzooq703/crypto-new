@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { Close } from '@/components/icons/close';
 import Button from '@/components/ui/button/button';
 import Scrollbar from '@/components/ui/scrollbar';
-import { CoinConverter } from '@/components/ui/transact-coin';
+// import { CoinConverter } from '@/components/ui/transact-coin';
 import CoinInfo from '@/components/cryptocurrency-pricing-table/coin-info';
 import TopCoin from '@/components/cryptocurrency-pricing-table/top-coin';
 
@@ -64,7 +64,7 @@ function InfoDrawer({ isOpen, setIsOpen }: CryptocurrencyDrawerProps) {
                 <div>
                   <span className="block border-t border-dashed border-t-gray-200 dark:border-t-gray-700" />
 
-                  <CoinConverter />
+                  {/* <CoinConverter /> */}
                 </div>
                 <div className="px-8 pb-10">
                   <h2 className="text-base font-medium uppercase text-gray-700 dark:text-gray-200">
