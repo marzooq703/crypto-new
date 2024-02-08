@@ -3,7 +3,6 @@
 import CryptocurrencySinglePrice from '@/components/cryptocurrency-pricing-table/cryptocurrency-single-price';
 import React, { useState } from 'react';
 import CoinInfo from '@/components/cryptocurrency-pricing-table/coin-info';
-import { CoinConverter } from '@/components/ui/transact-coin';
 import CoinTabs from '@/components/cryptocurrency-pricing-table/coin-tabs';
 import TopCoin from '@/components/cryptocurrency-pricing-table/top-coin';
 import { useLayout } from '@/lib/hooks/use-layout';
@@ -34,7 +33,7 @@ function CoinSinglePrice() {
             <div>
               <span className="block border-t border-dashed border-t-gray-200 dark:border-t-gray-700" />
 
-              <CoinConverter />
+              {/* <CoinConverter /> */}
             </div>
             <div className="px-8 pb-10">
               <h2 className="text-base font-medium uppercase text-gray-700 dark:text-gray-200">
