@@ -86,10 +86,10 @@ export default function CoinSelectView({ onSelect }: CoinSelectViewTypes) {
           </li>
         ))}
       </ul>
-      <div>
+      <div className="mb-4">
         <label
           htmlFor="chainSelect"
-          className="block mb-1 text-sm text-gray-700 dark:text-gray-300"
+          className="block font-bold  mb-1 text-sm text-gray-700 dark:text-gray-300"
         >
           Select Chain
         </label>

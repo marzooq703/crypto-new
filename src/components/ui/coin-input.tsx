@@ -1,7 +1,7 @@
 'use client';
 
 import type { CoinTypes } from '@/types';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
@@ -32,9 +32,11 @@ export default function CoinInput({
   className,
   ...rest
 }: CoinInputTypes) {
+  const [chainSelected, setChainSelected] = useState(false);
   let [value, setValue] = useState('');
   let [selectedCoin, setSelectedCoin] = useState(coinList[defaultCoinIndex]);
   let [visibleCoinList, setVisibleCoinList] = useState(false);
+  const [visibleChainMessage, setVisibleChainMessage] = useState(true);
   const modalContainerRef = useRef<HTMLDivElement>(null);
   useClickAway(modalContainerRef, () => {
     setVisibleCoinList(false);
@@ -47,9 +49,30 @@ export default function CoinInput({
       getCoinValue && getCoinValue(param);
     }
   };
+
+  useEffect(() => {
+    if (chainSelected && selectedCoin) {
+      setVisibleCoinList(false); // Close modal when both coin and chain are selected
+    }
+  }, [chainSelected, selectedCoin]);
+
   function handleSelectedCoin(coin: CoinTypes) {
     setSelectedCoin(coin);
-    setVisibleCoinList(false);
+
+    // Check if both coin and chain are selected
+    if (coin && chainSelected) {
+      setVisibleCoinList(false); // Close modal when both coin and chain are selected
+    }
+
+    // Check if the coin is selected and chain is not selected
+    if (coin && !chainSelected) {
+      setVisibleChainMessage(true); // Show the message to choose the chain
+    }
+
+    // The chain is selected, set chainSelected to true
+    if (coin && chainSelected) {
+      setChainSelected(false);
+    }
   }
   return (
     <div className="w-full">
@@ -116,6 +139,11 @@ export default function CoinInput({
                 <CoinSelectView
                   onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}
                 />
+                {!chainSelected && visibleChainMessage && (
+                  <p className="text-red-500 font-bold text-lg mt-2 rounded bg-yellow-200">
+                    ! Choose your chain.
+                  </p>
+                )}
               </motion.div>
             </motion.div>
           )}

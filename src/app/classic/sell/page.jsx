@@ -74,7 +74,7 @@ const SellCrypto = () => {
     <div>
       <Trade>
         <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
-          <div className="flex items-center mb-4">
+          {/* <div className="flex items-center mb-4">
             <label className="mr-2 font-semibold text-gray-700">Chains:</label>
             <select
               value={selectedNetwork}
@@ -94,7 +94,7 @@ const SellCrypto = () => {
                 <path d="M10 12l-5-5 1.5-1.5L10 9l3.5-3.5L16 7z" />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div className={cn('relative')}>
             <div className="mb-3">
               <CoinInput
