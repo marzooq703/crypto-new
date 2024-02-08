@@ -1,5 +1,3 @@
-'use client';
-
 import type { CoinTypes } from '@/types';
 import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -30,22 +28,23 @@ export default function CoinInput({
   defaultCoinIndex = 0,
   exchangeRate,
   className,
-  ...rest
 }: CoinInputTypes) {
   const [chainSelected, setChainSelected] = useState(false);
-  let [value, setValue] = useState('');
-  let [selectedCoin, setSelectedCoin] = useState(coinList[defaultCoinIndex]);
-  let [visibleCoinList, setVisibleCoinList] = useState(false);
-  const [visibleChainMessage, setVisibleChainMessage] = useState(true);
+  const [value, setValue] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState(coinList[defaultCoinIndex]);
+  const [visibleCoinList, setVisibleCoinList] = useState(false);
+  const [visibleChainMessage, setVisibleChainMessage] = useState(false);
   const modalContainerRef = useRef<HTMLDivElement>(null);
+
   useClickAway(modalContainerRef, () => {
     setVisibleCoinList(false);
   });
   useLockBodyScroll(visibleCoinList);
+
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.match(decimalPattern)) {
       setValue(event.target.value);
-      let param = { coin: selectedCoin.code, value: event.target.value };
+      const param = { coin: selectedCoin.code, value: event.target.value };
       getCoinValue && getCoinValue(param);
     }
   };
@@ -56,24 +55,21 @@ export default function CoinInput({
     }
   }, [chainSelected, selectedCoin]);
 
+  function handleSelectedChain() {
+    setChainSelected(true); // Set chainSelected to true indicating chain is selected
+    setVisibleCoinList(true); // Close the modal
+  }
+
   function handleSelectedCoin(coin: CoinTypes) {
     setSelectedCoin(coin);
 
-    // Check if both coin and chain are selected
-    if (coin && chainSelected) {
-      setVisibleCoinList(false); // Close modal when both coin and chain are selected
-    }
-
-    // Check if the coin is selected and chain is not selected
-    if (coin && !chainSelected) {
-      setVisibleChainMessage(true); // Show the message to choose the chain
-    }
-
-    // The chain is selected, set chainSelected to true
-    if (coin && chainSelected) {
-      setChainSelected(false);
+    // Check if the coin is selected
+    if (coin) {
+      // Show the chains dropdown after selecting the coin
+      setVisibleChainMessage(false);
     }
   }
+
   return (
     <div className="w-full">
       <>
@@ -104,7 +100,6 @@ export default function CoinInput({
               inputMode="decimal"
               onChange={handleOnChange}
               className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
-              {...rest}
             />
             <span className="font-xs px-3 text-gray-400">
               = ${exchangeRate ? exchangeRate : '0.00'}
@@ -121,7 +116,6 @@ export default function CoinInput({
               transition={{ duration: 0.3 }}
               className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5"
             >
-              {/* This element is to trick the browser into centering the modal contents. */}
               <span
                 className="inline-block h-full align-middle"
                 aria-hidden="true"
@@ -137,12 +131,14 @@ export default function CoinInput({
                 className="inline-block text-left align-middle"
               >
                 <CoinSelectView
-                  onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}
+                  onSelect={(selectedCoin) => {
+                    handleSelectedCoin(selectedCoin);
+                    handleSelectedChain(); // Call handleSelectedChain when a chain is selected
+                  }}
                 />
-                {!chainSelected && visibleChainMessage && (
-                  <p className="text-red-500 font-bold text-lg mt-2 rounded bg-yellow-200">
-                    ! Choose your chain.
-                  </p>
+
+                {visibleChainMessage && (
+                  <div>{/* Render your chains dropdown here */}</div>
                 )}
               </motion.div>
             </motion.div>
