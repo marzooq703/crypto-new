@@ -30,11 +30,16 @@ export default function CoinInput({
   className,
 }: CoinInputTypes) {
   const [chainSelected, setChainSelected] = useState(false);
+  const [selectedChain, setSelectedChain] = useState('');
   const [value, setValue] = useState('');
   const [selectedCoin, setSelectedCoin] = useState(coinList[defaultCoinIndex]);
   const [visibleCoinList, setVisibleCoinList] = useState(false);
   const [visibleChainMessage, setVisibleChainMessage] = useState(false);
   const modalContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleSelectedChain = (selectedChain: string) => {
+    setSelectedChain(selectedChain);
+  };
 
   useClickAway(modalContainerRef, () => {
     setVisibleCoinList(false);
@@ -55,10 +60,11 @@ export default function CoinInput({
     }
   }, [chainSelected, selectedCoin]);
 
-  function handleSelectedChain() {
-    setChainSelected(true); // Set chainSelected to true indicating chain is selected
-    setVisibleCoinList(true); // Close the modal
-  }
+  const handleChainSelection = (selectedValue: string) => {
+    setChainSelected(true);
+    setSelectedChain(selectedValue);
+    setVisibleCoinList(false);
+  };
 
   function handleSelectedCoin(coin: CoinTypes) {
     setSelectedCoin(coin);
@@ -66,9 +72,15 @@ export default function CoinInput({
     // Check if the coin is selected
     if (coin) {
       // Show the chains dropdown after selecting the coin
-      setVisibleChainMessage(false);
+      setVisibleChainMessage(true);
     }
   }
+
+  const chains = [
+    { code: 'btc', name: 'Bitcoin' },
+    { code: 'eth', name: 'Ethereum' },
+    { code: 'ltc', name: 'Litecoin' },
+  ];
 
   return (
     <div className="w-full">
@@ -133,13 +145,33 @@ export default function CoinInput({
                 <CoinSelectView
                   onSelect={(selectedCoin) => {
                     handleSelectedCoin(selectedCoin);
-                    handleSelectedChain(); // Call handleSelectedChain when a chain is selected
+                    handleChainSelection(selectedChain); // Call handleSelectedChain when a chain is selected
                   }}
                 />
 
-                {visibleChainMessage && (
-                  <div>{/* Render your chains dropdown here */}</div>
-                )}
+                {/* {visibleChainMessage && (
+          <div className="mt-4">
+            <label
+              htmlFor="chainSelect"
+              className="block mb-1 text-sm font-bold text-gray-700 dark:text-gray-300"
+            >
+              Select Chain
+            </label>
+            <select
+  id="chainSelect"
+  value={selectedChain}
+  onChange={(e) => handleChainSelection(e.target.value)} // Corrected
+  className="w-full py-2 pl-3 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+>
+              <option value="">Select a chain</option>
+              {chains.map((chain) => (
+                <option key={chain.code} value={chain.code}>
+                  {chain.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )} */}
               </motion.div>
             </motion.div>
           )}
