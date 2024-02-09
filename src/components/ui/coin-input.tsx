@@ -37,9 +37,9 @@ export default function CoinInput({
   const [visibleChainMessage, setVisibleChainMessage] = useState(false);
   const modalContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleSelectedChain = (selectedChain: string) => {
-    setSelectedChain(selectedChain);
-  };
+  // const handleSelectedChain = (selectedChain: string) => {
+  //   setSelectedChain(selectedChain);
+  // };
 
   useClickAway(modalContainerRef, () => {
     setVisibleCoinList(false);
@@ -55,6 +55,8 @@ export default function CoinInput({
   };
 
   useEffect(() => {
+    console.log('chainSelected', chainSelected);
+    console.log('selectedChain', selectedChain);
     if (chainSelected && selectedCoin) {
       setVisibleCoinList(false); // Close modal when both coin and chain are selected
     }
@@ -76,11 +78,11 @@ export default function CoinInput({
     }
   }
 
-  const chains = [
-    { code: 'btc', name: 'Bitcoin' },
-    { code: 'eth', name: 'Ethereum' },
-    { code: 'ltc', name: 'Litecoin' },
-  ];
+  // const chains = [
+  //   { code: 'btc', name: 'Bitcoin' },
+  //   { code: 'eth', name: 'Ethereum' },
+  //   { code: 'ltc', name: 'Litecoin' },
+  // ];
 
   return (
     <div className="w-full">
@@ -91,7 +93,10 @@ export default function CoinInput({
             className,
           )}
         >
-          <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
+          <div
+            className="min-w-[80px]PAY WITH
+ border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600"
+          >
             <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
               {label}
             </span>

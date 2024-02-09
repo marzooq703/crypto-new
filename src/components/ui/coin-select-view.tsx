@@ -1,6 +1,6 @@
 import type { CoinTypes } from '@/types';
 import { useState } from 'react';
-import chains from '@/data/static/chain-list'; // Assuming you import chains from the correct location
+import chains from '@/data/static/chain-list';
 import { coinList } from '@/data/static/coin-list';
 import { SearchIcon } from '@/components/icons/search';
 import { useModal } from '@/components/modal-views/context';
@@ -11,40 +11,38 @@ interface CoinSelectViewTypes {
 
 export default function CoinSelectView({ onSelect }: CoinSelectViewTypes) {
   const { closeModal } = useModal();
-  const [selectedChain, setSelectedChain] = useState('');
+  const [selectedChain, setSelectedChain] = useState<string>('');
+  const [selectedCoin, setSelectedCoin] = useState<CoinTypes | null>(null);
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
 
   const handleChainSelection = (chainCode: string) => {
     setSelectedChain(chainCode);
-  };
-
-  const handleConfirm = () => {
-    if (selectedChain) {
-      // Use the selected coin from your logic
-      const selectedCoin: CoinTypes = coinList[0]; // Placeholder, replace with your logic
-      onSelect(selectedCoin, selectedChain);
-      closeModal();
-    } else {
-      // Handle case where no chain is selected
+    // Check if both coin and chain are selected when chain is selected
+    if (selectedCoin) {
+      confirmSelection(selectedCoin, chainCode);
     }
   };
 
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const handleSelectedCoin = (item: CoinTypes) => {
+    setSelectedCoin(item);
+    // Check if both coin and chain are selected when coin is selected
+    if (selectedChain) {
+      confirmSelection(item, selectedChain);
+    }
+  };
+
+  const confirmSelection = (coin: CoinTypes, chain: string) => {
+    onSelect(coin, chain);
+    closeModal();
+  };
+
   let coinListData = coinList;
 
   if (searchKeyword.length > 0) {
     coinListData = coinList.filter(function (item) {
       const name = item.name;
-      return (
-        name.match(searchKeyword) || name.toLowerCase().match(searchKeyword)
-      );
+      return name.match(new RegExp(searchKeyword, 'i')) !== null;
     });
-  }
-
-  function handleSelectedCoin(item: CoinTypes) {
-    // Handle the selection of the coin
-    // You can modify this logic as per your requirements
-    onSelect(item, selectedChain);
-    closeModal();
   }
 
   function handleSelectedCoinOnKeyDown(
