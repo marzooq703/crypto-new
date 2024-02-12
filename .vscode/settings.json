@@ -19,5 +19,6 @@
     "topup",
     "Unlockable",
     "UNSTAKE"
-  ]
+  ],
+  "liveServer.settings.port": 5501
 }
