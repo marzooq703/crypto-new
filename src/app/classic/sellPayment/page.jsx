@@ -1,6 +1,5 @@
 'use client';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
@@ -475,12 +474,13 @@ const SellPayment = () => {
 
   const router = useRouter();
 
-  // useEffect=(()=>{
-  //   const storedInrValue = localStorage.getItem('inrValue')
-  //   if(storedInrValue){                                      /* UseEffect Error */
-  //     setInrValue(parseFloat(storedInrValue))
-  //   }
-  // },[])
+  useEffect(() => {
+    const storedInrValue = localStorage.getItem('inrValue');
+    if (storedInrValue) {
+      /* UseEffect Error */
+      setInrValue(parseFloat(storedInrValue));
+    }
+  }, []);
   useEffect(() => {
     const fetchUsdtBalance = async () => {
       const web3 = new Web3(window.ethereum);
@@ -602,7 +602,7 @@ const SellPayment = () => {
       // navigate("/sell-crypto-failed");
     }
   };
-
+  console.log(inrValue, 'inrValue');
   return (
     <>
       <div className="max-w-screen-xl mx-auto mt-8 space-y-8">
@@ -626,7 +626,7 @@ const SellPayment = () => {
             </div>
             <div style={{ textAlign: 'center' }}>
               <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">{toValue.value}</strong>
+              <strong className="text-green-500">{inrValue}</strong>
             </div>
           </div>
         </div>
