@@ -19,6 +19,9 @@ const SellCrypto = () => {
   const router = useRouter();
 
   console.log('Inrvalue', inrValue);
+  const setInrValueInLocalStorage = (value) => {
+    localStorage.setItem('inrValue', JSON.stringify(value));
+  };
   useEffect(() => {
     const fetchConversionRate = async () => {
       try {
@@ -52,6 +55,10 @@ const SellCrypto = () => {
     }
   }, [sellingAmount]);
 
+  useEffect(() => {
+    setInrValueInLocalStorage(inrValue);
+  }, [inrValue]);
+
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
@@ -69,7 +76,7 @@ const SellCrypto = () => {
     setCryptoAmount(data);
     localStorage.setItem('cryptoAmount', JSON.stringify(data));
   };
-
+  console.log(cryptoAmount.value, 'cryptoAmount');
   return (
     <div>
       <Trade>
