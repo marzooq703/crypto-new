@@ -3,10 +3,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Button from '@/components/ui/button/button';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 const KYC = () => {
   const router = useRouter();
-
+  const searchParams = useSearchParams();
+  const search = searchParams.get('search');
   const [isLoading, setIsLoading] = useState(false);
   return (
     <>
