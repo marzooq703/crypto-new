@@ -1,5 +1,5 @@
 {
-  "name": "Criptic",
+  "name": "stable-crypto",
   "version": "2.7.1",
   "private": true,
   "scripts": {
