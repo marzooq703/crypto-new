@@ -10,7 +10,7 @@ export async function GET(request) {
       'x-product-instance-id': 'f3d073fe-bec8-4739-9b75-f650cc406a8d',
     },
     data: {
-      redirectURL: 'https://www.stablecrypto.in/',
+      redirectURL: 'http://localhost:3000/classic/kyc',
     },
   };
   let res = await axios

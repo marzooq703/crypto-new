@@ -6,10 +6,20 @@ import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
 const KYC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const search = searchParams.get('search');
-  const [isLoading, setIsLoading] = useState(false);
+  const success = searchParams.get('success');
+  const id = searchParams.get('id');
+
+  useEffect(() => {
+    if (success == 'false') {
+      alert('KYC Failed');
+    }
+    if (success != 'false' && id) {
+      alert('KYC was successfull');
+    }
+  }, []);
   return (
     <>
       <Button
