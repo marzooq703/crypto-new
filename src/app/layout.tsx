@@ -23,8 +23,9 @@ const fira_code = Fira_Code({
 });
 
 export const metadata = {
-  title: 'Criptic',
-  description: 'Criptic - React Next Web3 NFT Crypto Dashboard Template',
+  title: 'Stable Crypto - Safe and Reliable Crypto Market in India',
+  description:
+    'Stable Crypto - We use face recognition and other security technologies to secure your Crypto Transactions',
 };
 
 export default function RootLayout({
