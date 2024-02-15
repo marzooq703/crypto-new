@@ -36,6 +36,7 @@ export default function SignUpForm() {
           firstName: firstName,
           lastName: lastName,
           email: user.email,
+          uid: user.uid,
         });
       })
       .then(() => {
