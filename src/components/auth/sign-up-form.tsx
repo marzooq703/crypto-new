@@ -5,8 +5,9 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
-import { auth } from '../../lib/firebase';
+import { db, auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
+import { collection, addDoc } from 'firebase/firestore';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
@@ -27,9 +28,17 @@ export default function SignUpForm() {
 
   const signUp = (e: React.FormEvent) => {
     e.preventDefault();
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log(userCredential);
+        const user = userCredential.user;
+        return addDoc(collection(db, 'users'), {
+          firstName: firstName,
+          lastName: lastName,
+          email: user.email,
+        });
+      })
+      .then(() => {
         setSignUpStatus('success');
         router.push('/classic');
       })
