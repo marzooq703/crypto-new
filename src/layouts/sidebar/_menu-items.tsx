@@ -112,6 +112,10 @@ export const defaultMenuItems = [
         name: 'Sign up',
         href: routes.signUp,
       },
+      {
+        name: 'KYC verification',
+        href: routes.kyc,
+      },
       // {
       //   name: 'Reset pin',
       //   href: routes.resetPin,

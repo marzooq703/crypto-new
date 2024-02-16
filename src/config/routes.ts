@@ -24,6 +24,7 @@ const routes = {
   coinDetails: '/coin-details',
   signIn: '/authentication',
   signUp: '/authentication/sign-up',
+  kyc: '/classic/kyc',
   resetPin: '/authentication/reset-pin',
   forgetPassword: '/authentication/forget-password',
   tradingBot: '/trading-bot',
