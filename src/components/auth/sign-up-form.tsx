@@ -24,10 +24,17 @@ export default function SignUpForm() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [agreeChecked, setAgreeChecked] = useState(false);
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
   const signUp = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!agreeChecked) {
+      alert('Please agree to the terms and conditions.');
+      return;
+    }
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -36,6 +43,7 @@ export default function SignUpForm() {
           firstName: firstName,
           lastName: lastName,
           email: user.email,
+          contactNumber: contactNumber,
           uid: user.uid,
         });
       })
@@ -88,6 +96,13 @@ export default function SignUpForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+      <Input
+        type="text"
+        placeholder="Contact Number"
+        inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+        value={contactNumber}
+        onChange={(e) => setContactNumber(e.target.value)}
+      />
       <div className="relative">
         <Input
           type={state ? 'text' : 'password'}
@@ -125,6 +140,8 @@ export default function SignUpForm() {
         containerClassName="!items-start"
         inputClassName="mt-1 focus:!ring-offset-[1px]"
         size="sm"
+        // checked={agreeChecked}
+        // onChange={(e) => setAgreeChecked(e.target.checked)}
       />
       <Button
         type="submit"
