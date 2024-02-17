@@ -1,30 +1,35 @@
 'use client';
 import Logo from '@/components/ui/logo';
+import { useState } from 'react';
 import Image from '@/components/ui/image';
 import SignUpForm from '@/components/auth/sign-up-form';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import { useRouter } from 'next/navigation';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
+import SignUpAdditionalInfoModal from '@/app/authentication/AdditionalInfo/page';
 
 // import images and icons
 import BitcoinImg from '@/assets/images/bit-coin.png';
 import GoogleIcon from '@/assets/images/google-icon.svg';
 import routes from '@/config/routes';
+import { User } from 'firebase/auth';
 
 export default function SignUp() {
   const router = useRouter();
+  const [showAdditionalInfoModal, setShowAdditionalInfoModal] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const signUpWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       // The signed-in user info.
-      const user = result.user;
-      console.log(user);
+      const signedInUser = result.user; // rename to avoid naming conflicts
+      setUser(signedInUser); // set the user
+      setShowAdditionalInfoModal(true);
 
-      // Redirect to the home page after successful sign-in
-      router.push('/'); // Replace '/' with your desired home page route
+      console.log(user);
     } catch (error) {
       console.error(error);
     }
@@ -55,6 +60,9 @@ export default function SignUp() {
               </div>
               Sign up with Google
             </button>
+            {showAdditionalInfoModal && (
+              <SignUpAdditionalInfoModal user={user} />
+            )}
             <p className="flex items-center justify-center gap-3 text-sm text-[#4B5563] before:h-[1px] before:w-full before:border-t before:border-dashed after:h-[1px] after:w-full after:border-t after:border-dashed dark:text-gray-300 dark:before:border-gray-500 dark:after:border-gray-500 ">
               or
             </p>
