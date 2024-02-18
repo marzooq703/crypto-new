@@ -12,7 +12,13 @@ import { SwapIcon } from '@/components/icons/swap-icon';
 import Trade from '@/components/ui/trade';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
+import TronWeb from 'tronweb';
 
+const tronWeb = new TronWeb({
+  fullHost: 'https://api.trongrid.io',
+  solidityNode: 'https://api.trongrid.io',
+  eventServer: 'https://api.trongrid.io',
+});
 const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
   try {
     if (!window.ethereum) {
@@ -23,15 +29,38 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: getChainId(network) }],
     });
-
+    console.log(network, 'net');
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
-    addr = ethers.utils.getAddress(addr);
+    const tronWeb = window.tronWeb;
+    const addr_tron = 'TNqSwySSVeVbSVxxhXku8BZCHPqdJ7dUaX';
 
-    if (network === 'matic') {
-      await sendUSDT(signer, addr, amount);
+    addr = ethers.utils.getAddress(addr);
+    const tron = false;
+
+    if (tron) {
+      const useUSDT = true;
+      const useUSDC = false;
+      if (useUSDT) {
+        await sendUSDT_Trc20(tronWeb, addr_tron, amount);
+      } else if (useUSDC) {
+        await sendUSDC_Trc20(tronWeb, addr_tron, amount);
+      }
+    } else if (network) {
+      // matic, eth ,bnb
+      const useUSDT = false;
+      const useUSDC = true;
+      if (useUSDT) {
+        await sendUSDT(signer, addr, amount);
+      } else if (useUSDC) {
+        await sendUSDC(signer, addr, amount);
+      }
+      // else {
+      //   await sendFDUSD(signer, addr, amount);
+      // }
     } else {
+      // Handle Ether transactions for other networks
       const tx = await signer.sendTransaction({
         to: addr,
         value: ethers.utils.parseEther(amount),
@@ -40,9 +69,38 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       setTxs([tx]);
     }
   } catch (err) {
+    // if no wallet is found
     setError(err);
     console.log(err.message);
     throw err;
+  }
+};
+
+const sendUSDT_Trc20 = async (tronWeb, toAddress, amount) => {
+  try {
+    const usdtContractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+    const usdtContract = await tronWeb.contract().at(usdtContractAddress);
+    const amountSun = tronWeb.toSun(amount);
+
+    await usdtContract.transfer(toAddress, amountSun).send();
+    console.log(amount, 'USDT sent to:', toAddress);
+  } catch (error) {
+    console.error('Error sending USDT:', error.message);
+    throw error;
+  }
+};
+
+const sendUSDC_Trc20 = async (tronWeb, toAddress, amount) => {
+  try {
+    const usdcContractAddress = 'TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8';
+    const usdcContract = await tronWeb.contract().at(usdcContractAddress);
+    const amountSun = tronWeb.toSun(amount);
+
+    await usdcContract.transfer(toAddress, amountSun).send();
+    console.log(amount, 'USDC sent to:', toAddress);
+  } catch (error) {
+    console.error('Error sending USDC:', error.message);
+    throw error;
   }
 };
 const usdtContractAbi = [
@@ -120,6 +178,7 @@ const usdtContractAbi = [
     type: 'function',
   },
 ];
+
 const sendUSDT = async (signer, toAddress, amount) => {
   try {
     const web3 = new Web3(window.ethereum);
@@ -139,16 +198,16 @@ const sendUSDT = async (signer, toAddress, amount) => {
 
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
-      usdtMaticContractAddress,
+      usdtBnbContractAddress,
     );
 
     const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
     const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
     const gasPriceWei = await web3.eth.getGasPrice(); // Dynamically fetch current gas price
     const gasPriceHex = web3.utils.toHex(gasPriceWei);
-    const gasLimit = 50000;
+    const gasLimit = 70000;
 
-    await usdtContract.methods.transfer(toAddress, amountWei1).send({
+    await usdtContract.methods.transfer(toAddress, amountWei).send({
       from: await signer.getAddress(),
       gasPrice: gasPriceHex,
       gasLimit,
@@ -159,6 +218,276 @@ const sendUSDT = async (signer, toAddress, amount) => {
     throw error;
   }
 };
+const usdcContractAbi = [
+  {
+    constant: true,
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'symbol',
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'decimals',
+    outputs: [
+      {
+        name: '',
+        type: 'uint8',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_spender',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        name: '_owner',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        name: 'balance',
+        type: 'uint256',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_to',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'transfer',
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_from',
+        type: 'address',
+      },
+      {
+        name: '_to',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'transferFrom',
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
+const sendUSDC = async (signer, toAddress, amount) => {
+  try {
+    const web3 = new Web3(window.ethereum);
+    const usdcMaticContractAddress =
+      '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
+    const usdcBnbContractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
+
+    const usdcContract = new web3.eth.Contract(
+      usdcContractAbi,
+      usdcBnbContractAddress,
+    );
+
+    const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
+    const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
+    const gasPriceWei = await web3.eth.getGasPrice();
+    const gasPriceHex = web3.utils.toHex(gasPriceWei);
+    const gasLimit = 90000;
+
+    await usdcContract.methods.transfer(toAddress, amountWei).send({
+      from: await signer.getAddress(),
+      gasPrice: gasPriceHex,
+      gasLimit,
+    });
+
+    console.log(amount, toAddress);
+  } catch (error) {
+    console.error('Error sending USDC', error.message);
+    throw error;
+  }
+};
+
+// const fdusdContractAbi = [
+//   {
+//     constant: true,
+//     inputs: [],
+//     name: 'name',
+//     outputs: [{ name: '', type: 'string' }],
+//     payable: false,
+//     stateMutability: 'view',
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [],
+//     name: 'symbol',
+//     outputs: [{ name: '', type: 'string' }],
+//     payable: false,
+//     stateMutability: 'view',
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [],
+//     name: 'decimals',
+//     outputs: [{ name: '', type: 'uint8' }],
+//     payable: false,
+//     stateMutability: 'view',
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: '_spender', type: 'address' },
+//       { name: '_value', type: 'uint256' },
+//     ],
+//     name: 'approve',
+//     outputs: [{ name: 'success', type: 'bool' }],
+//     payable: false,
+//     stateMutability: 'nonpayable',
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: '_owner', type: 'address' }],
+//     name: 'balanceOf',
+//     outputs: [{ name: 'balance', type: 'uint256' }],
+//     payable: false,
+//     stateMutability: 'view',
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: '_to', type: 'address' },
+//       { name: '_value', type: 'uint256' },
+//     ],
+//     name: 'transfer',
+//     outputs: [{ name: 'success', type: 'bool' }],
+//     payable: false,
+//     stateMutability: 'nonpayable',
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: '_from', type: 'address' },
+//       { name: '_to', type: 'address' },
+//       { name: '_value', type: 'uint256' },
+//     ],
+//     name: 'transferFrom',
+//     outputs: [{ name: 'success', type: 'bool' }],
+//     payable: false,
+//     stateMutability: 'nonpayable',
+//     type: 'function',
+//   },
+// ];
+
+// const sendFDUSD = async (signer, toAddress, amount) => {
+//   try {
+//     const web3 = new Web3(window.ethereum);
+//     const fdusdMaticContractAddress = 'Your FDUSD Matic Contract Address';
+
+//     const fdusdContract = new web3.eth.Contract(
+//       fdusdContractAbi,
+//       fdusdMaticContractAddress,
+//     );
+
+//     const amountWei = web3.utils.toWei(amount, 'ether');
+//     const gasPriceWei = await web3.eth.getGasPrice();
+//     const gasPriceHex = web3.utils.toHex(gasPriceWei);
+//     const gasLimit = 50000;
+
+//     await fdusdContract.methods.transfer(toAddress, amountWei).send({
+//       from: await signer.getAddress(),
+//       gasPrice: gasPriceHex,
+//       gasLimit,
+//     });
+
+//     console.log(amount, toAddress);
+//   } catch (error) {
+//     console.error('Error sending FDUSD', error.message);
+//     throw error;
+//   }
+// };
 
 const getChainId = (network) => {
   switch (network) {
@@ -177,6 +506,7 @@ const SellCrypto = () => {
 
   const [sellingAmount, setSellingAmount] = useState({});
   const [usdtBalance, setUsdtBalance] = useState({});
+  const [usdcBalance, setUsdcBalance] = useState({});
 
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [, setError] = useState();
@@ -186,18 +516,17 @@ const SellCrypto = () => {
   console.log(cryptowalletAmount, 'hjh');
 
   useEffect(() => {
-    const fetchUsdtBalance = async () => {
-      const web3 = new Web3(window.ethereum);
-
+    const fetchBalances = async () => {
       try {
         if (!window.ethereum) {
           throw new Error('No crypto wallet found. Please install MetaMask.');
         }
+
+        const web3 = new Web3(window.ethereum);
         const usdtMaticContractAddress =
           '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
-        const usdtEthContractAddress =
-          '0xdac17f958d2ee523a2206206994597c13d831ec7';
-
+        const usdcMaticContractAddress =
+          '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
@@ -208,25 +537,40 @@ const SellCrypto = () => {
           usdtContractAbi,
           usdtMaticContractAddress,
         );
+        const usdcContract = new web3.eth.Contract(
+          usdcContractAbi,
+          usdcMaticContractAddress,
+        );
 
         const usdtBalanceWei = await usdtContract.methods
           .balanceOf(address)
           .call();
 
-        const usdtBalance = parseFloat(
+        const usdcBalanceWei = await usdcContract.methods
+          .balanceOf(address)
+          .call();
+
+        const usdtBalances = parseFloat(
           web3.utils.fromWei(usdtBalanceWei, 'ether'),
         );
-        const Balance = `${usdtBalance}`.slice(0, -4);
+        const usdcBalances = parseFloat(
+          web3.utils.fromWei(usdcBalanceWei, 'ether'),
+        );
 
-        setUsdtBalance(Balance);
+        const usdtBalance = `${usdtBalances}`.slice(0, -4);
+        const usdcBalance = `${usdcBalances}`.slice(0, -4);
 
-        console.log('Initial USDT Balance:', Balance);
+        setUsdtBalance(usdtBalance);
+        setUsdcBalance(usdcBalance);
+
+        console.log('Initial USDT Balance:', usdtBalance);
+        console.log('Initial USDC Balance:', usdcBalance);
       } catch (error) {
-        console.error('Error fetching USDT balance', error.message);
+        console.error('Error fetching balances:', error.message);
       }
     };
 
-    fetchUsdtBalance();
+    fetchBalances();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -236,17 +580,17 @@ const SellCrypto = () => {
     console.log(sellingAmountValue, 'sellingAmountValue');
     console.log(usdtBalance, 'usdtBalance');
     try {
-      if (sellingAmountValue > usdtBalance) {
-        console.error('Insufficient balance. Please enter a valid amount.');
-      } else {
-        await startPayment({
-          setError,
-          setTxs,
-          amount: `${sellingAmount.value}`,
-          addr: '0xb141A92Eabd9F05D21bB388a8AFfcA6d6Eea752B',
-          network: 'matic', //  "eth", "matic", "bnb",
-        });
-      }
+      // if (sellingAmountValue > usdtBalance) {
+      //   console.error('Insufficient balance. Please enter a valid amount.');
+      // } else {
+      await startPayment({
+        setError,
+        setTxs,
+        amount: `${sellingAmount.value}`,
+        addr: '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B',
+        network: 'bnb', //  "eth", "matic", "bnb",
+      });
+      // }
 
       // navigate("/sell-crypto-details");
     } catch (err) {
