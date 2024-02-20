@@ -6,10 +6,11 @@ import Image from 'next/image';
 import SignInForm from '@/components/auth/sign-in-form';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import routes from '@/config/routes';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/components/Loading/page';
+import SignUpAdditionalInfoModal from './AdditionalInfo/page';
 
 // import images and icons
 import BitcoinImg from '@/assets/images/bit-coin.png';
@@ -18,19 +19,27 @@ import GoogleIcon from '@/assets/images/google-icon.svg';
 export default function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [showAdditionalInfoModal, setShowAdditionalInfoModal] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      // The signed-in user info.
-      const user = result.user;
-      console.log(user);
+      const signedInUser = result.user;
+      setUser(signedInUser);
 
-      // Redirect to the home page after successful sign-in
-      router.push('/'); // Replace '/' with your desired home page route
+      // Check if the user is already registered in Firebase Authentication
+      if (!signedInUser) {
+        setShowAdditionalInfoModal(true);
+      } else {
+        router.push('/');
+      } // NOT WORKING, NEED TO CHECK IF THERE IS USER IS IN THE AUTHENTICATION .
     } catch (error) {
-      console.error(error);
+      // IF  THERE IS NO USER IN THE AUTHENTICATION. WE MUST ASK FOR THE FIRST&LAST NAME, CONTACT NO.
+      console.error(error); // ITS SIGNING IN WITHOUT ASKING THEM. ADDITIONALINFOMODAL NOT WORKING.
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,7 +90,7 @@ export default function SignIn() {
           </p>
           <SignInForm />
           <p className="text-sm tracking-[0.5px] text-[#4B5563] dark:text-gray-300">
-            Not member yet?{' '}
+            Not a member yet?{' '}
             <AnchorLink
               href={routes.signUp}
               className="font-medium underline hover:text-black/80 dark:text-gray-300"
@@ -94,6 +103,7 @@ export default function SignIn() {
       <div className="relative hidden bg-[#F3F4F6] lg:block">
         <Image src={BitcoinImg} alt="sign-up" fill className="object-cover" />
       </div>
+      {showAdditionalInfoModal && <SignUpAdditionalInfoModal user={user} />}
     </div>
   );
 }
