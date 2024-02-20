@@ -7,7 +7,7 @@ import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import { db, auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc } from 'firebase/firestore';
+import { setDoc, doc } from 'firebase/firestore';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
@@ -43,17 +43,26 @@ export default function SignUpForm() {
     }
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
-        return addDoc(collection(db, 'users'), {
+        return await setDoc(doc(db, 'users', email), {
           firstName: firstName,
           lastName: lastName,
           email: user.email,
           contactNumber: contactNumber,
           uid: user.uid,
+          isKycVerified: false,
         });
+        // return addDoc(collection(db, 'users'), {
+        //   firstName: firstName,
+        //   lastName: lastName,
+        //   email: user.email,
+        //   contactNumber: contactNumber,
+        //   uid: user.uid,
+        // });
       })
-      .then(() => {
+      .then((val) => {
+        console.log('AUTH DA', val);
         setSignUpStatus('success');
         router.push('/classic');
       })
