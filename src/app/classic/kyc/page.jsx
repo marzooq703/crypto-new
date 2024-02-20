@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import Button from '@/components/ui/button/button';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
-
+import { getFirestore } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
 const KYC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
