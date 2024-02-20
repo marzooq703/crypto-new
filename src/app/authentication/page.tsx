@@ -26,20 +26,14 @@ export default function SignIn() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const signedInUser = result.user;
-      setUser(signedInUser);
+      // The signed-in user info.
+      const signedInUser = result.user; // rename to avoid naming conflicts
+      setUser(signedInUser); // set the user
+      setShowAdditionalInfoModal(true);
 
-      // Check if the user is already registered in Firebase Authentication
-      if (!signedInUser) {
-        setShowAdditionalInfoModal(true);
-      } else {
-        router.push('/');
-      } // NOT WORKING, NEED TO CHECK IF THERE IS USER IS IN THE AUTHENTICATION .
+      console.log(user);
     } catch (error) {
-      // IF  THERE IS NO USER IN THE AUTHENTICATION. WE MUST ASK FOR THE FIRST&LAST NAME, CONTACT NO.
-      console.error(error); // ITS SIGNING IN WITHOUT ASKING THEM. ADDITIONALINFOMODAL NOT WORKING.
-    } finally {
-      setLoading(false);
+      console.error(error);
     }
   };
 
@@ -85,6 +79,8 @@ export default function SignIn() {
             </div>
             Log in with Google
           </button>
+          {showAdditionalInfoModal && <SignUpAdditionalInfoModal user={user} />}
+
           <p className="flex items-center justify-center gap-3 text-sm text-[#4B5563] before:h-[1px] before:w-full before:border-t before:border-dashed after:h-[1px] after:w-full after:border-t after:border-dashed dark:text-gray-300 dark:before:border-gray-500 dark:after:border-gray-500 ">
             or
           </p>
@@ -103,7 +99,6 @@ export default function SignIn() {
       <div className="relative hidden bg-[#F3F4F6] lg:block">
         <Image src={BitcoinImg} alt="sign-up" fill className="object-cover" />
       </div>
-      {showAdditionalInfoModal && <SignUpAdditionalInfoModal user={user} />}
     </div>
   );
 }
