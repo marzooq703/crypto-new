@@ -7,7 +7,7 @@ import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import { db, auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc, updateDoc } from 'firebase/firestore';
 
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
@@ -45,7 +45,7 @@ export default function SignUpForm() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        return await setDoc(doc(db, 'users', email), {
+        await setDoc(doc(db, 'users', email), {
           firstName: firstName,
           lastName: lastName,
           email: user.email,
@@ -53,6 +53,7 @@ export default function SignUpForm() {
           uid: user.uid,
           isKycVerified: false,
         });
+        return user;
         // return addDoc(collection(db, 'users'), {
         //   firstName: firstName,
         //   lastName: lastName,
@@ -61,13 +62,24 @@ export default function SignUpForm() {
         //   uid: user.uid,
         // });
       })
-      .then((val) => {
-        console.log('AUTH DA', val);
+      .then(async (user) => {
+        console.log('User registered successflly:', user);
+        const isKYCsuccessful = true;
+        if (isKYCsuccessful) {
+          await updateDoc(doc(db, 'users', email), {
+            isKycVerified: true,
+          });
+        }
         setSignUpStatus('success');
         router.push('/classic');
       })
+      // .then((val) => {
+      //   console.log('AUTH DA', val);
+      //   setSignUpStatus('success');
+      //   router.push('/classic');
+      // })
       .catch((error) => {
-        console.log(error);
+        console.error('error registering:', error);
         setSignUpStatus('failed');
       });
   };

@@ -9,12 +9,34 @@ import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 import axios from 'axios';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const BuyCrypto = () => {
   const [selectedNetwork, setSelectedNetwork] = useState('matic');
   const [inrValue, setInrValue] = useState('');
   const [usdtValue, setUsdtValue] = useState(0);
+  const [isKYCVerified, setIsKYCVerified] = useState(false); // State to hold KYC verification status
+  const [userId, setUserId] = useState(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        console.log('User:', user);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  console.log('User ID:', userId);
 
   useEffect(() => {
     const fetchConversionRate = async () => {
@@ -49,6 +71,25 @@ const BuyCrypto = () => {
     }
   }, [inrValue]);
 
+  useEffect(() => {
+    const checkKYCStatus = async () => {
+      try {
+        const docRef = doc(db, 'users', 'user_id');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setIsKYCVerified(userData.isKYCVerified);
+        } else {
+          console.log('No such document!, check KYC verification.');
+        }
+      } catch (error) {
+        console.error('Error getting document:', error);
+      }
+    };
+
+    checkKYCStatus();
+  }, []);
+
   const handleNetworkChange = (e) => {
     setSelectedNetwork(e.target.value);
   };
@@ -60,6 +101,24 @@ const BuyCrypto = () => {
   const handleInrInputChange = (e) => {
     setInrValue(e.target.value);
   };
+
+  const handleVerifyKYC = () => {
+    router.push('/classic/kyc');
+  };
+
+  if (!isKYCVerified) {
+    return (
+      <div>
+        <p>
+          You are not authorized to access this page. Please Verify KYC before
+          buying or selling crypto.
+        </p>
+        <Button onClick={handleVerifyKYC} className="mt-4">
+          Verify KYC
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div>
