@@ -9,13 +9,18 @@ import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 import axios from 'axios';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore'; // Import Firestore related functions
+import { db } from '../../../lib/firebase'; // Assuming you have a 'db' object for Firestore
 
 const SellCrypto = () => {
-  const [selectedNetwork, setSelectedNetwork] = useState('erc20');
-  const [toggleCoin, setToggleCoin] = useState(false);
+  // const [selectedNetwork, setSelectedNetwork] = useState('erc20');
+  // const [toggleCoin, setToggleCoin] = useState(false);
   const [sellingAmount, setSellingAmount] = useState({});
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [inrValue, setInrValue] = useState(0);
+  const [isKYCVerified, setIsKYCVerified] = useState(false);
+
   const router = useRouter();
 
   console.log('Inrvalue', inrValue);
@@ -56,16 +61,38 @@ const SellCrypto = () => {
   }, [sellingAmount]);
 
   useEffect(() => {
-    setInrValueInLocalStorage(inrValue);
-  }, [inrValue]);
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setIsKYCVerified(userData.isKYCVerified);
+          } else {
+            console.log('No such document!');
+          }
+        } catch (error) {
+          console.error('Error getting document:', error);
+        }
+      }
+    });
 
-  const handleNetworkChange = (e) => {
-    setSelectedNetwork(e.target.value);
-  };
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = () => {
     router.push('/classic/sellPayment');
   };
+
+  const handleVerifyKYC = () => {
+    router.push('/classic/kyc');
+  };
+
+  // const handleNetworkChange = (e) => {
+  //   setSelectedNetwork(e.target.value);
+  // };
 
   const handleCoinInputChange = (data) => {
     setSellingAmount(data);
@@ -77,6 +104,24 @@ const SellCrypto = () => {
     localStorage.setItem('cryptoAmount', JSON.stringify(data));
   };
   console.log(cryptoAmount.value, 'cryptoAmount');
+
+  useEffect(() => {
+    setInrValueInLocalStorage(inrValue);
+  }, [inrValue]);
+
+  if (!isKYCVerified) {
+    return (
+      <div>
+        <p>
+          You are not authorized to access this page. Please Verify KYC before
+          buying or selling crypto.
+        </p>
+        <Button onClick={handleVerifyKYC} className="mt-4">
+          Verify KYC
+        </Button>
+      </div>
+    );
+  }
   return (
     <div>
       <Trade>
