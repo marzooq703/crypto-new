@@ -18,7 +18,7 @@ export default function SignUpAdditionalInfoModal({ user }) {
         contactNumber: contactNumber,
         uid: user.uid,
       });
-      router.push('/');
+      router.push('/classic/kyc');
     } catch (error) {
       console.error('Error saving additional information:', error);
     }
