@@ -71,7 +71,7 @@ export default function SignUpForm() {
           });
         }
         setSignUpStatus('success');
-        router.push('/classic');
+        router.push('/classic/kyc');
       })
       // .then((val) => {
       //   console.log('AUTH DA', val);

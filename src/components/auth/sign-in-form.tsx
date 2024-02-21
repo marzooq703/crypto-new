@@ -35,7 +35,7 @@ export default function SignInForm() {
       );
       console.log(userCredential);
       setSignInStatus('success');
-      router.push('/classic');
+      router.push('/classic/kyc');
     } catch (error) {
       console.error(error);
       setSignInStatus('failed');
