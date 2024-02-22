@@ -16,9 +16,39 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const BuyCrypto = () => {
   const [inrValue, setInrValue] = useState('');
   const [usdtValue, setUsdtValue] = useState(0);
+  const [userEmail, setUserEmail] = useState(null);
 
+  console.log(userEmail, 'email');
   console.log(usdtValue, 'usdtValue');
   const router = useRouter();
+
+  useEffect(() => {
+    // Fetch user email if not already fetched
+    const fetchUserEmail = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        // Handle the case where the user is not logged in
+        console.error('User is not logged in');
+        return;
+      }
+
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setUserEmail(userData.email);
+        } else {
+          console.error('User document does not exist');
+        }
+      } catch (error) {
+        console.error('Error fetching user document:', error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   const fetchConversionRate = async () => {
     try {
@@ -68,6 +98,19 @@ const BuyCrypto = () => {
 
   const handleSubmit = async () => {
     try {
+      // Fetch user email if not already fetched
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!userEmail && user) {
+        setUserEmail(user.email);
+      }
+
+      // Ensure user email is available
+      if (!userEmail) {
+        // console.error('User email is not available');
+        return;
+      }
+
       // Create a transaction data object
       const transactionData = {
         currency: 'INR',
@@ -78,7 +121,7 @@ const BuyCrypto = () => {
 
       // Add the transaction data to the Firestore collection
       await setDoc(
-        doc(db, 'transactions', generateTransactionId()),
+        doc(db, 'transactions', generateTransactionId(userEmail)),
         transactionData,
       );
 
@@ -93,16 +136,9 @@ const BuyCrypto = () => {
     }
   };
 
-  const generateTransactionId = () => {
-    // Generate a timestamp
+  const generateTransactionId = (userEmail) => {
     const timestamp = new Date().getTime(); // Using getTime() to get the number of milliseconds since the Unix epoch
-
-    // Generate a random string of characters
-    const randomString = Math.random().toString(36).substring(7); // Using substring to remove the '0.' prefix
-
-    // Combine the timestamp and the random string to create the transaction ID
-    const transactionId = timestamp + '-' + randomString;
-
+    const transactionId = `${userEmail}`;
     return transactionId;
   };
 
