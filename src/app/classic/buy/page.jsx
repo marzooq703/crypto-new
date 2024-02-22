@@ -9,7 +9,7 @@ import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 import axios from 'axios';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
@@ -67,20 +67,43 @@ const BuyCrypto = () => {
   };
 
   const handleSubmit = async () => {
-    localStorage.setItem('inrValue', JSON.stringify(inrValue));
-    localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
+    try {
+      // Create a transaction data object
+      const transactionData = {
+        currency: 'INR',
+        amount: inrValue,
+        equivalentUSDT: usdtValue,
+        timestamp: new Date().toISOString(), // Convert date to ISO string format
+      };
 
-    // const transactionData = {
-    //   inrValue,
-    //   usdtValue,
-    //   timestamp: new Date(),
-    // };
-    // try {
-    // await db.collection('transactions').add(transactionData);
-    router.push('/classic/payment');
-    // } catch (error) {
-    //   console.error('error saving transaction:', error);
-    // }
+      // Add the transaction data to the Firestore collection
+      await setDoc(
+        doc(db, 'transactions', generateTransactionId()),
+        transactionData,
+      );
+
+      // Store values in local storage
+      localStorage.setItem('inrValue', JSON.stringify(inrValue));
+      localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
+
+      // Navigate to the payment page
+      router.push('/classic/payment');
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+    }
+  };
+
+  const generateTransactionId = () => {
+    // Generate a timestamp
+    const timestamp = new Date().getTime(); // Using getTime() to get the number of milliseconds since the Unix epoch
+
+    // Generate a random string of characters
+    const randomString = Math.random().toString(36).substring(7); // Using substring to remove the '0.' prefix
+
+    // Combine the timestamp and the random string to create the transaction ID
+    const transactionId = timestamp + '-' + randomString;
+
+    return transactionId;
   };
 
   useEffect(() => {
