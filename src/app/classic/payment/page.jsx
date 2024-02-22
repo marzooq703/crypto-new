@@ -2,6 +2,7 @@
 
 import QRCode from 'react-qr-code';
 import { useEffect, useState } from 'react';
+import { db } from '@/lib/firebase';
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
@@ -9,48 +10,87 @@ import { useEffect, useState } from 'react';
 
 const BuyPayment = () => {
   const [coinValue, setCoinValue] = useState({});
+  const [inrValue, setInrValue] = useState('');
+  const [usdtValue, setUsdtValue] = useState('');
+  const [transactions, setTransaction] = useState(null);
+
+  useEffect(() => {
+    const storedInrValue = localStorage.getItem('inrValue');
+    const storedUsdtValue = localStorage.getItem('usdtValue');
+
+    if (storedInrValue) {
+      setInrValue(JSON.parse(storedInrValue));
+    }
+    if (storedUsdtValue) {
+      setUsdtValue(JSON.parse(storedUsdtValue));
+    }
+    console.log(storedInrValue, 'inrvalue');
+    console.log(storedUsdtValue, 'USDT value');
+  }, []);
 
   useEffect(() => {
     let storedValue;
     if (typeof window !== 'undefined') {
-      storedValue = JSON.parse(localStorage.getItem('datas')) || {};
+      storedValue = JSON.parse(localStorage.getItem('datas')) || { value: '' };
     }
     setCoinValue(storedValue);
   }, []); // Note the correct placement of the dependency array here
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      if (typeof window !== 'undefined') {
-        // Remove 'datas' from local storage when the URL changes
-        localStorage.removeItem('datas');
+    const fetchTransaction = async () => {
+      try {
+        // Retrieve the latest transaction from Firestore
+        const transactionSnapshot = await db
+          .collection('transactions')
+          .orderBy('timestamp', 'desc')
+          .limit(1)
+          .get();
+
+        if (!transactionSnapshot.empty) {
+          // Extract transaction data
+          const transactionData = transactionSnapshot.docs[0].data();
+          setTransaction(transactionData);
+        }
+      } catch (error) {
+        console.error('Error fetching transaction:', error);
       }
     };
 
-    if (typeof window !== 'undefined') {
-      // Subscribe to the event when the component mounts
-      window.addEventListener('beforeunload', handleRouteChange);
-    }
-
-    // Unsubscribe from the event when the component unmounts
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('beforeunload', handleRouteChange);
-      }
-    };
+    fetchTransaction();
   }, []);
+  // useEffect(() => {
+  //   const handleRouteChange = () => {
+  //     if (typeof window !== 'undefined') {
+  //       // Remove 'datas' from local storage when the URL changes
+  //       localStorage.removeItem('datas');
+  //     }
+  //   };
+
+  //   if (typeof window !== 'undefined') {
+  //     // Subscribe to the event when the component mounts
+  //     window.addEventListener('beforeunload', handleRouteChange);
+  //   }
+
+  //   // Unsubscribe from the event when the component unmounts
+  //   return () => {
+  //     if (typeof window !== 'undefined') {
+  //       window.removeEventListener('beforeunload', handleRouteChange);
+  //     }
+  //   };
+  // }, []);
 
   // Additional check to prevent 0, null, or undefined
-  if (
-    coinValue.value === 0 ||
-    coinValue.value === null ||
-    coinValue.value === undefined
-  ) {
-    return (
-      <div className="max-w-screen-xl mx-auto mt-8 text-red-600">
-        Error: Invalid CoinValue. Please provide a valid value.
-      </div>
-    );
-  }
+  // if (
+  //   coinValue.value === 0 ||
+  //   coinValue.value === null ||
+  //   coinValue.value === undefined
+  // ) {
+  //   return (
+  //     <div className="max-w-screen-xl mx-auto mt-8 text-red-600">
+  //       Error: Invalid CoinValue. Please provide a valid value.
+  //     </div>
+  //   );
+  // }
 
   //   const handlePayButtonClick = () => {
   // Simulating a payment success or failure
@@ -82,11 +122,9 @@ const BuyPayment = () => {
         {/* Line: You are about to receive __ Eth for __ rupees in wallet */}
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
-          <strong className="text-blue-500">1.5 Eth</strong> for{' '}
-          <strong className="text-green-500">
-            {coinValue.value || 0}rupees
-          </strong>{' '}
-          in wallet.
+          <strong className="text-blue-500">{usdtValue || 0}</strong> for{' '}
+          <strong className="text-green-500">{inrValue || 0} rupees</strong> in
+          wallet.
         </p>
 
         {/* Medium size box showing two things */}
@@ -94,13 +132,13 @@ const BuyPayment = () => {
           {/* Left side: To pay __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">To pay</p>
-            <strong className="text-red-500">{coinValue.value || 0}</strong>
+            <strong className="text-red-500">{inrValue || 0}</strong>
           </div>
 
           {/* Right side: You get __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">You get</p>
-            <strong className="text-green-500">1.5</strong>
+            <strong className="text-green-500">{usdtValue || 0}</strong>
           </div>
         </div>
       </div>

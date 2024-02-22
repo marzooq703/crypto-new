@@ -109,19 +109,19 @@ const SellCrypto = () => {
     setInrValueInLocalStorage(inrValue);
   }, [inrValue]);
 
-  if (!isKYCVerified) {
-    return (
-      <div>
-        <p>
-          You are not authorized to access this page. Please Verify KYC before
-          buying or selling crypto.
-        </p>
-        <Button onClick={handleVerifyKYC} className="mt-4">
-          Verify KYC
-        </Button>
-      </div>
-    );
-  }
+  // if (!isKYCVerified) {
+  //   return (
+  //     <div>
+  //       <p>
+  //         You are not authorized to access this page. Please Verify KYC before
+  //         buying or selling crypto.
+  //       </p>
+  //       <Button onClick={handleVerifyKYC} className="mt-4">
+  //         Verify KYC
+  //       </Button>
+  //     </div>
+  //   );
+  // }
   return (
     <div>
       <Trade>
