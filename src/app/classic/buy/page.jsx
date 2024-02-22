@@ -107,7 +107,7 @@ const BuyCrypto = () => {
 
       // Ensure user email is available
       if (!userEmail) {
-        // console.error('User email is not available');
+        console.error('User email is not available');
         return;
       }
 
