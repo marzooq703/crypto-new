@@ -22,6 +22,11 @@ const chains: Chain[] = [
     code: 'MATIC',
     icon: 'matic_icon_url.png',
   },
+  {
+    name: 'TRON',
+    code: 'Tron',
+    icon: 'matic_icon_url.png',
+  },
   // Add more chains as needed
 ];
 

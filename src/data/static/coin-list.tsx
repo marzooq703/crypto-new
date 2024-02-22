@@ -43,12 +43,12 @@ export const coinList = [
     name: 'FD USD Coin',
     price: 0.34,
   },
-  // {
-  //   icon: <Doge />,
-  //   code: 'DOGE',
-  //   name: 'Doge Coin',
-  //   price: 0.07,
-  // },
+  {
+    icon: <Doge />,
+    code: 'Tron',
+    name: 'Trx',
+    price: 0.07,
+  },
 ];
 
 export const CoinExplore = [

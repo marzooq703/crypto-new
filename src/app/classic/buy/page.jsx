@@ -9,16 +9,46 @@ import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 import axios from 'axios';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const BuyCrypto = () => {
   const [inrValue, setInrValue] = useState('');
   const [usdtValue, setUsdtValue] = useState(0);
+  const [userEmail, setUserEmail] = useState(null);
 
+  console.log(userEmail, 'email');
   console.log(usdtValue, 'usdtValue');
   const router = useRouter();
+
+  useEffect(() => {
+    // Fetch user email if not already fetched
+    const fetchUserEmail = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        // Handle the case where the user is not logged in
+        console.error('User is not logged in');
+        return;
+      }
+
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setUserEmail(userData.email);
+        } else {
+          console.error('User document does not exist');
+        }
+      } catch (error) {
+        console.error('Error fetching user document:', error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   const fetchConversionRate = async () => {
     try {
@@ -67,20 +97,49 @@ const BuyCrypto = () => {
   };
 
   const handleSubmit = async () => {
-    localStorage.setItem('inrValue', JSON.stringify(inrValue));
-    localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
+    try {
+      // Fetch user email if not already fetched
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!userEmail && user) {
+        setUserEmail(user.email);
+      }
 
-    // const transactionData = {
-    //   inrValue,
-    //   usdtValue,
-    //   timestamp: new Date(),
-    // };
-    // try {
-    // await db.collection('transactions').add(transactionData);
-    router.push('/classic/payment');
-    // } catch (error) {
-    //   console.error('error saving transaction:', error);
-    // }
+      // Ensure user email is available
+      if (!userEmail) {
+        console.error('User email is not available');
+        return;
+      }
+
+      // Create a transaction data object
+      const transactionData = {
+        currency: 'INR',
+        amount: inrValue,
+        equivalentUSDT: usdtValue,
+        timestamp: new Date().toISOString(), // Convert date to ISO string format
+      };
+
+      // Add the transaction data to the Firestore collection
+      await setDoc(
+        doc(db, 'transactions', generateTransactionId(userEmail)),
+        transactionData,
+      );
+
+      // Store values in local storage
+      localStorage.setItem('inrValue', JSON.stringify(inrValue));
+      localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
+
+      // Navigate to the payment page
+      router.push('/classic/payment');
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+    }
+  };
+
+  const generateTransactionId = (userEmail) => {
+    const timestamp = new Date().getTime(); // Using getTime() to get the number of milliseconds since the Unix epoch
+    const transactionId = `${userEmail}`;
+    return transactionId;
   };
 
   useEffect(() => {
@@ -103,7 +162,7 @@ const BuyCrypto = () => {
                 defaultCoinIndex={1}
               />
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <input
                 type="text"
                 value={usdtValue}
@@ -111,8 +170,8 @@ const BuyCrypto = () => {
                 placeholder="Enter USDT value"
                 className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
               />
-            </div>
-            {/* <div className="mb-3">
+            </div> */}
+            <div className="mb-3">
               <CoinInput
                 label={'To'}
                 defaultCoinIndex={0}
@@ -120,8 +179,9 @@ const BuyCrypto = () => {
                 exchangeRate={0.0}
                 value={usdtValue}
                 placeholder="USDT value"
-                disabled={true}              />
-            </div> */}
+                disabled={true}
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 xs:gap-[18px]">
