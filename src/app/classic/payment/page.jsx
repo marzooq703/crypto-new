@@ -2,7 +2,8 @@
 
 import QRCode from 'react-qr-code';
 import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
+import { db } from '../../../lib/firebase';
+
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
@@ -36,28 +37,30 @@ const BuyPayment = () => {
     setCoinValue(storedValue);
   }, []); // Note the correct placement of the dependency array here
 
-  useEffect(() => {
-    const fetchTransaction = async () => {
-      try {
-        // Retrieve the latest transaction from Firestore
-        const transactionSnapshot = await db
-          .collection('transactions')
-          .orderBy('timestamp', 'desc')
-          .limit(1)
-          .get();
+  // useEffect(() => {
+  //   const fetchTransaction = async () => {
+  //     try {
+  //       // Retrieve the latest transaction from Firestore
+  //       const transactionSnapshot = await db
+  //         .collection('transactions')
+  //         .orderBy('timestamp', 'desc')
+  //         .limit(1)
+  //         .get();
 
-        if (!transactionSnapshot.empty) {
-          // Extract transaction data
-          const transactionData = transactionSnapshot.docs[0].data();
-          setTransaction(transactionData);
-        }
-      } catch (error) {
-        console.error('Error fetching transaction:', error);
-      }
-    };
+  //       if (!transactionSnapshot.empty) {
+  //         // Extract transaction data
+  //         const transactionData = transactionSnapshot.docs[0].data();
+  //         setTransaction(transactionData);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching transaction:', error);
+  //     }
+  //   };
 
-    fetchTransaction();
-  }, []);
+  //   fetchTransaction();
+  // }, []);
+  //-----------------------------------------------
+
   // useEffect(() => {
   //   const handleRouteChange = () => {
   //     if (typeof window !== 'undefined') {

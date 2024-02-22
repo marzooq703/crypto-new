@@ -70,17 +70,17 @@ const BuyCrypto = () => {
     localStorage.setItem('inrValue', JSON.stringify(inrValue));
     localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
 
-    const transactionData = {
-      inrValue,
-      usdtValue,
-      timestamp: new Date(),
-    };
-    try {
-      await db.collection('transactions').add(transactionData);
-      router.push('/classic/payment');
-    } catch (error) {
-      console.error('error saving transaction:', error);
-    }
+    // const transactionData = {
+    //   inrValue,
+    //   usdtValue,
+    //   timestamp: new Date(),
+    // };
+    // try {
+    // await db.collection('transactions').add(transactionData);
+    router.push('/classic/payment');
+    // } catch (error) {
+    //   console.error('error saving transaction:', error);
+    // }
   };
 
   useEffect(() => {
