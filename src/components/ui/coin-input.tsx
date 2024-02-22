@@ -28,6 +28,7 @@ export default function CoinInput({
   defaultCoinIndex = 0,
   exchangeRate,
   className,
+  ...rest
 }: CoinInputTypes) {
   const [chainSelected, setChainSelected] = useState(false);
   const [selectedChain, setSelectedChain] = useState('');
@@ -117,6 +118,7 @@ export default function CoinInput({
               inputMode="decimal"
               onChange={handleOnChange}
               className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
+              {...rest}
             />
             <span className="font-xs px-3 text-gray-400">
               = ${exchangeRate ? exchangeRate : '0.00'}

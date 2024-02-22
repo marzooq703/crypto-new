@@ -103,7 +103,7 @@ const BuyCrypto = () => {
                 defaultCoinIndex={1}
               />
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <input
                 type="text"
                 value={usdtValue}
@@ -111,8 +111,8 @@ const BuyCrypto = () => {
                 placeholder="Enter USDT value"
                 className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
               />
-            </div>
-            {/* <div className="mb-3">
+            </div> */}
+            <div className="mb-3">
               <CoinInput
                 label={'To'}
                 defaultCoinIndex={0}
@@ -120,8 +120,9 @@ const BuyCrypto = () => {
                 exchangeRate={0.0}
                 value={usdtValue}
                 placeholder="USDT value"
-                disabled={true}              />
-            </div> */}
+                disabled={true}
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 xs:gap-[18px]">
