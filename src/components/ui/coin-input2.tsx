@@ -41,7 +41,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
 
   return (
     <>
-      <div
+      {/* <div
         className={`group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600 ${className}`}
       >
         <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
@@ -52,7 +52,6 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
             onClick={() => setVisibleCoinList(true)}
             className="flex items-center font-medium outline-none dark:text-gray-100"
           >
-            {/* Replace with INR icon */}
             <span>INR (₹)</span>
             <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5" />
           </button>
@@ -74,9 +73,38 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
               : '0.00'}
           </span>
         </div>
-      </div>
+      </div> */}
 
-      <AnimatePresence>
+      <div
+        className={`flex min-h-[70px] rounded-lg border border-gray-200 ${className}`}
+      >
+        <div className="min-w-[80px] border-r border-gray-200 p-3">
+          <span className="mb-1.5 block text-xs uppercase text-gray-600">
+            {label}
+          </span>
+          <span className="flex items-center font-medium outline-none text-gray-800 dark:text-gray-100">
+            INR (₹)
+          </span>
+        </div>
+        <div className="flex flex-1 flex-col text-right">
+          <input
+            type="text"
+            value={value}
+            placeholder="0.0"
+            inputMode="decimal"
+            onChange={handleOnChange}
+            className="w-full rounded-br-lg rounded-tr-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
+            {...rest}
+          />
+          <span className="font-xs px-3 text-gray-400">
+            = $
+            {exchangeRate
+              ? (parseFloat(value) * exchangeRate).toFixed(2)
+              : '0.00'}
+          </span>
+        </div>
+      </div>
+      {/* <AnimatePresence>
         {visibleCoinList && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -85,8 +113,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5"
           >
-            {/* This element is to trick the browser into centering the modal contents. */}
-            <span
+\            <span
               className="inline-block h-full align-middle"
               aria-hidden="true"
             >
@@ -100,8 +127,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
               ref={modalContainerRef}
               className="inline-block text-left align-middle"
             >
-              {/* Display only INR, remove dynamic CoinSelectView */}
-              <div
+\              <div
                 onClick={() =>
                   handleOnChange({
                     target: { value: 'INR' },
@@ -113,7 +139,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
     </>
   );
 };
