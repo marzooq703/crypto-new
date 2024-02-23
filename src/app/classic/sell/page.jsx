@@ -11,7 +11,8 @@ import Trade from '@/components/ui/trade';
 import axios from 'axios';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore'; // Import Firestore related functions
-import { db } from '../../../lib/firebase'; // Assuming you have a 'db' object for Firestore
+import { db } from '../../../lib/firebase';
+import { addDoc, collection } from 'firebase/firestore'; // Assuming you have a 'db' object for Firestore
 
 const SellCrypto = () => {
   // const [selectedNetwork, setSelectedNetwork] = useState('erc20');
@@ -21,8 +22,8 @@ const SellCrypto = () => {
   const [inrValue, setInrValue] = useState(0);
   const [usdtBalance, setUsdtBalance] = useState(0);
   const [user, setUser] = useState(null); // State to hold the authenticated user
-
   const [isKYCVerified, setIsKYCVerified] = useState(false);
+  console.log(user, 'user');
 
   const router = useRouter();
 
@@ -65,10 +66,11 @@ const SellCrypto = () => {
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      if (authUser) {
+        setUser(authUser);
         try {
-          const docRef = doc(db, 'users', user.uid);
+          const docRef = doc(db, 'users', authUser.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
@@ -79,6 +81,8 @@ const SellCrypto = () => {
         } catch (error) {
           console.error('Error getting document:', error);
         }
+      } else {
+        setUser(null);
       }
     });
 
@@ -107,11 +111,14 @@ const SellCrypto = () => {
 
   const handleSubmit = async () => {
     try {
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
       if (sellingAmount.value > usdtBalance) {
-        //   throw new Error('Insufficient balance. Please enter a valid amount.');
-        // } else {
+        throw new Error('Insufficient balance. Please enter a valid amount.');
+      } else {
+        //  the three lie code is for sufficient balance.
         // Perform transaction logic here
-
         // Save transaction data to Firestore
         const transactionData = {
           email: user.email, // Use user's email as transaction ID
@@ -128,11 +135,12 @@ const SellCrypto = () => {
         console.log('Transaction written with ID: ', docRef.id);
 
         // Redirect to SellPayment page
-        router.push('/sellpayment'); // Replace '/sellpayment' with the actual URL of your SellPayment page
+        router.push('/classic/sellPayment'); // Replace '/sellpayment' with the actual URL of your SellPayment page
       }
     } catch (error) {
       console.error('Error handling submit:', error);
       // Handle errors here if needed
+      // router.push('/authentication')
     }
   };
 
