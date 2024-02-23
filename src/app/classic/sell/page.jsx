@@ -19,6 +19,9 @@ const SellCrypto = () => {
   const [sellingAmount, setSellingAmount] = useState({});
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [inrValue, setInrValue] = useState(0);
+  const [usdtBalance, setUsdtBalance] = useState(0);
+  const [user, setUser] = useState(null); // State to hold the authenticated user
+
   const [isKYCVerified, setIsKYCVerified] = useState(false);
 
   const router = useRouter();
@@ -82,8 +85,55 @@ const SellCrypto = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleSubmit = () => {
-    router.push('/classic/sellPayment');
+  // useEffect(() => {
+  //   const fetchUsdtBalance = async () => {
+  //     try {
+  //       // Fetch the user's USDT balance from your data source
+  //       // For example, you can make an API call or fetch from a database
+  //       const userUsdtBalance = await getUserUsdtBalance(); // Replace with your actual function
+
+  //       // Update the state with the fetched balance
+  //       setUsdtBalance(userUsdtBalance);
+  //                                                      // must check this
+
+  //     } catch (error) {
+  //       console.error('Error fetching USDT balance:', error);
+  //     }
+  //   };
+
+  //   // Call the function to fetch the balance
+  //   fetchUsdtBalance();
+  // }, []);
+
+  const handleSubmit = async () => {
+    try {
+      if (sellingAmount.value > usdtBalance) {
+        //   throw new Error('Insufficient balance. Please enter a valid amount.');
+        // } else {
+        // Perform transaction logic here
+
+        // Save transaction data to Firestore
+        const transactionData = {
+          email: user.email, // Use user's email as transaction ID
+          amount: sellingAmount.value,
+          timestamp: new Date(),
+          status: 'completed', // You can update this based on the transaction status
+        };
+
+        // Add transaction data to Firestore
+        const docRef = await addDoc(
+          collection(db, 'transactions'),
+          transactionData,
+        );
+        console.log('Transaction written with ID: ', docRef.id);
+
+        // Redirect to SellPayment page
+        router.push('/sellpayment'); // Replace '/sellpayment' with the actual URL of your SellPayment page
+      }
+    } catch (error) {
+      console.error('Error handling submit:', error);
+      // Handle errors here if needed
+    }
   };
 
   const handleVerifyKYC = () => {

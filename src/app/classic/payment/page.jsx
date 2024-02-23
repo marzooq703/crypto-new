@@ -148,14 +148,14 @@ const BuyPayment = () => {
 
       {/* Payment Details Box */}
       <div className="border rounded p-6 bg-white shadow-md w-full">
-        <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
+        {/* <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
           Payment Details
-        </h2>
+        </h2> */}
 
         {/* List of Questions and Text Fields */}
         <div className="space-y-4">
           {/* Account Holder Name */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               Account Holder Name
             </label>
@@ -163,10 +163,10 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
 
           {/* Account Number */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               Account Number
             </label>
@@ -174,10 +174,10 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
 
           {/* IFSC Code */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               IFSC Code
             </label>
@@ -185,10 +185,10 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
 
           {/* Account Type */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               Account Type (Savings or Current)
             </label>
@@ -196,10 +196,10 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
 
           {/* Bank Name */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               Bank Name
             </label>
@@ -207,10 +207,10 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
 
           {/* Branch Name */}
-          <div>
+          {/* <div>
             <label className="block text-md font-medium text-gray-600">
               Account Opening Branch
             </label>
@@ -218,7 +218,19 @@ const BuyPayment = () => {
               type="text"
               className="form-input w-full border rounded-md"
             />
-          </div>
+          </div> */}
+        </div>
+        {/* <div className="block text-md font-medium text-black text-center mt-6">
+          <p>or</p>
+        </div> */}
+
+        {/* QR Code */}
+        <div className="text-center mt-6">
+          <label className="block text-md font-medium text-gray-600 mb-2">
+            Scan QR Code to Pay
+          </label>
+          {/* <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" /> */}
+          <QRCode value="Sample QR Code Content" />
         </div>
         <div className="block text-md font-medium text-black text-center mt-6">
           <p>or</p>
@@ -237,25 +249,14 @@ const BuyPayment = () => {
             </button>
           </a>
         </div>
-        <div className="block text-md font-medium text-black text-center mt-6">
-          <p>or</p>
-        </div>
-        {/* QR Code */}
-        <div className="text-center mt-6">
-          <label className="block text-md font-medium text-gray-600 mb-2">
-            Scan QR Code to Pay
-          </label>
-          {/* <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" /> */}
-          <QRCode value="Sample QR Code Content" />
-        </div>
 
         {/* Pay Button */}
-        <button
+        {/* <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md mt-8 w-full"
           //   onClick={handlePayButtonClick}
         >
           Pay
-        </button>
+        </button> */}
       </div>
     </div>
   );
