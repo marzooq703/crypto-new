@@ -11,7 +11,7 @@ export default function SearchButton({ ...props }) {
       onClick={() => openModal('SEARCH_VIEW')}
       {...props}
     >
-      <SearchIcon className="h-auto w-3.5 sm:w-auto" />
+      {/* <SearchIcon className="h-auto w-3.5 sm:w-auto" /> */}
     </Button>
   );
 }
