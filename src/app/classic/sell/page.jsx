@@ -114,32 +114,33 @@ const SellCrypto = () => {
       if (!user) {
         throw new Error('User not authenticated');
       }
+
       if (sellingAmount.value > usdtBalance) {
-        throw new Error('Insufficient balance. Please enter a valid amount.');
-      } else {
-        //  the three lie code is for sufficient balance.
-        // Perform transaction logic here
-        // Save transaction data to Firestore
+        //   throw new Error('Insufficient balance. Please enter a valid amount.');
+        // } else {
+        // If the user is authenticated and has sufficient balance, proceed with the transaction logic
+
         const transactionData = {
           email: user.email, // Use user's email as transaction ID
-          amount: sellingAmount.value,
-          timestamp: new Date(),
-          status: 'completed', // You can update this based on the transaction status
+          amount: sellingAmount.value, // Amount to be sold
+          timestamp: new Date(), // Current timestamp
+          status: 'completed', // Transaction status (you can update this based on the actual status)
         };
 
-        // Add transaction data to Firestore
         const docRef = await addDoc(
-          collection(db, 'transactions'),
+          collection(db, 'sellTransactions'),
           transactionData,
         );
-        console.log('Transaction written with ID: ', docRef.id);
+        console.log(
+          'Transaction written with ID: ',
+          docRef.id,
+          transactionData,
+        );
 
-        // Redirect to SellPayment page
-        router.push('/classic/sellPayment'); // Replace '/sellpayment' with the actual URL of your SellPayment page
+        router.push('/classic/sellPayment');
       }
     } catch (error) {
       console.error('Error handling submit:', error);
-      // Handle errors here if needed
       // router.push('/authentication')
     }
   };
