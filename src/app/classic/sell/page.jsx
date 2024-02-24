@@ -116,8 +116,8 @@ const SellCrypto = () => {
       }
 
       if (sellingAmount.value > usdtBalance) {
-        //   throw new Error('Insufficient balance. Please enter a valid amount.');
-        // } else {
+        throw new Error('Insufficient balance. Please enter a valid amount.');
+      } else {
         // If the user is authenticated and has sufficient balance, proceed with the transaction logic
 
         const transactionData = {
