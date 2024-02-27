@@ -103,9 +103,11 @@ const AdminPage = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="border border-gray-400 px-4 py-2">Currency</th>
-              <th className="border border-gray-400 px-4 py-2">Amount (INR)</th>
               <th className="border border-gray-400 px-4 py-2">
-                Equivalent USDT
+                Amount (USDT/INR)
+              </th>
+              <th className="border border-gray-400 px-4 py-2">
+                Equivalent (USDT/INR)
               </th>
             </tr>
           </thead>
@@ -140,7 +142,7 @@ const AdminPage = () => {
                     {transaction.amount}
                   </td>
                   <td className="border border-gray-400 px-4 py-2">
-                    {transaction.equivalentUSDT}
+                    {transaction.equivalentINR}
                   </td>
                 </tr>
               ))}
