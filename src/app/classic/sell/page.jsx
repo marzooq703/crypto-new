@@ -121,11 +121,13 @@ const SellCrypto = () => {
         // If the user is authenticated and has sufficient balance, proceed with the transaction logic
 
         const transactionData = {
-          email: user.email, // Use user's email as transaction ID
-          amount: sellingAmount.value, // Amount to be sold
-          timestamp: new Date(), // Current timestamp
-          status: 'completed', // Transaction status (you can update this based on the actual status)
-        };
+          email: user.email,
+          amount: sellingAmount.value,
+          timestamp: new Date(),
+          status: 'completed',
+          currency: 'INR',
+          equivalentINR: inrValue,
+        }; //TODO: if any error in production. try with the commented handle submit below this.
 
         const docRef = await addDoc(
           collection(db, 'sellTransactions'),
@@ -141,9 +143,37 @@ const SellCrypto = () => {
       }
     } catch (error) {
       console.error('Error handling submit:', error);
-      // router.push('/authentication')
     }
   };
+  //---------------------------------------------
+  // const handleSubmit = async () => {
+  //   try {
+  //     if (!user) {
+  //       throw new Error('User not authenticated');
+  //     }
+
+  //     // Proceed with the transaction logic
+
+  //     const transactionData = {
+  //       email: user.email,
+  //       amount: sellingAmount.value,
+  //       timestamp: new Date(),
+  //       status: 'completed',
+  //       currency: 'INR',
+  //       equivalentINR: inrValue,
+  //     };
+
+  //     const docRef = await addDoc(
+  //       collection(db, 'sellTransactions'),
+  //       transactionData
+  //     );
+  //     console.log('Transaction written with ID: ', docRef.id, transactionData);
+
+  //     router.push('/classic/sellPayment');
+  //   } catch (error) {
+  //     console.error('Error handling submit:', error);
+  //   }
+  // };
 
   const handleVerifyKYC = () => {
     router.push('/classic/kyc');
