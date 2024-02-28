@@ -12,6 +12,7 @@ import axios from 'axios';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import {sendMessageToGroup} from "../../../lib/telegram"
 
 const BuyCrypto = () => {
   const [inrValue, setInrValue] = useState('');
@@ -103,6 +104,15 @@ const BuyCrypto = () => {
       const user = auth.currentUser;
       if (!userEmail && user) {
         setUserEmail(user.email);
+
+        //telegram thing
+        const groupChatId = '-4140541763';
+        const message =
+          'New transaction: INR ' +
+          inrValue +
+          ' equivalent to USDT ' +
+          usdtValue;
+        sendMessageToGroup(groupChatId, message);
       }
 
       // Ensure user email is available
