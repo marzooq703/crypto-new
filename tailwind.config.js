@@ -38,7 +38,7 @@ module.exports = {
         'calc-358': 'calc(100% - 358px)',
       },
       fontFamily: {
-        body: ['Rothorn Demi Bold', 'ROHH'],
+        body: ['Epilogue', 'sans-serif'],
       },
       fontSize: {
         '15px': ['15px', '20px'],
