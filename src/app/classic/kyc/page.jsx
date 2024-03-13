@@ -45,6 +45,7 @@ const KYC = () => {
               console.error(error);
               setIsLoading(false);
             });
+          console.log('ashiq');
         }}
       >
         Complete Aadhar KYC

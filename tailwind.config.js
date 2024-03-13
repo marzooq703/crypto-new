@@ -38,10 +38,10 @@ module.exports = {
         'calc-358': 'calc(100% - 358px)',
       },
       fontFamily: {
-        body: ['Fira Code', 'monospace'],
+        body: ['Epilogue', 'sans-serif'],
       },
       fontSize: {
-        '13px': ['13px', '18px'],
+        '15px': ['15px', '20px'],
       },
       borderWidth: {
         3: '3px',
