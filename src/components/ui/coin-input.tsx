@@ -116,7 +116,7 @@ export default function CoinInput({
             {...rest}
           />
           <span className="font-xs px-3 text-gray-400">
-            chain name
+            chain: ERC-20
             {/*   = ${exchangeRate ? exchangeRate : '0.00'} */}
           </span>
         </div>
