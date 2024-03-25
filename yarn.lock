@@ -735,6 +735,11 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
+"@faceio/fiojs@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@faceio/fiojs/-/fiojs-1.1.0.tgz#7536157b86efb059fccb8ba4c2781b713c35df71"
+  integrity sha512-JCn1mDi7MYwpyj2OvmPofNJPcawVF4vuCeH2GTD49NcSITHkSSM2/MrSwqj3vvy1OX3LHJ3hvHUbKDPSg4iweQ==
+
 "@fastify/busboy@^2.0.0":
   version "2.1.1"
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz"
