@@ -38,7 +38,8 @@ async function authenticateUser() {
     console.log('Success, user identified');
     // Handle user data as needed
   } catch (error) {
-    handleError(error.response.data.code);
+    console.log(error);
+    handleError(error?.response?.data?.code);
   }
 }
 
