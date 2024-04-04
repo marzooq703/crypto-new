@@ -2,7 +2,7 @@
 import axios from 'axios';
 import faceIO from '@faceio/fiojs';
 
-const faceio = new faceIO('fioac267'); // Get the application Public ID at https://console.faceio.net.
+const faceio = new faceIO('fioafd86'); // Get the application Public ID at https://console.faceio.net.
 const API_KEY = 'fioac267';
 function App() {
   return (
