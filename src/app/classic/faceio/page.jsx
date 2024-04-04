@@ -2,8 +2,8 @@
 import axios from 'axios';
 import faceIO from '@faceio/fiojs';
 
-const faceio = new faceIO('fioac267'); // Get the application Public ID at https://console.faceio.net.
-const API_KEY = 'fioac267';
+const faceio = new faceIO('fioafd86'); // Get the application Public ID at https://console.faceio.net.
+const API_KEY = 'fioafd86';
 function App() {
   return (
     <div className="App">
@@ -87,8 +87,8 @@ async function enrollNewUser() {
       locale: 'auto', // Default user locale
       payload: {
         /* The payload we want to associate with this particular user which is forwarded back to us upon future authentication of this user.*/
-        whoami: 123423, // Dummy ID linked to this particular user
-        email: 'ahamedaqeel703@gmail.com',
+        whoami: 696882, // Dummy ID linked to this particular user
+        email: 'sammy@gmail.com',
       },
     });
 
