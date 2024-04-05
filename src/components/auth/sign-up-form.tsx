@@ -25,6 +25,7 @@ export default function SignUpForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [contactNumber, setContactNumber] = useState('');
+  const [error, setError] = useState('');
   const [agreeChecked, setAgreeChecked] = useState(false);
   const [allFieldsFilled, setAllFieldsFilled] = useState(false);
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
@@ -32,6 +33,7 @@ export default function SignUpForm() {
   const signUp = (e: React.FormEvent) => {
     e.preventDefault();
 
+    setError('');
     if (!allFieldsFilled) {
       alert('Please fill in all the fields.');
       return;
@@ -80,6 +82,16 @@ export default function SignUpForm() {
       // })
       .catch((error) => {
         console.error('error registering:', error);
+        if (error.message == 'Firebase: Error (auth/email-already-in-use).')
+          setError('Email already in use!');
+        else if (
+          error.message ==
+          'Firebase: Password should be at least 6 characters (auth/weak-password).'
+        )
+          setError('Password should be at least 6 characters');
+        else {
+          setError(error.message);
+        }
         setSignUpStatus('failed');
       });
   };
@@ -100,11 +112,11 @@ export default function SignUpForm() {
     <form noValidate onSubmit={signUp} className="grid grid-cols-1 gap-4">
       {/* Display success or failure message */}
       {signUpStatus === 'success' && (
-        <div className="text-green-500">Sign-in successful!</div>
+        <div className="text-green-500">Sign Up successful!</div>
       )}
       {signUpStatus === 'failed' && (
         <div className="text-red-500">
-          Sign-in failed. Please check your credentials.
+          {error || 'Sign-up failed. Please check your credentials.'}
         </div>
       )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">

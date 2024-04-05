@@ -194,14 +194,14 @@ const BuyCrypto = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 xs:gap-[18px]">
+        {/* <div className="flex flex-col gap-4 xs:gap-[18px]">
           <TransactionInfo label={'Min. Received'} />
           <TransactionInfo label={'Rate'} />
           <TransactionInfo label={'Offered by'} />
           <TransactionInfo label={'Price Slippage'} value={'1%'} />
           <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} />
-        </div>
+        </div> */}
         <Button
           size="large"
           shape="rounded"
