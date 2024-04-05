@@ -8,7 +8,7 @@ const Checkout = () => {
 
   useEffect(() => {
     const initializeSDK = async () => {
-      const cashfreeInstance = await load({ mode: 'production' });
+      const cashfreeInstance = await load({ mode: 'sandbox' });
       setCashfree(cashfreeInstance);
     };
     initializeSDK();
@@ -18,7 +18,7 @@ const Checkout = () => {
     if (!cashfree) return;
     const checkoutOptions = {
       paymentSessionId:
-        'session_g45uK7SSj_toM61SBjntPycEHUJgoQ-OQEePh3yzaPXFjyoDq5ZjQfVEv99ZMIQyOX10NeA4r2iJVS8Il9BZJd64qVwsNZLgBGvJ0zBab8Cp',
+        'session_NX3Ox6pqFnSm2zK9ksjJICiPBxbDl_rPFg_w3KAhcoH692sCChKYGvor4m8yNnqYxRVWwnV53LYy9YjbR9_sRaUnRYAysEOqeFzybpC3Y9U4',
       redirectTarget: '_modal',
     };
     cashfree.checkout(checkoutOptions).then(() => {
