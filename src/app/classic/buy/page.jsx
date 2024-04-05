@@ -100,19 +100,22 @@ const BuyCrypto = () => {
   const handleSubmit = async () => {
     try {
       // Fetch user email if not already fetched
+      //-----------------------------------------------------------------------------------------
+      //  axios
+      //     .post('http://localhost:3000/classic/telegram/api', {
+      //       type: 'Buy',
+      //       amount: '10USD',
+      //       userName: 'tariq',
+      //       userID: 'sdf',
+      //       city: 'chennai',
+      //     })
+      //     .then((val) => {
+      //       console.log(val)
+      //     }).catch((err) => console.error(err));
       const auth = getAuth();
       const user = auth.currentUser;
       if (!userEmail && user) {
         setUserEmail(user.email);
-
-        //telegram thing
-        const groupChatId = '-4140541763';
-        const message =
-          'New transaction: INR ' +
-          inrValue +
-          ' equivalent to USDT ' +
-          usdtValue;
-        sendMessageToGroup(groupChatId, message);
       }
 
       // Ensure user email is available
