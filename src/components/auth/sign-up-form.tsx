@@ -65,6 +65,19 @@ export default function SignUpForm() {
         // });
       })
       .then(async (user) => {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(
+            'crypto-user',
+            JSON.stringify({
+              firstName: firstName,
+              lastName: lastName,
+              email: user.email,
+              contactNumber: contactNumber,
+              uid: user.uid,
+              isKycVerified: false,
+            }),
+          );
+        }
         console.log('User registered successflly:', user);
         const isKYCsuccessful = true;
         if (isKYCsuccessful) {
@@ -73,7 +86,7 @@ export default function SignUpForm() {
           });
         }
         setSignUpStatus('success');
-        router.push('/classic/kyc');
+        router.push('/authentication/face-verification');
       })
       // .then((val) => {
       //   console.log('AUTH DA', val);
