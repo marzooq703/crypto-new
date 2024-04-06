@@ -35,7 +35,15 @@ export default function SignInForm() {
       );
       console.log(userCredential);
       setSignInStatus('success');
-      router.push('/classic/kyc');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'crypto-user',
+          JSON.stringify({
+            email: email,
+          }),
+        );
+      }
+      router.push('/authentication/face-verification/verify');
     } catch (error) {
       console.error(error);
       setSignInStatus('failed');

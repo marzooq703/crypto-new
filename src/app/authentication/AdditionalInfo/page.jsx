@@ -18,7 +18,20 @@ export default function SignUpAdditionalInfoModal({ user }) {
         contactNumber: contactNumber,
         uid: user.uid,
       });
-      router.push('/classic/kyc');
+      // if (typeof window !== 'undefined') {
+      //   localStorage.setItem(
+      //     'crypto-user',
+      //     JSON.stringify({
+      //       firstName: firstName,
+      //       lastName: lastName,
+      //       email: user.email,
+      //       contactNumber: contactNumber,
+      //       uid: user.uid,
+      //       isKycVerified: false,
+      //     }),
+      //   );
+      // }
+      router.push('/authentication/face-verification/verify');
     } catch (error) {
       console.error('Error saving additional information:', error);
     }
