@@ -1,9 +1,24 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import cn from 'classnames';
+import Button from '@/components/ui/button';
+import CoinInput2 from '@/components/ui/coin-input2';
+import CoinInput from '@/components/ui/coin-input';
+import TransactionInfo from '@/components/ui/transaction-info';
+import { SwapIcon } from '@/components/icons/swap-icon';
+import Trade from '@/components/ui/trade';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
-import { useRouter } from 'next/navigation';
+// import TronWeb from 'tronweb';
 
+// const tronWeb = new TronWeb({
+//   fullHost: 'https://api.trongrid.io',
+//   solidityNode: 'https://api.trongrid.io',
+//   eventServer: 'https://api.trongrid.io',
+// });
 const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
   try {
     if (!window.ethereum) {
@@ -14,16 +29,29 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: getChainId(network) }],
     });
+    // console.log(network, 'net');
 
+    // const tronWeb = window.tronWeb;
+    // const addr_tron = 'TNqSwySSVeVbSVxxhXku8BZCHPqdJ7dUaX';
+
+    // const tron = false;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-
     addr = ethers.utils.getAddress(addr);
-    if (network === 'bnb') {
+
+    // if (tron) {
+    //   const useUSDT = true;
+    //   const useUSDC = false;
+    //   if (useUSDT) {
+    //     await sendUSDT_Trc20(tronWeb, addr_tron, amount);
+    //   } else if (useUSDC) {
+    //     await sendUSDC_Trc20(tronWeb, addr_tron, amount);
+    //   }
+    // }
+    if (network) {
       // matic, eth ,bnb
       const useUSDT = true;
       const useUSDC = false;
-
       if (useUSDT) {
         await sendUSDT(signer, addr, amount);
       } else if (useUSDC) {
@@ -32,10 +60,6 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       // else {
       //   await sendFDUSD(signer, addr, amount);
       // }
-    } else if (network === 'matic') {
-      //   what condition should we write ???
-    } else if (network === 'eth') {
-      // what conditions should we write ??
     } else {
       // Handle Ether transactions for other networks
       const tx = await signer.sendTransaction({
@@ -46,11 +70,40 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       setTxs([tx]);
     }
   } catch (err) {
+    // if no wallet is found
     setError(err);
     console.log(err.message);
     throw err;
   }
 };
+
+// const sendUSDT_Trc20 = async (tronWeb, toAddress, amount) => {
+//   try {
+//     const usdtContractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+//     const usdtContract = await tronWeb.contract().at(usdtContractAddress);
+//     const amountSun = tronWeb.toSun(amount);
+
+//     await usdtContract.transfer(toAddress, amountSun).send();
+//     console.log(amount, 'USDT sent to:', toAddress);
+//   } catch (error) {
+//     console.error('Error sending USDT:', error.message);
+//     throw error;
+//   }
+// };
+
+// const sendUSDC_Trc20 = async (tronWeb, toAddress, amount) => {
+//   try {
+//     const usdcContractAddress = 'TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8';
+//     const usdcContract = await tronWeb.contract().at(usdcContractAddress);
+//     const amountSun = tronWeb.toSun(amount);
+
+//     await usdcContract.transfer(toAddress, amountSun).send();
+//     console.log(amount, 'USDC sent to:', toAddress);
+//   } catch (error) {
+//     console.error('Error sending USDC:', error.message);
+//     throw error;
+//   }
+// };
 const usdtContractAbi = [
   {
     constant: true,
@@ -127,28 +180,26 @@ const usdtContractAbi = [
   },
 ];
 
-const sendUSDT = async (signer, toAddress, amount, network) => {
+const sendUSDT = async (signer, toAddress, amount) => {
   try {
     const web3 = new Web3(window.ethereum);
-    let usdtContractAddress;
+    const usdtMaticContractAddress =
+      '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+    const usdtEthContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+    const usdtBnbContractAddress = '0x55d398326f99059ff775485246999027b3197955';
 
-    switch (network) {
-      case 'matic':
-        usdtContractAddress = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
-        break; //
-      case 'eth': // what to do next?
-        usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; //
-        break;
-      case 'bnb':
-        usdtContractAddress = '0x55d398326f99059ff775485246999027b3197955';
-        break;
-      default:
-        throw new Error('Invalid network specified');
-    }
+    // const usdtContractAddress =
+    //   network === 'matic'
+    //     ? usdtMaticContractAddress
+    //     : network === 'eth'
+    //     ? usdtEthContractAddress
+    //     : network === 'bnb'
+    //     ? usdtBnbContractAddress
+    //     : '';
 
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
-      usdtBnbContractAddress,
+      usdtMaticContractAddress,
     );
 
     const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
@@ -157,7 +208,7 @@ const sendUSDT = async (signer, toAddress, amount, network) => {
     const gasPriceHex = web3.utils.toHex(gasPriceWei);
     const gasLimit = 70000;
 
-    await usdtContract.methods.transfer(toAddress, amountWei).send({
+    await usdtContract.methods.transfer(toAddress, amountWei1).send({
       from: await signer.getAddress(),
       gasPrice: gasPriceHex,
       gasLimit,
@@ -168,7 +219,6 @@ const sendUSDT = async (signer, toAddress, amount, network) => {
     throw error;
   }
 };
-
 const usdcContractAbi = [
   {
     constant: true,
@@ -305,31 +355,23 @@ const usdcContractAbi = [
     type: 'function',
   },
 ];
-const sendUSDC = async (signer, toAddress, amount, network) => {
+const sendUSDC = async (signer, toAddress, amount) => {
   try {
     const web3 = new Web3(window.ethereum);
-    let usdcContractAddress;
+    const usdcMaticContractAddress =
+      '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
+    const usdcBnbContractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
 
-    switch (network) {
-      case 'matic':
-        usdcContractAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
-        break;
-      case 'bnb':
-        usdcContractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
-        break;
-      default:
-        throw new Error('Invalid network specified');
-    }
     const usdcContract = new web3.eth.Contract(
       usdcContractAbi,
-      usdcContractAddress,
+      usdcBnbContractAddress,
     );
 
     const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
     const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
     const gasPriceWei = await web3.eth.getGasPrice();
     const gasPriceHex = web3.utils.toHex(gasPriceWei);
-    const gasLimit = 50000;
+    const gasLimit = 90000;
 
     await usdcContract.methods.transfer(toAddress, amountWei).send({
       from: await signer.getAddress(),
@@ -460,74 +502,51 @@ const getChainId = (network) => {
       throw new Error('Unsupported network');
   }
 };
-const SellPayment = () => {
+const Crypto = () => {
+  let [toggleCoin, setToggleCoin] = useState(false);
+
   const [sellingAmount, setSellingAmount] = useState({});
-  const [fromValue, setFromValue] = useState('');
-  const [toValue, setToValue] = useState('');
   const [usdtBalance, setUsdtBalance] = useState({});
   const [usdcBalance, setUsdcBalance] = useState({});
+
   const [cryptoAmount, setCryptoAmount] = useState({});
-  const [error, setError] = useState(null);
+  const [, setError] = useState();
   const [, setTxs] = useState([]);
-  const [inrValue, setInrValue] = useState(0);
-  const [network, setNetwork] = useState('bnb');
 
-  const router = useRouter();
+  const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
+  console.log(cryptowalletAmount, 'hjh');
 
   useEffect(() => {
-    const storedInrValue = localStorage.getItem('inrValue');
-    if (storedInrValue) {
-      /* UseEffect Error */
-      setInrValue(parseFloat(storedInrValue));
-    }
-  }, []);
-  useEffect(() => {
-    const fetchUsdtBalance = async () => {
-      const web3 = new Web3(window.ethereum);
-
+    const fetchBalances = async () => {
       try {
         if (!window.ethereum) {
           throw new Error('No crypto wallet found. Please install MetaMask.');
         }
 
+        const web3 = new Web3(window.ethereum);
+        const usdtMaticContractAddress =
+          '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+        const usdcMaticContractAddress =
+          '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
 
         console.log('Wallet Address:', address);
 
-        let usdtContractAddress, usdcContractAddress;
-
-        // Set contract addresses based on the network
-        switch (network) {
-          case 'matic':
-            usdtContractAddress = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
-            usdcContractAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
-            break;
-          case 'eth':
-            usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // check whether if it is right.
-            usdcContractAddress = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
-            break;
-          case 'bnb':
-            usdtContractAddress = '0x55d398326f99059ff775485246999027b3197955';
-            usdcContractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
-            break;
-          default:
-            throw new Error('Invalid network specified');
-        }
-
         const usdtContract = new web3.eth.Contract(
           usdtContractAbi,
-          usdtContractAddress,
+          usdtMaticContractAddress,
         );
         const usdcContract = new web3.eth.Contract(
           usdcContractAbi,
-          usdcContractAddress,
+          usdcMaticContractAddress,
         );
 
         const usdtBalanceWei = await usdtContract.methods
           .balanceOf(address)
           .call();
+
         const usdcBalanceWei = await usdcContract.methods
           .balanceOf(address)
           .call();
@@ -537,7 +556,7 @@ const SellPayment = () => {
         );
         const usdcBalances = parseFloat(
           web3.utils.fromWei(usdcBalanceWei, 'ether'),
-        ).toFixed(4);
+        );
 
         const usdtBalance = `${usdtBalances}`.slice(0, -4);
         const usdcBalance = `${usdcBalances}`.slice(0, -4);
@@ -545,34 +564,14 @@ const SellPayment = () => {
         setUsdtBalance(usdtBalance);
         setUsdcBalance(usdcBalance);
 
-        console.log('Initial USDT Balance:', usdtBalances);
-        console.log('Initial USDC Balance:', usdcBalances);
+        console.log('Initial USDT Balance:', usdtBalance);
+        console.log('Initial USDC Balance:', usdcBalance);
       } catch (error) {
         console.error('Error fetching balances:', error.message);
       }
     };
 
-    fetchUsdtBalance();
-  }, [network]);
-
-  const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
-  console.log(cryptowalletAmount, 'hjh');
-
-  useEffect(() => {
-    // Fetch the 'From' value from localStorage when component mounts
-    const sellingAmountValue = localStorage.getItem('sellingAmount');
-    if (sellingAmountValue) {
-      setFromValue(JSON.parse(sellingAmountValue));
-    }
-
-    // Fetch the 'To' value from localStorage or any other source
-    let toValueFromStorage;
-    if (typeof window !== undefined) {
-      toValueFromStorage = localStorage.getItem('toCoinValue');
-    }
-    if (toValueFromStorage) {
-      setToValue(JSON.parse(toValueFromStorage));
-    }
+    fetchBalances();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -581,20 +580,19 @@ const SellPayment = () => {
     const sellingAmountValue = parseFloat(sellingAmount.value);
     console.log(sellingAmountValue, 'sellingAmountValue');
     console.log(usdtBalance, 'usdtBalance');
-    console.log(network, 'selected Network');
     try {
       if (sellingAmountValue > usdtBalance) {
-        throw new Error('Insufficient balance. Please enter a valid amount.');
+        console.error('Insufficient balance. Please enter a valid amount.');
       } else {
         await startPayment({
           setError,
           setTxs,
           amount: `${sellingAmount.value}`,
           addr: '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B',
-          network: network, //  "eth", "matic", "bnb",
+          network: 'matic', //  "eth", "matic", "bnb",
         });
       }
-      console.log(sellingAmount.value, 'selling amount');
+
       // navigate("/sell-crypto-details");
     } catch (err) {
       setError(err.message);
@@ -602,148 +600,66 @@ const SellPayment = () => {
       // navigate("/sell-crypto-failed");
     }
   };
-  console.log(inrValue, 'inrValue');
+
+  const clickSell = () => {
+    router.push('/classic/sellPayment');
+  };
+  console.log(sellingAmount.value, 'asdas');
   return (
-    <>
-      <div className="max-w-screen-xl mx-auto mt-8 space-y-8">
-        <div className="border rounded p-6 bg-white shadow-md w-full">
-          <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
-            Confirm Information
-          </h2>
-
-          <p className="text-sm text-center mb-6 text-gray-600">
-            You are about to receive{' '}
-            <strong className="text-green-500">{inrValue}</strong>
-            rupees for{' '}
-            <strong className="text-blue-500">{fromValue.value}</strong> in
-            wallet.
-          </p>
-
-          <div className="flex justify-between border rounded p-4 bg-gray-100">
-            <div style={{ textAlign: 'center' }}>
-              <p className="text-sm mb-2 text-gray-600">To sell</p>
-              <strong className="text-red-500">{fromValue.value} </strong>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <p className="text-sm mb-2 text-gray-600">You get</p>
-              <strong className="text-green-500">{inrValue}</strong>
-            </div>
-          </div>
-        </div>
-
-        {/* Payment Details Box */}
-        <div className="border rounded p-6 bg-white shadow-md w-full">
-          <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
-            Crediting Account Details
-          </h2>
-
-          <div className="space-y-4">
-            {/* Account Holder Name */}
-            <div>
-              <label
-                htmlFor="accountHolderName"
-                className="block text-md font-medium text-gray-600"
-              >
-                Account Holder Name
-              </label>
-              <input
-                type="text"
-                id="accountHolderName"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter account holder name"
-              />
-            </div>
-
-            {/* Account Number */}
-            <div>
-              <label
-                htmlFor="accountNumber"
-                className="block text-md font-medium text-gray-600"
-              >
-                Account Number
-              </label>
-              <input
-                type="text"
-                id="accountNumber"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter account number"
-              />
-            </div>
-
-            {/* IFSC Code */}
-            <div>
-              <label
-                htmlFor="ifscCode"
-                className="block text-md font-medium text-gray-600"
-              >
-                IFSC Code
-              </label>
-              <input
-                type="text"
-                id="ifscCode"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter IFSC code"
-              />
-            </div>
-
-            {/* Account Type */}
-            <div>
-              <label
-                htmlFor="accountType"
-                className="block text-md font-medium text-gray-600"
-              >
-                Account Type (Savings or Current)
-              </label>
-              <input
-                type="text"
-                id="accountType"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter account type"
-              />
-            </div>
-
-            {/* Bank Name */}
-            <div>
-              <label
-                htmlFor="bankName"
-                className="block text-md font-medium text-gray-600"
-              >
-                Bank Name
-              </label>
-              <input
-                type="text"
-                id="bankName"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter bank name"
-              />
-            </div>
-
-            {/* Branch Name */}
-            <div>
-              <label
-                htmlFor="branchName"
-                className="block text-md font-medium text-gray-600"
-              >
-                Account Opening Branch
-              </label>
-              <input
-                type="text"
-                id="branchName"
-                className="form-input w-full border rounded-md"
-                placeholder="Enter branch name"
-              />
-            </div>
-          </div>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mt-8 w-full"
-            onClick={handleSubmit}
+    <div>
+      <Trade>
+        <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
+          <div
+            className={cn(
+              'relative flex gap-3',
+              toggleCoin ? 'flex-col-reverse' : 'flex-col',
+            )}
           >
-            Sell
-          </button>
+            <CoinInput
+              label={'From'}
+              exchangeRate={0.0}
+              defaultCoinIndex={0}
+              getCoinValue={(data) => setSellingAmount(data)}
+            />
+            <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600">
+              {/* <Button
+                size="mini"
+                color="gray"
+                shape="circle"
+                variant="transparent"
+                onClick={() => setToggleCoin(!toggleCoin)}
+              >
+                <SwapIcon className="h-auto w-3" />
+              </Button> */}
+            </div>
+            <CoinInput2
+              label={'To'}
+              exchangeRate={0.0}
+              defaultCoinIndex={1}
+              getCoinValue={(data) => console.log('To coin value:', data)}
+            />
+          </div>
         </div>
-      </div>
-    </>
+        <div className="flex flex-col gap-4 xs:gap-[18px]">
+          <TransactionInfo label={'Min. Received'} />
+          <TransactionInfo label={'Rate'} />
+          <TransactionInfo label={'Offered by'} />
+          <TransactionInfo label={'Price Slippage'} value={'1%'} />
+          <TransactionInfo label={'Network Fee'} />
+          <TransactionInfo label={'Criptic Fee'} />
+        </div>
+        <Button
+          size="large"
+          shape="rounded"
+          fullWidth={true}
+          className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+          onClick={handleSubmit}
+        >
+          Sell
+        </Button>
+      </Trade>
+    </div>
   );
 };
 
-export default SellPayment;
+export default Crypto;
