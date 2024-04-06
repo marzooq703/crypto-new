@@ -12,6 +12,7 @@ import axios from 'axios';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import {sendMessageToGroup} from "../../../lib/telegram"
 
 const BuyCrypto = () => {
   const [inrValue, setInrValue] = useState('');
@@ -99,6 +100,18 @@ const BuyCrypto = () => {
   const handleSubmit = async () => {
     try {
       // Fetch user email if not already fetched
+      //-----------------------------------------------------------------------------------------
+      //  axios
+      //     .post('http://localhost:3000/classic/telegram/api', {
+      //       type: 'Buy',
+      //       amount: '10USD',
+      //       userName: 'tariq',
+      //       userID: 'sdf',
+      //       city: 'chennai',
+      //     })
+      //     .then((val) => {
+      //       console.log(val)
+      //     }).catch((err) => console.error(err));
       const auth = getAuth();
       const user = auth.currentUser;
       if (!userEmail && user) {
@@ -184,14 +197,14 @@ const BuyCrypto = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 xs:gap-[18px]">
+        {/* <div className="flex flex-col gap-4 xs:gap-[18px]">
           <TransactionInfo label={'Min. Received'} />
           <TransactionInfo label={'Rate'} />
           <TransactionInfo label={'Offered by'} />
           <TransactionInfo label={'Price Slippage'} value={'1%'} />
           <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} />
-        </div>
+        </div> */}
         <Button
           size="large"
           shape="rounded"

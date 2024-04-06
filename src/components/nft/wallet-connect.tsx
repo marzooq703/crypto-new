@@ -17,17 +17,17 @@ export default function WalletConnect({
   btnClassName?: string;
   anchorClassName?: string;
 }) {
-  const { address } = useAccount();
-  const { open } = useWeb3Modal();
-  const { data } = useBalance({
-    address,
-  });
-  const { disconnect } = useDisconnect();
-  const balance = data?.formatted;
+  // const { address } = useAccount();
+  // const { open } = useWeb3Modal();
+  // const { data } = useBalance({
+  //   address,
+  // });
+  // const { disconnect } = useDisconnect();
+  // const balance = data?.formatted;
 
   return (
     <>
-      {address ? (
+      {/* {address ? (
         <div className="flex items-center gap-3 sm:gap-6 lg:gap-8">
           <div className="relative flex-shrink-0">
             <Menu>
@@ -105,7 +105,7 @@ export default function WalletConnect({
         >
           CONNECT
         </Button>
-      )}
+      )} */}
     </>
   );
 }
