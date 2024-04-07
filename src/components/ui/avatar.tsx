@@ -52,7 +52,7 @@ function Avatar({
       {shape === 'circle' ? (
         size === 'xs' || 'sm' ? (
           <Image
-            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff"
+            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff&size=256"
             alt={alt}
             width={width}
             height={height}
