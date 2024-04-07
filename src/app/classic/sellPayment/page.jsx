@@ -641,6 +641,11 @@ const Crypto = () => {
     const sellingAmountValue = parseFloat(sellingAmount.value);
     console.log(sellingAmountValue, 'sellingAmountValue');
     console.log(usdtBalance, 'usdtBalance');
+    Swal.fire({
+      icon: 'error',
+      title: 'Wallet not found',
+      text: 'Please connect a wallet to continue',
+    });
     try {
       if (sellingAmountValue > usdtBalance) {
         console.error('Insufficient balance. Please enter a valid amount.');
