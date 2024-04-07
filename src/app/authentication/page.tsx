@@ -65,7 +65,7 @@ export default function SignIn() {
               Please login account with your info
             </p>
           </div>
-          <button
+          {/* <button
             onClick={signInWithGoogle}
             className="flex w-full items-center justify-center gap-2.5 rounded-md border-2 border-[#F3F4F6] bg-[#F3F4F6] py-2 text-sm font-medium text-black transition-all hover:bg-transparent dark:border-brand dark:bg-brand dark:text-gray-300 dark:hover:bg-transparent sm:rounded-lg sm:tracking-[0.04em]"
           >
@@ -78,12 +78,12 @@ export default function SignIn() {
               />
             </div>
             Log in with Google
-          </button>
+          </button> */}
           {showAdditionalInfoModal && <SignUpAdditionalInfoModal user={user} />}
 
-          <p className="flex items-center justify-center gap-3 text-sm text-[#4B5563] before:h-[1px] before:w-full before:border-t before:border-dashed after:h-[1px] after:w-full after:border-t after:border-dashed dark:text-gray-300 dark:before:border-gray-500 dark:after:border-gray-500 ">
+          {/* <p className="flex items-center justify-center gap-3 text-sm text-[#4B5563] before:h-[1px] before:w-full before:border-t before:border-dashed after:h-[1px] after:w-full after:border-t after:border-dashed dark:text-gray-300 dark:before:border-gray-500 dark:after:border-gray-500 ">
             or
-          </p>
+          </p> */}
           <SignInForm />
           <p className="text-sm tracking-[0.5px] text-[#4B5563] dark:text-gray-300">
             Not a member yet?{' '}

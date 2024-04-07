@@ -6,7 +6,8 @@ import Checkbox from '@/components/ui/forms/checkbox';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import { useRouter } from 'next/navigation';
-
+import { db } from '../../lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
@@ -36,12 +37,11 @@ export default function SignInForm() {
       console.log(userCredential);
       setSignInStatus('success');
       if (typeof window !== 'undefined') {
-        localStorage.setItem(
-          'crypto-user',
-          JSON.stringify({
-            email: email,
-          }),
-        );
+        const unsub = onSnapshot(doc(db, 'users', email), (doc) => {
+          const data = doc.data();
+          console.log('Current data: ', data);
+          localStorage.setItem('crypto-user', JSON.stringify(data));
+        });
       }
       router.push('/authentication/face-verification/verify');
     } catch (error) {

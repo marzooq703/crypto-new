@@ -15,8 +15,6 @@ import TopupButton from '@/components/ui/topup-button';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import { useEffect } from 'react';
-import { db } from '../../lib/firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function ClassicScreen() {
   const [coinData, setCoinData] = useState([]);
@@ -41,14 +39,6 @@ export default function ClassicScreen() {
     console.log(coinData); // Log coinData after it's updated
   }, [coinData]);
 
-  useEffect(() => {
-    const unsub = onSnapshot(
-      doc(db, 'users', 'shafa.reena@gmail.com'),
-      (doc) => {
-        console.log('Current data: ', doc.data());
-      },
-    );
-  }, []);
   return (
     <>
       <div className="flex flex-wrap">

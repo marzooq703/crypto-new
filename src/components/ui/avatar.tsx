@@ -1,6 +1,8 @@
+'use client';
 import cn from 'classnames';
 import Image from '@/components/ui/image';
 import { StaticImageData } from 'next/image';
+import { useEffect, useState } from 'react';
 
 interface AvatarProps {
   image: StaticImageData;
@@ -40,6 +42,15 @@ function Avatar({
   height = 100,
 }: AvatarProps) {
   const sizeClassNames = sizes[size];
+  const [userData, setUserData] = useState({ firstName: '', lastName: '' });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const auth = localStorage.getItem('crypto-user');
+
+      setUserData(JSON.parse(auth));
+    }
+  }, []);
   return (
     <figure
       className={cn(

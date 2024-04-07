@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import cn from 'classnames';
@@ -43,6 +43,16 @@ export default function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const { closeDrawer } = useDrawer();
   const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState({ firstName: '', lastName: '' });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const auth = localStorage.getItem('crypto-user');
+      console.log('auth', auth);
+      if (!auth) router.push('/authentication');
+      else setUserData(JSON.parse(auth));
+    }
+  }, []);
 
   const ref = useRef<HTMLElement>(null);
   useClickAway(ref, () => {
@@ -160,18 +170,22 @@ export default function Sidebar({ className }: { className?: string }) {
                   delay: 0.1,
                 },
               }}
-              onClick={() =>
-                router.push(
-                  (layout === LAYOUT_OPTIONS.MODERN ? '' : layout) +
-                    routes.profile,
-                )
-              }
+              // onClick={() =>
+              //   router.push(
+              //     (layout === LAYOUT_OPTIONS.MODERN ? '' : layout) +
+              //       routes.profile,
+              //   )
+              // }
             >
-              <AuthorCard
-                image={AuthorImage}
-                name="Ha Williamson"
-                role="admin"
-              />
+              {userData.firstName || userData.lastName ? (
+                <AuthorCard
+                  image={AuthorImage}
+                  name={`${userData?.firstName} ${userData?.lastName}`}
+                  role="User"
+                />
+              ) : (
+                ''
+              )}
             </motion.div>
           </div>
         )}
