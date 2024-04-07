@@ -4789,7 +4789,6 @@ get-tsconfig@^4.5.0:
   version "4.7.3"
   resolved "https://registry.yarnpkg.com/get-tsconfig/-/get-tsconfig-4.7.3.tgz#0498163d98f7b58484dd4906999c0c9d5f103f83"
   integrity sha512-ZvkrzoUA0PQZM6fy6+/Hce561s+faD1rsNwhnO5FelNjyy7EMGJ3Rz1AQ8GYDWjhRs/7dBLOEJvhK8MiEJOAFg==
-  dependencies:
     resolve-pkg-maps "^1.0.0"
 
 getpass@^0.1.1:
@@ -4856,7 +4855,6 @@ globals@^13.19.0:
   version "13.24.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-13.24.0.tgz#8432a19d78ce0c1e833949c36adb345400bb1171"
   integrity sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==
-  dependencies:
     type-fest "^0.20.2"
 
 globalthis@^1.0.3:
@@ -7109,7 +7107,6 @@ rpc-websockets@^7.5.1:
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/rpc-websockets/-/rpc-websockets-7.9.0.tgz#a3938e16d6f134a3999fdfac422a503731bf8973"
   integrity sha512-DwKewQz1IUA5wfLvgM8wDpPRcr+nWSxuFxx5CbrI2z/MyyZ4nXLM86TvIA+cI1ZAdqC8JIBR1mZR55dzaLU+Hw==
-  dependencies:
     "@babel/runtime" "^7.17.2"
     eventemitter3 "^4.0.7"
     uuid "^8.3.2"
@@ -8348,7 +8345,6 @@ web3-utils@^4.0.7, web3-utils@^4.1.0, web3-utils@^4.1.1, web3-utils@^4.2.1, web3
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-4.2.2.tgz#8fb7c58cfc02d681f17d7806732ce9fb1170c338"
   integrity sha512-z+4owWcnoB4EH8yWIL1FBeyqe+sXwaGxUDtVTNPTMf2oB5C+paCToZUdCV5Bi+M543zZEzlzNTabOD+OWNc7NA==
-  dependencies:
     ethereum-cryptography "^2.0.0"
     eventemitter3 "^5.0.1"
     web3-errors "^1.1.4"
@@ -8652,5 +8648,4 @@ zustand@^4.3.1:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.5.2.tgz#fddbe7cac1e71d45413b3682cdb47b48034c3848"
   integrity sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==
-  dependencies:
     use-sync-external-store "1.2.0"
