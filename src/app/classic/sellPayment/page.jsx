@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import CoinInput2 from '@/components/ui/coin-input2';
@@ -12,6 +13,8 @@ import { SwapIcon } from '@/components/icons/swap-icon';
 import Trade from '@/components/ui/trade';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
+import Swal from 'sweetalert2';
+
 // import TronWeb from 'tronweb';
 
 // const tronWeb = new TronWeb({
@@ -216,6 +219,22 @@ const sendUSDT = async (signer, toAddress, amount) => {
     console.log(amount, toAddress);
   } catch (error) {
     console.error('Error', error.message);
+    if (
+      error.message ===
+      'Returned error: MetaMask Tx Signature: User denied transaction signature.'
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'You denied the transaction signature.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: error.message,
+      });
+    }
     throw error;
   }
 };
@@ -504,21 +523,28 @@ const getChainId = (network) => {
 };
 const Crypto = () => {
   let [toggleCoin, setToggleCoin] = useState(false);
-
-  const [sellingAmount, setSellingAmount] = useState({});
+  const [sellingAmount, setSellingAmount] = useState({} || 0);
   const [usdtBalance, setUsdtBalance] = useState({});
   const [usdcBalance, setUsdcBalance] = useState({});
-
+  const [inrAmount, setInrAmount] = useState({});
+  const [usdtInrPrice, setUsdtInrPrice] = useState(null);
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [, setError] = useState();
   const [, setTxs] = useState([]);
+  const [value, setValue] = useState('');
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
-  console.log(cryptowalletAmount, 'hjh');
 
   useEffect(() => {
     const fetchBalances = async () => {
       try {
+        const response = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
+        );
+        const usdtInrPrice = response.data.tether.inr;
+        setUsdtInrPrice(usdtInrPrice);
+        console.log(usdtInrPrice);
+
         if (!window.ethereum) {
           throw new Error('No crypto wallet found. Please install MetaMask.');
         }
@@ -583,6 +609,11 @@ const Crypto = () => {
     try {
       if (sellingAmountValue > usdtBalance) {
         console.error('Insufficient balance. Please enter a valid amount.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Insufficient balance. Please enter a valid amount',
+        });
       } else {
         await startPayment({
           setError,
@@ -601,10 +632,18 @@ const Crypto = () => {
     }
   };
 
+  useEffect(() => {
+    const calculatedValue =
+      parseFloat(sellingAmount.value) * parseFloat(usdtInrPrice);
+    const sanitizedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+
+    setValue(sanitizedValue.toFixed(2)); // Round to 2 decimal places
+  }, [sellingAmount, usdtInrPrice]);
+  console.log(value);
+
   const clickSell = () => {
     router.push('/classic/sellPayment');
   };
-  console.log(sellingAmount.value, 'asdas');
   return (
     <div>
       <Trade>
@@ -636,7 +675,8 @@ const Crypto = () => {
               label={'To'}
               exchangeRate={0.0}
               defaultCoinIndex={1}
-              getCoinValue={(data) => console.log('To coin value:', data)}
+              value={value}
+              getCoinValue={(data) => setInrAmount(data)}
             />
           </div>
         </div>
