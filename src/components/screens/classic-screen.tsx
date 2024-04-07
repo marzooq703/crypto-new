@@ -15,6 +15,8 @@ import TopupButton from '@/components/ui/topup-button';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import { useEffect } from 'react';
+import { db } from '../../lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function ClassicScreen() {
   const [coinData, setCoinData] = useState([]);
@@ -39,12 +41,20 @@ export default function ClassicScreen() {
     console.log(coinData); // Log coinData after it's updated
   }, [coinData]);
 
+  useEffect(() => {
+    const unsub = onSnapshot(
+      doc(db, 'users', 'shafa.reena@gmail.com'),
+      (doc) => {
+        console.log('Current data: ', doc.data());
+      },
+    );
+  }, []);
   return (
     <>
       <div className="flex flex-wrap">
-        <div className="mb-8 w-full sm:mb-0  dark:[&_.swiper-scrollbar>_.swiper-scrollbar-drag]:bg-body/50">
+        {/* <div className="mb-8 w-full sm:mb-0  dark:[&_.swiper-scrollbar>_.swiper-scrollbar-drag]:bg-body/50">
           <CoinSlider coins={coinData} />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex w-full flex-col sm:mt-8 lg:mt-8 lg:flex-row">
@@ -57,12 +67,12 @@ export default function ClassicScreen() {
                 className="mx-auto mb-6"
                 size="lg"
               />
-              <h3 className="mb-2 text-center text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 3xl:mb-3">
-                My Balance
+              {/* <h3 className="mb-2 text-center text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 3xl:mb-3">
+                Balance
               </h3>
               <div className="mb-7 text-center font-medium tracking-tighter text-gray-900 dark:text-white xl:text-2xl 3xl:mb-8 3xl:text-[32px]">
                 $0
-              </div>
+              </div> */}
 
               <TopupButton className="md:h-12 " />
             </div>

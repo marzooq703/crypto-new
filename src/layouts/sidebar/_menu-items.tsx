@@ -75,11 +75,11 @@ export const defaultMenuItems = [
   //   icon: <PoolIcon />,
   //   href: routes.liquidity,
   // },
-  {
-    name: 'Profile',
-    icon: <ProfileIcon />,
-    href: routes.profile,
-  },
+  // {
+  //   name: 'Profile',
+  //   icon: <ProfileIcon />,
+  //   href: routes.profile,
+  // },
   // {
   //   name: 'Vote',
   //   icon: <VoteIcon />,
@@ -99,33 +99,33 @@ export const defaultMenuItems = [
   //     },
   //   ],
   // },
-  {
-    name: 'Authentication',
-    icon: <LockIcon className="w-[18px]" />,
-    href: routes.signIn,
-    dropdownItems: [
-      {
-        name: 'Sign in',
-        href: routes.signIn,
-      },
-      {
-        name: 'Sign up',
-        href: routes.signUp,
-      },
-      {
-        name: 'KYC verification',
-        href: routes.kyc,
-      },
-      // {
-      //   name: 'Reset pin',
-      //   href: routes.resetPin,
-      // },
-      // {
-      //   name: 'Forget password',
-      //   href: routes.forgetPassword,
-      // },
-    ],
-  },
+  // {
+  //   name: 'Authentication',
+  //   icon: <LockIcon className="w-[18px]" />,
+  //   href: routes.signIn,
+  //   dropdownItems: [
+  //     {
+  //       name: 'Sign in',
+  //       href: routes.signIn,
+  //     },
+  //     {
+  //       name: 'Sign up',
+  //       href: routes.signUp,
+  //     },
+  //     {
+  //       name: 'KYC verification',
+  //       href: routes.kyc,
+  //     },
+  //     // {
+  //     //   name: 'Reset pin',
+  //     //   href: routes.resetPin,
+  //     // },
+  //     // {
+  //     //   name: 'Forget password',
+  //     //   href: routes.forgetPassword,
+  //     // },
+  //   ],
+  // },
 ];
 
 export const MinimalMenuItems = [
