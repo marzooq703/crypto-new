@@ -12,7 +12,7 @@ const FaceVerification = () => {
   useEffect(() => {
     setFaceIo(new faceIO('fioafd86'));
     if (typeof window !== 'undefined') {
-      setCurrentUser(JSON.parse(localStorage.getItem('crypto-user')));
+      setCurrentUser(JSON.parse(localStorage.getItem('crypto-user') || {}));
     }
   }, []);
   useEffect(() => {
