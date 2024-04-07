@@ -22,7 +22,7 @@ export default function IndexPageClassic() {
   return (
     <>
       {/* <GeoFencing /> */}
-      <ClassicScreen />;
+      <ClassicScreen />
     </>
   );
 }
