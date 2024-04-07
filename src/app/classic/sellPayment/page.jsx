@@ -571,7 +571,7 @@ const Crypto = () => {
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
   useEffect(() => {
-    const fetchBalances = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get(
           'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
@@ -579,7 +579,16 @@ const Crypto = () => {
         const usdtInrPrice = response.data.tether.inr;
         setUsdtInrPrice(usdtInrPrice);
         console.log(usdtInrPrice);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchBalances = async () => {
+      try {
         if (!window.ethereum) {
           throw new Error('No crypto wallet found. Please install MetaMask.');
         }
