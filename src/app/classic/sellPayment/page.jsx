@@ -14,6 +14,8 @@ import Trade from '@/components/ui/trade';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
 import Swal from 'sweetalert2';
+import { db } from '../../../lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
 
@@ -22,9 +24,22 @@ import Swal from 'sweetalert2';
 //   solidityNode: 'https://api.trongrid.io',
 //   eventServer: 'https://api.trongrid.io',
 // });
-const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
+const startPayment = async ({
+  setError,
+  setTxs,
+  amount,
+  addr,
+  network,
+  inrTransefed,
+  transefedAddress,
+}) => {
   try {
     if (!window.ethereum) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'No crypto wallet found',
+      });
       throw new Error('No crypto wallet found. Please install MetaMask.');
     }
 
@@ -56,7 +71,8 @@ const startPayment = async ({ setError, setTxs, amount, addr, network }) => {
       const useUSDT = true;
       const useUSDC = false;
       if (useUSDT) {
-        await sendUSDT(signer, addr, amount);
+        console.log(inrTransefed, transefedAddress, 'it is me');
+        await sendUSDT(signer, addr, amount, inrTransefed, transefedAddress);
       } else if (useUSDC) {
         await sendUSDC(signer, addr, amount);
       }
@@ -183,7 +199,13 @@ const usdtContractAbi = [
   },
 ];
 
-const sendUSDT = async (signer, toAddress, amount) => {
+const sendUSDT = async (
+  signer,
+  toAddress,
+  amount,
+  inrTransefed,
+  fromAddress,
+) => {
   try {
     const web3 = new Web3(window.ethereum);
     const usdtMaticContractAddress =
@@ -216,7 +238,21 @@ const sendUSDT = async (signer, toAddress, amount) => {
       gasPrice: gasPriceHex,
       gasLimit,
     });
-    console.log(amount, toAddress);
+
+    await addDoc(collection(db, 'userTransactions'), {
+      usdtSold: amount,
+      inrTransefed: inrTransefed,
+      fromAddress: toAddress,
+      toAdderess: fromAddress,
+      status: 'sucess',
+    });
+
+    console.log(amount, toAddress, inrTransefed, fromAddress);
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'transaction was successful.',
+    });
   } catch (error) {
     console.error('Error', error.message);
     if (
@@ -534,7 +570,6 @@ const Crypto = () => {
   const [value, setValue] = useState('');
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
-
   useEffect(() => {
     const fetchBalances = async () => {
       try {
@@ -615,12 +650,15 @@ const Crypto = () => {
           text: 'Insufficient balance. Please enter a valid amount',
         });
       } else {
+        const reciverAddress = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
         await startPayment({
           setError,
           setTxs,
           amount: `${sellingAmount.value}`,
-          addr: '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B',
+          addr: reciverAddress,
           network: 'matic', //  "eth", "matic", "bnb",
+          inrTransefed: value,
+          transefedAddress: reciverAddress,
         });
       }
 
