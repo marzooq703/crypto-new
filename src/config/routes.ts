@@ -5,7 +5,7 @@ const routes = {
   retro: '/retro',
   swap: '/buy',
   buy: '/buy',
-  sell: '/sell',
+  sell: '/sellPayment',
   liquidity: '/liquidity',
   liquidityPosition: '/liquidity-position',
   farms: '/farms',
