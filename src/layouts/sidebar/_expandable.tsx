@@ -51,7 +51,7 @@ export default function Sidebar({ className }: { className?: string }) {
       const parse = auth ? JSON.parse(auth) : false;
       console.log('auth', auth);
       if (!parse) router.push('/authentication');
-      else setUserData(JSON.parse(parse));
+      else setUserData(parse);
     }
   }, []);
 
