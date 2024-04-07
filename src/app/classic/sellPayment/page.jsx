@@ -35,11 +35,11 @@ const startPayment = async ({
 }) => {
   try {
     if (!window.ethereum) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'No crypto wallet found',
-      });
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error!',
+      //   text: 'No crypto wallet found',
+      // });
       throw new Error('No crypto wallet found. Please install MetaMask.');
     }
 
