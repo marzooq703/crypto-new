@@ -1,5 +1,5 @@
+// @ts-nocheck
 'use client';
-
 import { useState, useEffect } from 'react';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import Checkbox from '@/components/ui/forms/checkbox';
@@ -15,6 +15,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import routes from '@/config/routes';
 import { auth } from '../../lib/firebase';
 // import GeoFencing from '../geoFencing/page';
+import faceIO from '@faceio/fiojs';
 
 type SignInStatus = 'success' | 'failed' | null;
 
@@ -25,7 +26,79 @@ export default function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signInStatus, setSignInStatus] = useState<SignInStatus>(null); // Track sign-in status
+  const [faceIo, setFaceIo] = useState({});
 
+  function handleError(errCode) {
+    // Handle error here
+    // Log all possible error codes during user interaction..
+    // Refer to: https://faceio.net/integration-guide#error-codes
+    // for a detailed overview when these errors are triggered.
+    const fioErrs = faceIo.fetchAllErrorCodes();
+    switch (errCode) {
+      case fioErrs.PERMISSION_REFUSED:
+        console.log('Access to the Camera stream was denied by the end user');
+        break;
+      case fioErrs.NO_FACES_DETECTED:
+        console.log(
+          'No faces were detected during the enroll or authentication process',
+        );
+        break;
+      case fioErrs.UNRECOGNIZED_FACE:
+        console.log("Unrecognized face on this application's Facial Index");
+        break;
+      case fioErrs.MANY_FACES:
+        console.log('Two or more faces were detected during the scan process');
+        break;
+      case fioErrs.FACE_DUPLICATION:
+        console.log(
+          'User enrolled previously (facial features already recorded). Cannot enroll again!',
+        );
+        break;
+      case fioErrs.MINORS_NOT_ALLOWED:
+        console.log('Minors are not allowed to enroll on this application!');
+        break;
+      case fioErrs.PAD_ATTACK:
+        console.log(
+          'Presentation (Spoof) Attack (PAD) detected during the scan process',
+        );
+        break;
+      case fioErrs.FACE_MISMATCH:
+        console.log(
+          'Calculated Facial Vectors of the user being enrolled do not match',
+        );
+        break;
+      case fioErrs.WRONG_PIN_CODE:
+        console.log('Wrong PIN code supplied by the user being authenticated');
+        break;
+      // ...
+      // Refer to the boilerplate at: https://gist.github.com/symisc/34203d2811a39f2a871373abc6dd1ce9
+      // for the list of all possible error codes.
+    }
+  }
+  async function authenticateUser() {
+    try {
+      const userData = await faceIo.authenticate({
+        locale: 'auto', // Default user locale
+      });
+
+      router.push('/');
+      console.log('Success, user identified');
+      // Grab the facial ID linked to this particular user which will be same
+      // for each of his successful future authentication. FACEIO recommend
+      // that your rely on this Facial ID if you plan to uniquely identify
+      // all enrolled users on your backend for example.
+      console.log('Linked facial Id: ' + userData.facialId);
+      // Grab the arbitrary data you have already linked (if any) to this particular user
+      // during his enrollment via the payload parameter of the enroll() method.
+      console.log('Payload: ' + JSON.stringify(userData.payload)); // {"whoami": 123456, "email": "john.doe@example.com"} from the enroll() example above
+    } catch (error) {
+      handleError(error.code);
+    }
+  }
+
+  useEffect(() => {
+    setFaceIo(new faceIO('fioafd86'));
+  }, []);
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -43,7 +116,8 @@ export default function SignInForm() {
           localStorage.setItem('crypto-user', JSON.stringify(data));
         });
       }
-      router.push('/authentication/face-verification/verify');
+      authenticateUser();
+      // router.push('/authentication/face-verification/verify');
     } catch (error) {
       console.error(error);
       setSignInStatus('failed');
