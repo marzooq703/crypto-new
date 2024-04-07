@@ -36,8 +36,8 @@ function Avatar({
   className,
   size = 'md',
   shape = 'circle',
-  width,
-  height,
+  width = 100,
+  height = 100,
 }: AvatarProps) {
   const sizeClassNames = sizes[size];
   return (
@@ -46,13 +46,13 @@ function Avatar({
         'relative shrink-0 overflow-hidden',
         className,
         shapes[shape],
-        shape === 'circle' && sizeClassNames
+        shape === 'circle' && sizeClassNames,
       )}
     >
       {shape === 'circle' ? (
         size === 'xs' || 'sm' ? (
           <Image
-            src={image}
+            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff&size=256"
             alt={alt}
             width={width}
             height={height}
@@ -61,7 +61,7 @@ function Avatar({
           />
         ) : (
           <Image
-            src={image}
+            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff"
             alt={alt}
             width={width}
             height={height}
@@ -71,7 +71,12 @@ function Avatar({
           />
         )
       ) : (
-        <Image src={image} alt={alt} className="rounded-[6px]" width={width} />
+        <Image
+          src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff"
+          alt={alt}
+          className="rounded-[6px]"
+          width={width}
+        />
       )}
     </figure>
   );

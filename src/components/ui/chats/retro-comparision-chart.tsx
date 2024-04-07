@@ -11,7 +11,8 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { Bitcoin } from '@/components/icons/bitcoin';
+// import { Bitcoin } from '@/components/icons/bitcoin';
+import { Tether } from '@/components/icons/tether';
 import { EthereumDark } from '@/components/icons/ethereum-dark';
 import { SwapIcon } from '@/components/icons/swap-icon';
 import { Refresh } from '@/components/icons/refresh';
@@ -74,6 +75,7 @@ export default function ComparisonChart() {
   const [date, setDate] = useState(1624147200);
   const [status, setStatus] = useState('Year');
   const [chartData, setChartData] = useState(yearlyComparison);
+  console.log('chartData', chartData);
   const [priceDiff, setPriceDiff] = useState(-1.107);
   const [percentage, setPercentage] = useState('2.22%');
   const [toggleCoin, setToggleCoin] = useState(false);
@@ -106,19 +108,19 @@ export default function ComparisonChart() {
               <span
                 className={cn(
                   'flex items-center gap-2.5',
-                  toggleCoin ? 'flex-row-reverse' : 'flex-row'
+                  toggleCoin ? 'flex-row-reverse' : 'flex-row',
                 )}
               >
-                <Bitcoin className="h-auto w-7 lg:w-9" />
+                <Tether className="h-auto w-7 lg:w-9" />
                 <EthereumDark className="h-auto w-7 lg:w-9" />
               </span>
               <span
                 className={cn(
                   'flex items-end font-medium text-dark dark:text-gray-400',
-                  toggleCoin ? 'flex-row-reverse' : 'flex-row'
+                  toggleCoin ? 'flex-row-reverse' : 'flex-row',
                 )}
               >
-                <span>BTCB</span>/<span>ETH</span>
+                <span>USDT</span>/<span>ETH</span>
               </span>
               <Button
                 size="mini"
@@ -137,16 +139,16 @@ export default function ComparisonChart() {
             <span
               className={cn(
                 'flex items-end',
-                toggleCoin ? 'flex-row-reverse' : 'flex-row'
+                toggleCoin ? 'flex-row-reverse' : 'flex-row',
               )}
             >
-              <span>BTCB</span>/<span>ETH</span>
+              <span>USDT</span>/<span>ETH</span>
             </span>
 
             <span
               className={cn(
                 'mb-1 flex items-center text-xs sm:mb-0 sm:text-base',
-                priceDiff > 0 ? 'text-green-500' : 'text-red-500'
+                priceDiff > 0 ? 'text-green-500' : 'text-red-500',
               )}
             >
               <span
@@ -159,9 +161,9 @@ export default function ComparisonChart() {
               {priceDiff} ({percentage})
             </span>
           </div>
-          <div className="mt-6 flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 sm:text-sm">
+          {/* <div className="mt-6 flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 sm:text-sm">
             <Refresh /> {formattedDate}
-          </div>
+          </div> */}
         </div>
         <RadioGroup
           value={status}
@@ -187,16 +189,17 @@ export default function ComparisonChart() {
             onMouseMove={(data) => {
               if (data.isTooltipActive) {
                 setDate(
-                  data.activePayload && data.activePayload[0].payload.date
+                  data.activePayload && data.activePayload[0].payload.date,
                 );
                 setPrice(
-                  data.activePayload && data.activePayload[0].payload.btc
+                  data.activePayload && data.activePayload[0].payload.btc,
                 );
                 setPriceDiff(
-                  data.activePayload && data.activePayload[0].payload.diff
+                  data.activePayload && data.activePayload[0].payload.diff,
                 );
                 setPercentage(
-                  data.activePayload && data.activePayload[0].payload.percentage
+                  data.activePayload &&
+                    data.activePayload[0].payload.percentage,
                 );
               }
             }}

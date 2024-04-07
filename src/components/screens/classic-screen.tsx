@@ -15,6 +15,8 @@ import TopupButton from '@/components/ui/topup-button';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import { useEffect } from 'react';
+import { db } from '../../lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function ClassicScreen() {
   const [coinData, setCoinData] = useState([]);
@@ -39,33 +41,41 @@ export default function ClassicScreen() {
     console.log(coinData); // Log coinData after it's updated
   }, [coinData]);
 
+  useEffect(() => {
+    const unsub = onSnapshot(
+      doc(db, 'users', 'shafa.reena@gmail.com'),
+      (doc) => {
+        console.log('Current data: ', doc.data());
+      },
+    );
+  }, []);
   return (
     <>
       <div className="flex flex-wrap">
-        <div className="mb-8 w-full sm:mb-0  dark:[&_.swiper-scrollbar>_.swiper-scrollbar-drag]:bg-body/50">
+        {/* <div className="mb-8 w-full sm:mb-0  dark:[&_.swiper-scrollbar>_.swiper-scrollbar-drag]:bg-body/50">
           <CoinSlider coins={coinData} />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex w-full flex-col sm:mt-8 lg:mt-8 lg:flex-row">
-        <div className="flex w-full items-center rounded-lg bg-white p-6 shadow-card dark:bg-light-dark md:col-span-1 md:h-[678px] lg:col-span-5 lg:h-[644px] lg:w-1/3 xl:col-span-3 xl:row-start-1 xl:row-end-2 xl:h-auto xl:w-1/4 2xl:col-span-3  2xl:h-[715px] 2xl:p-6 3xl:col-span-3 3xl:h-[730px] 3xl:p-8 4xl:h-[815px]">
+        <div className="flex w-full rounded-lg bg-white p-6 shadow-card dark:bg-light-dark md:col-span-1 md:h-[678px] lg:col-span-5 lg:h-[644px] lg:w-1/3 xl:col-span-3 xl:row-start-1 xl:row-end-2 xl:h-auto xl:w-1/4 2xl:col-span-3  2xl:h-[715px] 2xl:p-6 3xl:col-span-3 3xl:h-[730px] 3xl:p-8 4xl:h-[815px]">
           <div className="w-full">
-            <div className="mb-8 h-full">
-              <Avatar
-                image={AuthorImage}
-                alt="Author"
-                className="mx-auto mb-6"
-                size="lg"
-              />
-              <h3 className="mb-2 text-center text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 3xl:mb-3">
-                My Balance
+            {/* <div className="mb-8 h-full"> */}
+            <Avatar
+              image={AuthorImage}
+              alt="Author"
+              className="mx-auto mb-6"
+              size="lg"
+            />
+            {/* <h3 className="mb-2 text-center text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 3xl:mb-3">
+                Balance
               </h3>
               <div className="mb-7 text-center font-medium tracking-tighter text-gray-900 dark:text-white xl:text-2xl 3xl:mb-8 3xl:text-[32px]">
                 $0
-              </div>
+              </div> */}
 
-              <TopupButton className="md:h-12 " />
-            </div>
+            {/* <TopupButton className="md:h-12 " /> */}
+            {/* </div> */}
             <span className="-mx-6 block border-t border-dashed border-t-gray-200 dark:border-t-gray-700 3xl:-mx-8" />
             <TransactCoin className="mt-6" transactionType="buy" />
           </div>

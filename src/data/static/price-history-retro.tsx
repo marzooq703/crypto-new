@@ -277,4 +277,20 @@ export const yearlyComparison = [
     percentage: '10.2%',
     date: 1623456000,
   },
+  {
+    name: '2023',
+    btc: 14,
+    eth: 2,
+    diff: 3,
+    percentage: '1.01%',
+    date: 1622505600,
+  },
+  {
+    name: '2024',
+    btc: 12,
+    eth: 2,
+    diff: -2.3,
+    percentage: '10.2%',
+    date: 1623456000,
+  },
 ];
