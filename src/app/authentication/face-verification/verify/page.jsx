@@ -17,7 +17,7 @@ const FaceVerification = () => {
   }, []);
   useEffect(() => {
     if (!currentUser) {
-      router.push('/authentication/sign-up');
+      router.push('/authentication');
     }
   }, [currentUser]);
   function handleError(errCode) {
@@ -67,40 +67,31 @@ const FaceVerification = () => {
       // for the list of all possible error codes.
     }
   }
-  async function enrollNewUser() {
+  async function authenticateUser() {
     try {
-      const userInfo = await faceIo.enroll({
+      const userData = await faceIo.authenticate({
         locale: 'auto', // Default user locale
-        payload: {
-          /* The payload we want to associate with this particular user which is forwarded back to us upon future authentication of this user.*/
-          uid: 123423, // Dummy ID linked to this particular user
-          email: 'ahamedaqeel703@gmail.com',
-        },
       });
-      router.push('/classic/kyc');
-      // alert(
-      //   `User Successfully Enrolled! Details:
-      //       Unique Facial ID: ${userInfo.facialId}
-      //       Enrollment Date: ${userInfo.timestamp}
-      //       Gender: ${userInfo.details.gender}
-      //       Age Approximation: ${userInfo.details.age}`,
-      // );
+
+      router.push('/');
+      console.log('Success, user identified');
+      // Grab the facial ID linked to this particular user which will be same
+      // for each of his successful future authentication. FACEIO recommend
+      // that your rely on this Facial ID if you plan to uniquely identify
+      // all enrolled users on your backend for example.
+      console.log('Linked facial Id: ' + userData.facialId);
+      // Grab the arbitrary data you have already linked (if any) to this particular user
+      // during his enrollment via the payload parameter of the enroll() method.
+      console.log('Payload: ' + JSON.stringify(userData.payload)); // {"whoami": 123456, "email": "john.doe@example.com"} from the enroll() example above
     } catch (error) {
       handleError(error.code);
     }
   }
   return (
     <div>
-      <h1 className="text-3xl font-semibold mb-4">
-        Face Enrollment with Secure PIN!
-      </h1>
-      <p className="mb-4">
-        We provide safe and secure crypto by verifying your face on every
-        transaction, please Verify your face with a uniqe Pin created by you for
-        Multi Step Security!
-      </p>
-      <Button shape="rounded" onClick={enrollNewUser}>
-        Enroll Face
+      <h1 className="text-3xl font-semibold mb-4">Verify your face to Login</h1>
+      <Button shape="rounded" onClick={authenticateUser}>
+        Verify
       </Button>
     </div>
   );
