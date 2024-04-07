@@ -40,6 +40,7 @@ const startPayment = async ({
       //   title: 'Error!',
       //   text: 'No crypto wallet found',
       // });
+
       throw new Error('No crypto wallet found. Please install MetaMask.');
     }
 
