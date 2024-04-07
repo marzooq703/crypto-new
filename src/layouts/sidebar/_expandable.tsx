@@ -48,9 +48,10 @@ export default function Sidebar({ className }: { className?: string }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const auth = localStorage.getItem('crypto-user');
+      const parse = auth ? JSON.parse(auth) : false;
       console.log('auth', auth);
-      if (!auth) router.push('/authentication');
-      else setUserData(JSON.parse(auth));
+      if (!parse) router.push('/authentication');
+      else setUserData(JSON.parse(parse));
     }
   }, []);
 
