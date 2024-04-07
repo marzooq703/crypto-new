@@ -70,7 +70,7 @@ function SwitcherButton({
           'flex h-[70px] items-center justify-center rounded-lg text-center text-sm font-medium uppercase tracking-wide transition-all',
           checked
             ? 'bg-white shadow-large dark:bg-gray-600'
-            : 'bg-gray-100 text-gray-500 group-hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:group-hover:bg-gray-700'
+            : 'bg-gray-100 text-gray-500 group-hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:group-hover:bg-gray-700',
         )}
       >
         {children}
@@ -80,7 +80,7 @@ function SwitcherButton({
           'mt-3 block text-center text-sm transition-all',
           checked
             ? 'text-brand dark:text-white'
-            : 'text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white'
+            : 'text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white',
         )}
       >
         {title}
@@ -191,7 +191,7 @@ function LayoutSwitcher() {
   // set initial layout on component mount
   useEffect(() => {
     const initialLayout = layoutOptions.find(
-      (layout) => layout === layoutSegmentFromURL
+      (layout) => layout === layoutSegmentFromURL,
     );
     setLayout(() => initialLayout ?? LAYOUT_OPTIONS.MODERN);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,9 +228,10 @@ function LayoutSwitcher() {
 function ColorSwitcher() {
   const [themeColor, setThemeColor] = useLocalStorage(
     'criptic-color',
-    '#323743'
+    '#2a52be',
   );
-  useThemeColor(themeColor ? themeColor : '#323743');
+  // "#2a52be"
+  useThemeColor(themeColor ? themeColor : '#2a52be');
   return (
     <div className="px-6 pt-8">
       <h4 className="mb-4 text-sm font-medium text-gray-900 dark:text-white">

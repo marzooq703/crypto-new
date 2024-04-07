@@ -3,6 +3,8 @@ import cn from 'classnames';
 import Image from '@/components/ui/image';
 import { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
+import { useThemeColor } from '@/lib/hooks/use-theme-color';
+import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 
 interface AvatarProps {
   image: StaticImageData;
@@ -46,11 +48,15 @@ function Avatar({
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // "#2a52be"
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const auth = localStorage.getItem('crypto-user');
-
-      setUserData(JSON.parse(auth));
+      const parse = auth ? JSON.parse(auth) : {};
+      setUserData(parse);
     }
   }, []);
+  useThemeColor('#2a52be');
   return (
     <figure
       className={cn(
@@ -63,7 +69,7 @@ function Avatar({
       {shape === 'circle' ? (
         size === 'xs' || 'sm' ? (
           <Image
-            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff&size=256"
+            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff&size=256"
             alt={alt}
             width={width}
             height={height}
@@ -72,7 +78,7 @@ function Avatar({
           />
         ) : (
           <Image
-            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff"
+            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff"
             alt={alt}
             width={width}
             height={height}
@@ -83,7 +89,7 @@ function Avatar({
         )
       ) : (
         <Image
-          src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=0D8ABC&color=fff"
+          src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff"
           alt={alt}
           className="rounded-[6px]"
           width={width}

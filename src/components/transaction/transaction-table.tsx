@@ -119,7 +119,7 @@ export default function TransactionTable() {
     useSortBy,
     useResizeColumns,
     useFlexLayout,
-    usePagination
+    usePagination,
   );
 
   const { pageIndex } = state;
@@ -146,7 +146,7 @@ export default function TransactionTable() {
                     {headerGroup.headers.map((column, idx) => (
                       <th
                         {...column.getHeaderProps(
-                          column.getSortByToggleProps()
+                          column.getSortByToggleProps(),
                         )}
                         key={idx}
                         className="group  bg-white px-2 py-5 font-normal first:rounded-bl-lg last:rounded-br-lg ltr:first:pl-8 ltr:last:pr-8 rtl:first:pr-8 rtl:last:pl-8 dark:bg-light-dark md:px-4"
@@ -182,7 +182,8 @@ export default function TransactionTable() {
                 {...getTableBodyProps()}
                 className="text-xs font-medium text-gray-900 dark:text-white 3xl:text-sm"
               >
-                {page.map((row, idx) => {
+                No Transacions Yet...
+                {/* {page.map((row, idx) => {
                   prepareRow(row);
                   return (
                     <tr
@@ -203,13 +204,13 @@ export default function TransactionTable() {
                       })}
                     </tr>
                   );
-                })}
+                })} */}
               </tbody>
             </table>
           </div>
         </Scrollbar>
       </div>
-      <div className="mt-3 flex items-center justify-center rounded-lg bg-white px-5 py-4 text-sm shadow-card dark:bg-light-dark lg:py-6">
+      {/* <div className="mt-3 flex items-center justify-center rounded-lg bg-white px-5 py-4 text-sm shadow-card dark:bg-light-dark lg:py-6">
         <div className="flex items-center gap-5">
           <Button
             onClick={() => previousPage()}
@@ -240,7 +241,7 @@ export default function TransactionTable() {
             <LongArrowRight className="h-auto w-4 rtl:rotate-180 " />
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

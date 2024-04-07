@@ -45,15 +45,15 @@ export default function RootLayout({
       <body>
         <QueryClientProvider>
           <ThemeProvider>
-            {/* <WagmiConfig> */}
-            {/* <SettingsButton /> */}
-            {/* <SettingsDrawer /> */}
-            <Suspense fallback={null}>
-              <ModalsContainer />
-              <DrawersContainer />
-            </Suspense>
-            {children}
-            {/* </WagmiConfig> */}
+            <WagmiConfig>
+              {/* <SettingsButton />
+              <SettingsDrawer /> */}
+              <Suspense fallback={null}>
+                <ModalsContainer />
+                <DrawersContainer />
+              </Suspense>
+              {children}
+            </WagmiConfig>
           </ThemeProvider>
         </QueryClientProvider>
       </body>
