@@ -69,7 +69,7 @@ function Avatar({
       {shape === 'circle' ? (
         size === 'xs' || 'sm' ? (
           <Image
-            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff&size=256"
+            src={`https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}&background=2a52be&color=fff&size=256`}
             alt={alt}
             width={width}
             height={height}
@@ -78,7 +78,7 @@ function Avatar({
           />
         ) : (
           <Image
-            src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff"
+            src={`https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}&background=2a52be&color=fff&size=256`}
             alt={alt}
             width={width}
             height={height}
@@ -89,7 +89,7 @@ function Avatar({
         )
       ) : (
         <Image
-          src="https://ui-avatars.com/api/?name=Hassan+Marzooq&background=2a52be&color=fff"
+          src={`https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}&background=2a52be&color=fff&size=256`}
           alt={alt}
           className="rounded-[6px]"
           width={width}
