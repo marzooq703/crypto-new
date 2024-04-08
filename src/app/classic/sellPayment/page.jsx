@@ -32,6 +32,7 @@ const startPayment = async ({
   network,
   inrTransefed,
   transefedAddress,
+  email,
 }) => {
   try {
     if (!window.ethereum) {
@@ -73,7 +74,14 @@ const startPayment = async ({
       const useUSDC = false;
       if (useUSDT) {
         console.log(inrTransefed, transefedAddress, 'it is me');
-        await sendUSDT(signer, addr, amount, inrTransefed, transefedAddress);
+        await sendUSDT(
+          signer,
+          addr,
+          amount,
+          inrTransefed,
+          transefedAddress,
+          email,
+        );
       } else if (useUSDC) {
         await sendUSDC(signer, addr, amount);
       }
@@ -206,6 +214,7 @@ const sendUSDT = async (
   amount,
   inrTransefed,
   fromAddress,
+  email,
 ) => {
   try {
     const web3 = new Web3(window.ethereum);
@@ -246,7 +255,33 @@ const sendUSDT = async (
       fromAddress: toAddress,
       toAdderess: fromAddress,
       status: 'sucess',
+      isMoneyTransferred: false,
     });
+
+    const docRef = doc(db, 'userTransactions', email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {
+        usdtSold: amount,
+        inrTransferred: inrTransefed,
+        fromAddress: toAddress,
+        toAddress: fromAddress,
+        status: 'success',
+        isMoneyTransferred: false,
+        email: email,
+      });
+    } else {
+      await setDoc(docRef, {
+        usdtSold: amount,
+        inrTransferred: inrTransefed,
+        fromAddress: toAddress,
+        toAddress: fromAddress,
+        status: 'success',
+        isMoneyTransferred: false,
+        email: email,
+      });
+    }
 
     console.log(amount, toAddress, inrTransefed, fromAddress);
     Swal.fire({
@@ -568,9 +603,17 @@ const Crypto = () => {
   const [cryptoAmount, setCryptoAmount] = useState({});
   const [, setError] = useState();
   const [, setTxs] = useState([]);
+  const [userEmail, setUserEmail] = useState(null);
   const [value, setValue] = useState('');
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
+  const localStorageData = localStorage.getItem('crypto-user');
+  if (localStorageData) {
+    const parsedData = JSON.parse(localStorageData);
+
+    setUserEmail(parsedData);
+  }
+  console.log(userEmail);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -674,6 +717,7 @@ const Crypto = () => {
           network: 'matic', //  "eth", "matic", "bnb",
           inrTransefed: value,
           transefedAddress: reciverAddress,
+          email: userEmail,
         });
       }
 
