@@ -62,14 +62,14 @@ function AuthenticationDropdown() {
             <a
               onClick={() => {
                 console.log('singout');
-                signOut(auth)
-                  .then(() => {
-                    // Sign-out successful.
-                    router.push('/authentication');
-                  })
-                  .catch((error) => {
-                    // An error happened.
-                  });
+                // signOut(auth)
+                //   .then(() => {
+                //     // Sign-out successful.
+                router.push('/authentication');
+                //   })
+                //   .catch((error) => {
+                //     // An error happened.
+                //   });
               }}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
             >
