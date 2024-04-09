@@ -114,6 +114,7 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
               href={item.value}
               title={item.name}
               isActive={item.value === pathname}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 mb-2.5"
             />
           ))}
           {/* <AnchorLink
