@@ -16,6 +16,7 @@ import Web3 from 'web3';
 import Swal from 'sweetalert2';
 import { db } from '../../../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
 
@@ -33,6 +34,7 @@ const startPayment = async ({
   inrTransefed,
   transefedAddress,
   email,
+  usdtBalance,
 }) => {
   try {
     if (!window.ethereum) {
@@ -58,6 +60,25 @@ const startPayment = async ({
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     addr = ethers.utils.getAddress(addr);
+
+    const web3 = new Web3(window.ethereum);
+    const usdtMaticContractAddress =
+      '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+
+    const usdtContract = new web3.eth.Contract(
+      usdtContractAbi,
+      usdtMaticContractAddress,
+    );
+
+    const usdtBalanceWei = await usdtContract.methods.balanceOf(addr).call();
+
+    const usdtBalances = parseFloat(
+      web3.utils.fromWei(usdtBalanceWei, 'ether'),
+    );
+
+    const usdtBalance = `${usdtBalances}`.slice(0, -4);
+
+    console.log(usdtBalance, 'usdtBalance');
 
     // if (tron) {
     //   const useUSDT = true;
@@ -231,17 +252,17 @@ const sendUSDT = async (
     //     : network === 'bnb'
     //     ? usdtBnbContractAddress
     //     : '';
-
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
       usdtMaticContractAddress,
     );
+    console.log(email, 'aqeel1');
 
     const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
     const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
     const gasPriceWei = await web3.eth.getGasPrice(); // Dynamically fetch current gas price
     const gasPriceHex = web3.utils.toHex(gasPriceWei);
-    const gasLimit = 70000;
+    const gasLimit = 100000;
 
     await usdtContract.methods.transfer(toAddress, amountWei1).send({
       from: await signer.getAddress(),
@@ -617,8 +638,9 @@ const Crypto = () => {
         const sell = localStorage.getItem('sell');
         setUsdtInrPrice(Number(sell));
       }
-      setUserEmail(parsedData);
+      setUserEmail(parsedData.email);
     }
+    console.log(userEmail, 'userEmail');
     // const fetchData = async () => {
     //   try {
     //     const response = await axios.get(
@@ -697,11 +719,11 @@ const Crypto = () => {
     const sellingAmountValue = parseFloat(sellingAmount.value);
     console.log(sellingAmountValue, 'sellingAmountValue');
     console.log(usdtBalance, 'usdtBalance');
-    Swal.fire({
-      icon: 'error',
-      title: 'Wallet not found',
-      text: 'Please connect a wallet to continue',
-    });
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Wallet not found',
+    //   text: 'Please connect a wallet to continue',
+    // });
     try {
       if (sellingAmountValue > usdtBalance) {
         console.error('Insufficient balance. Please enter a valid amount.');
