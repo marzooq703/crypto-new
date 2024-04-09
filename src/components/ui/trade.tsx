@@ -77,16 +77,16 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
   return (
     <div className="pt-8 text-sm xl:pt-10">
       <div className="mx-auto w-full max-w-lg rounded-lg bg-white p-5 pt-4 shadow-card dark:bg-light-dark xs:p-6 xs:pt-5">
-        <nav className="mb-5 min-h-[40px] border-b border-dashed border-gray-200 pb-4 uppercase tracking-wider dark:border-gray-700 xs:mb-6 xs:pb-5 xs:tracking-wide">
-          {isMounted && ['xs'].indexOf(breakpoint) !== -1 && (
-            <Listbox
-              options={tradeMenu}
-              selectedOption={selectedMenuItem}
-              onChange={setSelectedMenuItem}
-              onSelect={(path) => handleRouteOnSelect(path)}
-              className="w-full"
-            >
-              <AnchorLink
+        {/* <nav className="mb-5 min-h-[40px] border-b border-dashed border-gray-200 pb-4 uppercase tracking-wider dark:border-gray-700 xs:mb-6 xs:pb-5 xs:tracking-wide"> */}
+        {/* {isMounted && ['xs'].indexOf(breakpoint) !== -1 && ( */}
+        {/* // <Listbox
+            //   options={tradeMenu}
+            //   selectedOption={selectedMenuItem}
+            //   onChange={setSelectedMenuItem}
+            //   onSelect={(path) => handleRouteOnSelect(path)}
+            //   className="w-full"
+            // > */}
+        {/* <AnchorLink
                 href={{
                   pathname:
                     layout === LAYOUT_OPTIONS.MODERN
@@ -97,26 +97,26 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
               >
                 Charts
                 <ExportIcon className="h-auto w-2.5" />
-              </AnchorLink>
-              <button className="inline-flex items-center justify-between gap-1.5 rounded-md px-3 py-2 uppercase text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700/70">
+              </AnchorLink> */}
+        {/* <button className="inline-flex items-center justify-between gap-1.5 rounded-md px-3 py-2 uppercase text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700/70">
                 Settings
                 <RangeIcon className="h-auto w-3" />
-              </button>
-            </Listbox>
-          )}
-          <div
-            className="hidden items-center justify-center  text-gray-600 dark:text-gray-400 sm:flex"
-            style={{ marginLeft: '0' }}
-          >
-            {tradeMenu.map((item) => (
-              <ActiveNavLink
-                key={item.name}
-                href={item.value}
-                title={item.name}
-                isActive={item.value === pathname}
-              />
-            ))}
-            {/* <AnchorLink
+              </button> */}
+        {/* // </Listbox>
+          // )} */}
+        <div
+          className="hidden items-center justify-center  text-gray-600 dark:text-gray-400 sm:flex mt-5 "
+          style={{ marginLeft: '0' }}
+        >
+          {tradeMenu.map((item) => (
+            <ActiveNavLink
+              key={item.name}
+              href={item.value}
+              title={item.name}
+              isActive={item.value === pathname}
+            />
+          ))}
+          {/* <AnchorLink
               href={{
                 pathname:
                   layout === LAYOUT_OPTIONS.MODERN ? '/' : routes.home + layout,
@@ -126,7 +126,7 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
               Chartsdddd
               <ExportIcon className="h-auto w-2.5" />
             </AnchorLink> */}
-            {/* <Button
+          {/* <Button
               variant="transparent"
               shape="circle"
               size="small"
@@ -134,8 +134,8 @@ export default function Trade({ children }: React.PropsWithChildren<{}>) {
             >
               <RangeIcon />
             </Button> */}
-          </div>
-        </nav>
+        </div>
+        {/* </nav> */}
         <AnimatePresence mode={'wait'}>
           <motion.div
             initial="exit"
