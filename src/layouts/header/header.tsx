@@ -17,7 +17,7 @@ import { useLayout } from '@/lib/hooks/use-layout';
 import { LAYOUT_OPTIONS } from '@/lib/constants';
 import { sideBarMenuItems } from '../sidebar/_expandable';
 import { LockIcon } from '@/components/icons/lock-icon';
-import { getAuth, signOut } from 'firebase/auth';
+// import { getAuth, signOut } from 'firebase/auth';
 
 function NotificationButton() {
   const { layout } = useLayout();
@@ -45,9 +45,9 @@ function AuthenticationDropdown() {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const auth = getAuth();
+  // const auth = getAuth();
   const router = useRouter();
-  if (!auth) router.push('/authentication');
+  // if (!auth) router.push('/authentication');
   return (
     <div className="relative">
       <button className="dropbtn" onClick={toggleDropdown}>
