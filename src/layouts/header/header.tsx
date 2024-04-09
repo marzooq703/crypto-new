@@ -11,12 +11,13 @@ import ActiveLink from '@/components/ui/links/active-link';
 import SearchButton from '@/components/search/button';
 import { useIsMounted } from '@/lib/hooks/use-is-mounted';
 import { useDrawer } from '@/components/drawer-views/context';
-import WalletConnect from '@/components/nft/wallet-connect';
+// import WalletConnect from '@/components/nft/wallet-connect';
 import routes from '@/config/routes';
 import { useLayout } from '@/lib/hooks/use-layout';
 import { LAYOUT_OPTIONS } from '@/lib/constants';
 import { sideBarMenuItems } from '../sidebar/_expandable';
 import { LockIcon } from '@/components/icons/lock-icon';
+import { getAuth, signOut } from 'firebase/auth';
 
 function NotificationButton() {
   const { layout } = useLayout();
@@ -44,7 +45,9 @@ function AuthenticationDropdown() {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
+  const auth = getAuth();
+  const router = useRouter();
+  if (!auth) router.push('/authentication');
   return (
     <div className="relative">
       <button className="dropbtn" onClick={toggleDropdown}>
@@ -56,7 +59,23 @@ function AuthenticationDropdown() {
       {isOpen && (
         <div className="absolute z-10 right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
           <div className="py-1">
-            {sideBarMenuItems
+            <a
+              onClick={() => {
+                console.log('singout');
+                signOut(auth)
+                  .then(() => {
+                    // Sign-out successful.
+                    router.push('/authentication');
+                  })
+                  .catch((error) => {
+                    // An error happened.
+                  });
+              }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              sign out
+            </a>
+            {/* {sideBarMenuItems
               .find((item) => item.name === 'Authentication')
               ?.dropdownItems?.map((dropdownItem, index) => (
                 <a
@@ -66,7 +85,7 @@ function AuthenticationDropdown() {
                 >
                   {dropdownItem.name}
                 </a>
-              ))}
+              ))} */}
           </div>
         </div>
       )}
@@ -79,7 +98,7 @@ function HeaderRightArea() {
     <div className="relative order-last flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-8">
       <AuthenticationDropdown />
       {/* <NotificationButton /> */}
-      <WalletConnect />
+      {/* <WalletConnect /> */}
     </div>
   );
 }

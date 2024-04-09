@@ -607,28 +607,31 @@ const Crypto = () => {
   const [value, setValue] = useState('');
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
-  const localStorageData = localStorage.getItem('crypto-user');
-  if (localStorageData) {
-    const parsedData = JSON.parse(localStorageData);
 
-    setUserEmail(parsedData);
-  }
-  console.log(userEmail);
+  // console.log(userEmail);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
-        );
-        const usdtInrPrice = response.data.tether.inr;
-        setUsdtInrPrice(usdtInrPrice);
-        console.log(usdtInrPrice);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+    const localStorageData = localStorage.getItem('crypto-user');
+    if (localStorageData) {
+      const parsedData = JSON.parse(localStorageData);
+      if (typeof window !== 'undefined') {
+        const sell = localStorage.getItem('sell');
+        setUsdtInrPrice(Number(sell));
       }
-    };
-
-    fetchData();
+      setUserEmail(parsedData);
+    }
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
+    //     );
+    //     const usdtInrPrice = response.data.tether.inr;
+    //     setUsdtInrPrice(usdtInrPrice);
+    //     console.log(usdtInrPrice);
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
+    // fetchData();
   }, []);
   useEffect(() => {
     const fetchBalances = async () => {

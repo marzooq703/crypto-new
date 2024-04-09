@@ -53,30 +53,38 @@ const BuyCrypto = () => {
 
   const fetchConversionRate = async () => {
     try {
-      const response = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price',
-        {
-          params: {
-            ids: 'tether',
-            vs_currencies: 'inr',
-          },
-        },
-      );
-      if (
-        !response.data ||
-        !response.data.tether ||
-        !response.data.tether.inr
-      ) {
-        throw new Error('Invalid response or missing data');
+      if (typeof window !== 'undefined') {
+        const buy = localStorage.getItem('buy');
+        const conversionRate = buy;
+        const calculatedUsdtValue =
+          parseFloat(inrValue) / parseFloat(conversionRate);
+        setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
       }
-      const conversionRate = response.data.tether.inr;
-      const calculatedUsdtValue =
-        parseFloat(inrValue) / parseFloat(conversionRate);
-      setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
 
-      // Log the conversion rate and the calculated USDT value
-      console.log('Conversion Rate:', conversionRate);
-      console.log('Calculated USDT Value:', calculatedUsdtValue.toFixed(2));
+      // const response = await axios.get(
+      //   'https://api.coingecko.com/api/v3/simple/price',
+      //   {
+      //     params: {
+      //       ids: 'tether',
+      //       vs_currencies: 'inr',
+      //     },
+      //   },
+      // );
+      // if (
+      //   !response.data ||
+      //   !response.data.tether ||
+      //   !response.data.tether.inr
+      // ) {
+      //   throw new Error('Invalid response or missing data');
+      // }
+      // const conversionRate = response.data.tether.inr;
+      // const calculatedUsdtValue =
+      //   parseFloat(inrValue) / parseFloat(conversionRate);
+      // setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
+
+      // // Log the conversion rate and the calculated USDT value
+      // console.log('Conversion Rate:', conversionRate);
+      // console.log('Calculated USDT Value:', calculatedUsdtValue.toFixed(2));
     } catch (error) {
       console.error('Error fetching conversion rate:', error);
     }

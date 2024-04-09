@@ -6,11 +6,7 @@ import {
   w3mProvider,
 } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/react';
-import {
-  configureChains,
-  createConfig,
-  WagmiConfig as WagmiConfigWrapper,
-} from 'wagmi';
+import { configureChains, createConfig } from 'wagmi';
 import { arbitrum, mainnet, polygon } from 'wagmi/chains';
 
 const chains = [arbitrum, mainnet, polygon];
@@ -27,7 +23,7 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 export default function WagmiConfig({ children }: React.PropsWithChildren) {
   return (
     <>
-      <WagmiConfigWrapper config={wagmiConfig}>{children}</WagmiConfigWrapper>
+      {/* <WagmiConfigWrapper config={wagmiConfig}>{children}</WagmiConfigWrapper> */}
 
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </>

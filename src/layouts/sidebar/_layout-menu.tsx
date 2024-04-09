@@ -12,7 +12,7 @@ import { useDrawer } from '@/components/drawer-views/context';
 // import { useLayout } from '@/lib/hooks/use-layout';
 import { ChevronDown } from '@/components/icons/chevron-down';
 import { MenuItem } from '@/components/ui/collapsible-menu';
-import WalletConnect from '@/components/nft/wallet-connect';
+// import WalletConnect from '@/components/nft/wallet-connect';
 import {
   MinimalMenuItems,
   defaultMenuItems,
@@ -240,7 +240,7 @@ export default function DrawerMenu({
         </div>
       </div>
       <div className="absolute bottom-4 right-0 z-10 w-full px-6">
-        <WalletConnect anchorClassName="w-full" btnClassName="!w-full !h-11" />
+        {/* <WalletConnect anchorClassName="w-full" btnClassName="!w-full !h-11" /> */}
       </div>
     </div>
   );

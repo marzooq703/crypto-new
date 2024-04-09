@@ -2,8 +2,8 @@ export const TransactionData = [
   {
     id: 0,
     transactionType: 'Buy',
-    createdAt: '12 january 2022',
-    symbol: 'BTC',
+    createdAt: '12 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -14,8 +14,8 @@ export const TransactionData = [
   {
     id: 1,
     transactionType: 'Sell',
-    createdAt: '13 january 2022',
-    symbol: 'BTC',
+    createdAt: '13 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -26,8 +26,8 @@ export const TransactionData = [
   {
     id: 2,
     transactionType: 'Buy',
-    createdAt: '14 january 2022',
-    symbol: 'BTC',
+    createdAt: '14 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -38,8 +38,8 @@ export const TransactionData = [
   {
     id: 3,
     transactionType: 'Sell',
-    createdAt: '15 january 2022',
-    symbol: 'BTC',
+    createdAt: '15 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -50,8 +50,8 @@ export const TransactionData = [
   {
     id: 4,
     transactionType: 'Buy',
-    createdAt: '16 january 2022',
-    symbol: 'BTC',
+    createdAt: '16 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -62,8 +62,8 @@ export const TransactionData = [
   {
     id: 5,
     transactionType: 'Buy',
-    createdAt: '17 january 2022',
-    symbol: 'BTC',
+    createdAt: '17 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -74,8 +74,8 @@ export const TransactionData = [
   {
     id: 6,
     transactionType: 'Buy',
-    createdAt: '18 january 2022',
-    symbol: 'BTC',
+    createdAt: '18 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -86,8 +86,8 @@ export const TransactionData = [
   {
     id: 7,
     transactionType: 'Buy',
-    createdAt: '19 january 2022',
-    symbol: 'BTC',
+    createdAt: '19 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -98,8 +98,8 @@ export const TransactionData = [
   {
     id: 8,
     transactionType: 'Buy',
-    createdAt: '20 january 2022',
-    symbol: 'BTC',
+    createdAt: '20 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -110,8 +110,8 @@ export const TransactionData = [
   {
     id: 9,
     transactionType: 'Buy',
-    createdAt: '21 january 2022',
-    symbol: 'BTC',
+    createdAt: '21 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -122,8 +122,8 @@ export const TransactionData = [
   {
     id: 10,
     transactionType: 'Buy',
-    createdAt: '22 january 2022',
-    symbol: 'BTC',
+    createdAt: '22 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
@@ -134,8 +134,8 @@ export const TransactionData = [
   {
     id: 11,
     transactionType: 'Buy',
-    createdAt: '23 january 2022',
-    symbol: 'BTC',
+    createdAt: '23 march 2024',
+    symbol: 'USDT',
     status: 'Pending',
     address: '0898hshiw36...',
     amount: {
