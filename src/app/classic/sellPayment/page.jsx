@@ -15,8 +15,15 @@ import { ethers } from 'ethers';
 import Web3 from 'web3';
 import Swal from 'sweetalert2';
 import { db } from '../../../lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+} from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
 
@@ -61,6 +68,7 @@ const startPayment = async ({
     const signer = provider.getSigner();
     addr = ethers.utils.getAddress(addr);
 
+    console.log('Wallet Address:', addr);
     const web3 = new Web3(window.ethereum);
     const usdtMaticContractAddress =
       '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
@@ -270,41 +278,68 @@ const sendUSDT = async (
       gasLimit,
     });
 
-    await addDoc(collection(db, 'userTransactions'), {
-      usdtSold: amount,
-      inrTransefed: inrTransefed,
-      fromAddress: toAddress,
-      toAdderess: fromAddress,
-      status: 'sucess',
-      isMoneyTransferred: false,
-    });
+    console.log(gasPriceHex, 'gasPriceHex');
 
     const docRef = doc(db, 'userTransactions', email);
+
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       await updateDoc(docRef, {
-        usdtSold: amount,
-        inrTransferred: inrTransefed,
-        fromAddress: toAddress,
-        toAddress: fromAddress,
-        status: 'success',
-        isMoneyTransferred: false,
-        email: email,
+        transactions: arrayUnion({
+          usdtSold: amount,
+          inrTransferred: inrTransefed,
+          fromAddress: toAddress,
+          toAddress: fromAddress,
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
       });
     } else {
       await setDoc(docRef, {
-        usdtSold: amount,
-        inrTransferred: inrTransefed,
-        fromAddress: toAddress,
-        toAddress: fromAddress,
-        status: 'success',
-        isMoneyTransferred: false,
-        email: email,
+        transactions: arrayUnion({
+          usdtSold: amount,
+          inrTransferred: inrTransefed,
+          fromAddress: toAddress,
+          toAddress: fromAddress,
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
       });
     }
 
+    const docRef2 = doc(db, 'allTransactions', 'Transactions');
+    const docSnap1 = await getDoc(docRef2);
+
+    if (docSnap1.exists()) {
+      await updateDoc(docRef2, {
+        transactions: arrayUnion({
+          usdtSold: amount,
+          inrTransferred: inrTransefed,
+          fromAddress: toAddress,
+          toAddress: fromAddress,
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
+      });
+    } else {
+      await setDoc(docRef2, {
+        transactions: arrayUnion({
+          usdtSold: amount,
+          inrTransferred: inrTransefed,
+          fromAddress: toAddress,
+          toAddress: fromAddress,
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
+      });
+    }
     console.log(amount, toAddress, inrTransefed, fromAddress);
+
     Swal.fire({
       icon: 'success',
       title: 'Success!',
