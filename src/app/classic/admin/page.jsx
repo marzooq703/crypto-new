@@ -2,19 +2,42 @@
 import { useEffect, useState } from 'react';
 import Button from '@/components/ui/button';
 import Swal from 'sweetalert2';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
 
 const Admin = () => {
+  const [loading, setLoading] = useState(true);
   const [buy, setBuy] = useState(0);
   const [sell, setSell] = useState(0);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const buy = localStorage.getItem('buy');
-      const sell = localStorage.getItem('sell');
-      setBuy(Number(buy));
-      setSell(Number(sell));
+  const getServerData = async () => {
+    const buyRef = doc(db, 'currentPricing', 'Buy');
+    const buyDoc = await getDoc(buyRef);
+
+    if (buyDoc.exists()) {
+      const buy = buyDoc.data();
+      console.log('Document data:', buy);
+      setBuy(buy.current);
+    } else {
+      console.log('No such document!');
     }
+
+    const sellRef = doc(db, 'currentPricing', 'Sell');
+    const sellDoc = await getDoc(sellRef);
+
+    if (sellDoc.exists()) {
+      const sell = sellDoc.data();
+      console.log('Document data:', sell);
+      setSell(sell.current);
+    } else {
+      console.log('No such document!');
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    getServerData();
   }, []);
+  if (loading) return <div>Loading...</div>;
   return (
     <>
       <h1>Update Buy </h1>
@@ -31,14 +54,30 @@ const Admin = () => {
       <Button
         shape="rounded"
         className="ml-3"
-        onClick={() => {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('buy', buy);
-          }
-          Swal.fire({
-            icon: 'success',
-            title: 'Buy price updated',
-          });
+        onClick={async () => {
+          // if (typeof window !== 'undefined') {
+          //   localStorage.setItem('buy', buy);
+          // }
+          await updateDoc(doc(db, 'currentPricing', 'Buy'), {
+            current: buy,
+          })
+            .then(() => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Buy price updated',
+              });
+            })
+            .catch((err) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error updating Buy price',
+                text: err.message,
+              });
+            });
+          // Swal.fire({
+          //   icon: 'success',
+          //   title: 'Buy price updated',
+          // });
         }}
       >
         Update
@@ -55,14 +94,25 @@ const Admin = () => {
       <Button
         shape="rounded"
         className="ml-3"
-        onClick={() => {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('sell', sell);
+        onClick={async () => {
+          // if (typeof window !== 'undefined') {
+          //   localStorage.setItem('sell', sell);
+          // }
+          try {
+            await updateDoc(doc(db, 'currentPricing', 'Sell'), {
+              current: sell,
+            });
+            Swal.fire({
+              icon: 'success',
+              title: 'Sell price updated',
+            });
+          } catch (e) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error updating Sell price',
+              text: e.message,
+            });
           }
-          Swal.fire({
-            icon: 'success',
-            title: 'Sell price updated',
-          });
         }}
       >
         Update
