@@ -9,7 +9,7 @@ import CoinInput2 from '@/components/ui/coin-input2';
 import TransactionInfo from '@/components/ui/transaction-info';
 import Trade from '@/components/ui/trade';
 import axios from 'axios';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // import {sendMessageToGroup} from "../../../lib/telegram"
@@ -53,13 +53,16 @@ const BuyCrypto = () => {
 
   const fetchConversionRate = async () => {
     try {
-      if (typeof window !== 'undefined') {
-        const buy = localStorage.getItem('buy');
+      console.log('Current data:');
+      const unsub = onSnapshot(doc(db, 'currentPricing', 'Buy'), (doc) => {
+        const data = doc.data();
+        console.log('Current data: ', data);
+        const buy = data.current;
         const conversionRate = buy;
         const calculatedUsdtValue =
           parseFloat(inrValue) / parseFloat(conversionRate);
         setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
-      }
+      });
 
       // const response = await axios.get(
       //   'https://api.coingecko.com/api/v3/simple/price',
@@ -164,9 +167,7 @@ const BuyCrypto = () => {
   };
 
   useEffect(() => {
-    if (inrValue !== '') {
-      fetchConversionRate();
-    }
+    if (inrValue !== '') fetchConversionRate();
   }, [inrValue]);
 
   return (
