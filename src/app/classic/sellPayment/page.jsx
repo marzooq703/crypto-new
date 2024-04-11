@@ -71,8 +71,8 @@ const startPayment = async ({
 
     console.log('Wallet Address:', addr);
     const web3 = new Web3(window.ethereum);
-    const usdtMaticContractAddress =
-      '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+    // const usdtMaticContractAddress =
+    //   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
 
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
@@ -705,8 +705,8 @@ const Crypto = () => {
         }
 
         const web3 = new Web3(window.ethereum);
-        const usdtMaticContractAddress =
-          '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+        // const usdtMaticContractAddress =
+        //   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
         const usdcMaticContractAddress =
           '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
         const provider = new ethers.providers.Web3Provider(window.ethereum);

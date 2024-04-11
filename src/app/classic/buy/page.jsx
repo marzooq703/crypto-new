@@ -123,31 +123,33 @@ const BuyCrypto = () => {
       //     .then((val) => {
       //       console.log(val)
       //     }).catch((err) => console.error(err));
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!userEmail && user) {
-        setUserEmail(user.email);
-      }
+
+      // TODO: Commented by Marzooq to use it in the next page in the future.
+      // const auth = getAuth();
+      // const user = auth.currentUser;
+      // if (!userEmail && user) {
+      //   setUserEmail(user.email);
+      // }
 
       // Ensure user email is available
-      if (!userEmail) {
-        console.error('User email is not available');
-        return;
-      }
+      // if (!userEmail) {
+      //   console.error('User email is not available');
+      //   return;
+      // }
 
       // Create a transaction data object
-      const transactionData = {
-        currency: 'INR',
-        amount: inrValue,
-        equivalentUSDT: usdtValue,
-        timestamp: new Date().toISOString(), // Convert date to ISO string format
-      };
+      // const transactionData = {
+      //   currency: 'INR',
+      //   amount: inrValue,
+      //   equivalentUSDT: usdtValue,
+      //   timestamp: new Date().toISOString(), // Convert date to ISO string format
+      // };
 
       // Add the transaction data to the Firestore collection
-      await setDoc(
-        doc(db, 'transactions', generateTransactionId(userEmail)),
-        transactionData,
-      );
+      // await setDoc(
+      //   doc(db, 'transactions', generateTransactionId(userEmail)),
+      //   transactionData,
+      // );
 
       // Store values in local storage
       localStorage.setItem('inrValue', JSON.stringify(inrValue));

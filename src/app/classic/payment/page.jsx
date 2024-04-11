@@ -3,7 +3,6 @@
 import QRCode from 'react-qr-code';
 import { useEffect, useState } from 'react';
 import { db } from '../../../lib/firebase';
-
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
@@ -15,6 +14,10 @@ const BuyPayment = () => {
   const [usdtValue, setUsdtValue] = useState('');
   const [transactions, setTransaction] = useState(null);
 
+  // const validateAddress = (address) => {
+
+  // };
+  // validateAddress();
   useEffect(() => {
     const storedInrValue = localStorage.getItem('inrValue');
     const storedUsdtValue = localStorage.getItem('usdtValue');
@@ -125,9 +128,9 @@ const BuyPayment = () => {
         {/* Line: You are about to receive __ Eth for __ rupees in wallet */}
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
-          <strong className="text-blue-500">{usdtValue || 0}</strong> for{' '}
-          <strong className="text-green-500">{inrValue || 0} rupees</strong> in
-          wallet.
+          <strong className="text-blue-500">{usdtValue || 0} USDT</strong> for{' '}
+          <strong className="text-green-500">{inrValue || 0} INR</strong> in
+          your wallet.
         </p>
 
         {/* Medium size box showing two things */}
@@ -135,13 +138,13 @@ const BuyPayment = () => {
           {/* Left side: To pay __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">To pay</p>
-            <strong className="text-red-500">{inrValue || 0}</strong>
+            <strong className="text-red-500">{inrValue || 0} INR</strong>
           </div>
 
           {/* Right side: You get __ */}
           <div className="text-center">
             <p className="text-sm mb-2 text-gray-600">You get</p>
-            <strong className="text-green-500">{usdtValue || 0}</strong>
+            <strong className="text-green-500">{usdtValue || 0} USDT</strong>
           </div>
         </div>
       </div>
@@ -225,15 +228,21 @@ const BuyPayment = () => {
         </div> */}
 
         {/* QR Code */}
-        <div className="text-center mt-6">
+        {/* <div className="text-center mt-6">
           <label className="block text-md font-medium text-gray-600 mb-2">
             Scan QR Code to Pay
           </label>
-          {/* <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" /> */}
+          // <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" />
           <QRCode value="Sample QR Code Content" />
-        </div>
-        <div className="block text-md font-medium text-black text-center mt-6">
+        </div> */}
+        {/* <div className="block text-md font-medium text-black text-center mt-6">
           <p>or</p>
+        </div> */}
+        <div>
+          <label className="block text-md font-medium text-gray-600">
+            Type or paste a valid address
+          </label>
+          <input type="text" className="form-input w-full border rounded-md" />
         </div>
         <div className="block text-md font-medium text-black text-center mt-6">
           <a
@@ -245,7 +254,7 @@ const BuyPayment = () => {
               className="bg-blue-500 text-white px-4 py-2 rounded-md  "
               //   onClick={handlePayButtonClick}
             >
-              Pay With Card
+              Pay
             </button>
           </a>
         </div>
