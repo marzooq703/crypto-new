@@ -1,57 +1,27 @@
 import { useEffect, useState } from 'react';
-import { useConnectWallet } from '@web3-onboard/react';
-import { ethers } from 'ethers';
-import type { TokenSymbol } from '@web3-onboard/common';
 import Button from '@/components/ui/button';
-
-interface Account {
-  address: string;
-  balance: Record<TokenSymbol, string> | null;
-  ens: { name: string | undefined; avatar: string | undefined };
-}
+import { ConnectKitButton } from 'connectkit';
 
 export default function ConnectWallet() {
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
-  const [ethersProvider, setProvider] =
-    useState<ethers.providers.Web3Provider | null>();
-  const [account, setAccount] = useState<Account | null>(null);
-
-  useEffect(() => {
-    if (wallet?.provider) {
-      const { name, avatar } = wallet?.accounts[0].ens ?? {};
-      setAccount({
-        address: wallet.accounts[0].address,
-        balance: wallet.accounts[0].balance,
-        ens: { name, avatar: avatar?.url },
-      });
-    }
-  }, [wallet]);
-
-  useEffect(() => {
-    // If the wallet has a provider than the wallet is connected
-    if (wallet?.provider) {
-      setProvider(new ethers.providers.Web3Provider(wallet.provider, 'any'));
-      // if using ethers v6 this is:
-      // ethersProvider = new ethers.BrowserProvider(wallet.provider, 'any')
-    }
-  }, [wallet]);
+  // useEffect(() => {
+  // }, []);
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  if (wallet?.provider && account) {
+  if (false) {
     return (
       <div>
         <Button onClick={toggleDropdown} shape="pill">
-          {wallet.label}
+          {/* {wallet.label} */}Name
         </Button>
         {isOpen && (
           <div className="absolute z-10 right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
             <div className="py-1">
               <a
                 onClick={() => {
-                  disconnect({ label: wallet.label });
+                  // disconnect({ label: wallet.label });
                 }}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
               >
@@ -64,9 +34,5 @@ export default function ConnectWallet() {
     );
   }
 
-  return (
-    <Button disabled={connecting} onClick={() => connect()} shape="pill">
-      Connect
-    </Button>
-  );
+  return <ConnectKitButton />;
 }

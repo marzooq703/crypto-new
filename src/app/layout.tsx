@@ -1,8 +1,10 @@
+'use client';
 import { Suspense } from 'react';
 import { Fira_Code } from 'next/font/google';
 import cn from 'classnames';
 import { QueryClientProvider } from '@/app/shared/query-client-provider';
 import { ThemeProvider } from '@/app/shared/theme-provider';
+import { Web3Provider } from '@/app/shared/Web3Provider';
 // import WagmiConfig from '@/app/shared/wagmi-config';
 import ModalsContainer from '@/components/modal-views/container';
 import DrawersContainer from '@/components/drawer-views/container';
@@ -22,11 +24,11 @@ const fira_code = Fira_Code({
   display: 'swap',
 });
 
-export const metadata = {
-  title: 'Stable Crypto - Safe and Reliable Crypto Market in India',
-  description:
-    'Stable Crypto - We use face recognition and other security technologies to secure your Crypto Transactions',
-};
+// export const metadata = {
+//   title: 'Stable Crypto - Safe and Reliable Crypto Market in India',
+//   description:
+//     'Stable Crypto - We use face recognition and other security technologies to secure your Crypto Transactions',
+// };
 
 export default function RootLayout({
   children,
@@ -45,14 +47,16 @@ export default function RootLayout({
       <body>
         <QueryClientProvider>
           <ThemeProvider>
-            {/* <WagmiConfig> */}
-            {/* <SettingsButton />
+            <Web3Provider>
+              {/* <WagmiConfig> */}
+              {/* <SettingsButton />
               <SettingsDrawer /> */}
-            <Suspense fallback={null}>
-              <ModalsContainer />
-              <DrawersContainer />
-            </Suspense>
-            {children}
+              <Suspense fallback={null}>
+                <ModalsContainer />
+                <DrawersContainer />
+              </Suspense>
+              {children}
+            </Web3Provider>
             {/* </WagmiConfig> */}
           </ThemeProvider>
         </QueryClientProvider>
