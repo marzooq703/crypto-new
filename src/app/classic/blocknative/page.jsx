@@ -49,7 +49,7 @@ const frontier = frontierModule();
 
 const trezorOptions = {
   email: 'test@test.com',
-  appUrl: 'https://www.blocknative.com',
+  appUrl: 'http://localhost:3000/',
 };
 
 const trezor = trezorModule(trezorOptions);

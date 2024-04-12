@@ -23,7 +23,6 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  onSnapshot,
 } from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
@@ -66,6 +65,7 @@ const startPayment = async ({
 
     // const tron = false;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
     addr = ethers.utils.getAddress(addr);
 
@@ -670,16 +670,10 @@ const Crypto = () => {
     const localStorageData = localStorage.getItem('crypto-user');
     if (localStorageData) {
       const parsedData = JSON.parse(localStorageData);
-      // if (typeof window !== 'undefined') {
-      //   const sell = localStorage.getItem('sell');
-      //   setUsdtInrPrice(Number(sell));
-      // }
-      const unsub = onSnapshot(doc(db, 'currentPricing', 'Sell'), (doc) => {
-        const data = doc.data();
-        console.log('Current data: ', data);
-        const sell = data.current;
+      if (typeof window !== 'undefined') {
+        const sell = localStorage.getItem('sell');
         setUsdtInrPrice(Number(sell));
-      });
+      }
       setUserEmail(parsedData.email);
     }
     console.log(userEmail, 'userEmail');
@@ -767,26 +761,27 @@ const Crypto = () => {
     //   text: 'Please connect a wallet to continue',
     // });
     try {
-      if (sellingAmountValue > usdtBalance) {
-        console.error('Insufficient balance. Please enter a valid amount.');
-        Swal.fire({
-          icon: 'error',
-          title: 'Error!',
-          text: 'Insufficient balance. Please enter a valid amount',
-        });
-      } else {
-        const reciverAddress = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
-        await startPayment({
-          setError,
-          setTxs,
-          amount: `${sellingAmount.value}`,
-          addr: reciverAddress,
-          network: 'matic', //  "eth", "matic", "bnb",
-          inrTransefed: value,
-          transefedAddress: reciverAddress,
-          email: userEmail,
-        });
-      }
+      // if (sellingAmountValue > usdtBalance) {
+      // console.error('Insufficient balance. Please enter a valid amount.');
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error!',
+      //   text: 'Insufficient balance. Please enter a valid amount',
+      // });
+      // }
+      //  else {
+      const reciverAddress = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
+      await startPayment({
+        setError,
+        setTxs,
+        amount: `${sellingAmount.value}`,
+        addr: reciverAddress,
+        network: 'matic', //  "eth", "matic", "bnb",
+        inrTransefed: value,
+        transefedAddress: reciverAddress,
+        email: userEmail,
+      });
+      // }
 
       // navigate("/sell-crypto-details");
     } catch (err) {
