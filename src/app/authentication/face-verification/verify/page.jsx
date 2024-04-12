@@ -10,7 +10,7 @@ const FaceVerification = () => {
   const [faceIo, setFaceIo] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
-    setFaceIo(new faceIO('fioafd86'));
+    setFaceIo(new faceIO('fioab44a'));
     if (typeof window !== 'undefined') {
       const auth = localStorage.getItem('crypto-user');
       setCurrentUser(JSON.parse(auth || {}));
