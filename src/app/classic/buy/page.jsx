@@ -225,7 +225,7 @@ const BuyCrypto = () => {
         >
           BUY
         </Button>
-        {/* <Button
+        <Button
           size="large"
           shape="rounded"
           fullWidth={true}
@@ -233,11 +233,7 @@ const BuyCrypto = () => {
           onClick={() => {
             axios
               .post('http://localhost:3000/classic/kyc/api', {
-                type: 'Buy',
-                amount: '10USD',
-                userName: 'tariq',
-                userID: 'sdf',
-                city: 'chennai',
+                amount: '1'
               })
               .then((val) => {
                 console.log(val);
@@ -246,7 +242,7 @@ const BuyCrypto = () => {
           }}
         >
           Test
-        </Button> */}
+        </Button>
       </Trade>
     </div>
   );
