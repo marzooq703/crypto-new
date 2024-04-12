@@ -5,14 +5,14 @@ import { useEffect } from 'react';
 // import dynamic from 'next/dynamic';
 // const faceIO = dynamic(() => import('@faceio/fiojs'), { ssr: false });
 
-// const faceio = new faceIO('fioafd86'); // Get the application Public ID at https://console.faceio.net.
+// const faceio = new faceIO('fioab44a'); // Get the application Public ID at https://console.faceio.net.
 const API_KEY = 'fioab44a';
 function App() {
   let faceio;
   useEffect(() => {
     faceio = new faceIO('fioab44a');
   }, []);
-  // const faceio = new faceIO('fioafd86');
+  // const faceio = new faceIO('fioab44a');
   async function authenticateUser() {
     try {
       const userData = await faceio.authenticate({
