@@ -22,12 +22,13 @@ const config = createConfig(
     walletConnectProjectId: '4b8c8cbd08646956222234798e7abedf',
 
     // Required App Info
-    appName: 'Your App Name',
+    appName: 'Stable Crypto',
 
     // Optional App Info
-    appDescription: 'Your App Description',
-    appUrl: 'https://family.co', // your app's url
-    appIcon: 'https://family.co/logo.png', // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    appDescription: 'Safest crypto exchange',
+    appUrl: 'https://app.stablecrypto.in', // your app's url
+    appIcon:
+      'https://res.cloudinary.com/djt8hcdtb/image/upload/v1712953953/Stable_Crypto_Logo_x8u28l.png', // your app's icon, no bigger than 1024x1024px (max. 1MB)
   }),
 );
 
