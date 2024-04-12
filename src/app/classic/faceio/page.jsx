@@ -6,11 +6,11 @@ import { useEffect } from 'react';
 // const faceIO = dynamic(() => import('@faceio/fiojs'), { ssr: false });
 
 // const faceio = new faceIO('fioafd86'); // Get the application Public ID at https://console.faceio.net.
-const API_KEY = 'fioac267';
+const API_KEY = 'fioab44a';
 function App() {
   let faceio;
   useEffect(() => {
-    faceio = new faceIO('fioafd86');
+    faceio = new faceIO('fioab44a');
   }, []);
   // const faceio = new faceIO('fioafd86');
   async function authenticateUser() {
