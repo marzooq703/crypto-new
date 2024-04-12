@@ -18,7 +18,7 @@ const Checkout = () => {
     if (!cashfree) return;
     const checkoutOptions = {
       paymentSessionId:
-        'session_NX3Ox6pqFnSm2zK9ksjJICiPBxbDl_rPFg_w3KAhcoH692sCChKYGvor4m8yNnqYxRVWwnV53LYy9YjbR9_sRaUnRYAysEOqeFzybpC3Y9U4',
+        'session_Bf-gvKWpi5gQU0h5uHfEimoSP4sQi2W9G6D0PxQ3e7ftPwWxwj6P8z-Z3RGh_UCF-dwQB-MdedCsCvIqkSMxWSg1ACOwwF7G4w8apAqrZDaX',
       redirectTarget: '_modal',
     };
     cashfree.checkout(checkoutOptions).then(() => {
