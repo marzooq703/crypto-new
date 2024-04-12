@@ -50,7 +50,7 @@ export async function POST(request) {
     const request = {
       order_amount: amount,
       order_currency: 'INR',
-      order_id: `order_${generateOrderId(5)}`,
+      order_id: id,
       customer_details: {
         customer_id: customerName,
         customer_phone: customerPhone,
