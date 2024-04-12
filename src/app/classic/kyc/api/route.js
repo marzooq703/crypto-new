@@ -1,11 +1,11 @@
 import { Cashfree } from 'cashfree-pg';
 var axios = require('axios').default;
 
-Cashfree.XClientId = '496275d72b66247ade662722d8572694';
-Cashfree.XClientSecret =
-  'cfsk_ma_prod_b929de6e5efcebffd5477a813580e6bf_7c2169e7';
+Cashfree.XClientId = process.env.XClientId;
+Cashfree.XClientSecret = process.env.XClientSecret;
 Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
 
+console.log(process.env.XClientId);
 function generateOrderId(length) {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
