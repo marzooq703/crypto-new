@@ -23,6 +23,7 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
+  onSnapshot
 } from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
@@ -666,15 +667,21 @@ const Crypto = () => {
 
   // console.log(userEmail);
   useEffect(() => {
-    const localStorageData = localStorage.getItem('crypto-user');
-    if (localStorageData) {
-      const parsedData = JSON.parse(localStorageData);
-      if (typeof window !== 'undefined') {
-        const sell = localStorage.getItem('sell');
-        setUsdtInrPrice(Number(sell));
-      }
-      setUserEmail(parsedData.email);
-    }
+    const unsub = onSnapshot(doc(db, 'currentPricing', 'Sell'), (doc) => {
+      const data = doc.data();
+      console.log('Current data: ', data);
+      const sell = data.current;
+      setUsdtInrPrice(Number(sell));
+    });
+    // const localStorageData = localStorage.getItem('crypto-user');
+    // if (localStorageData) {
+    //   const parsedData = JSON.parse(localStorageData);
+    //   if (typeof window !== 'undefined') {
+    //     const sell = localStorage.getItem('sell');
+    //     setUsdtInrPrice(Number(sell));
+    //   }
+    //   setUserEmail(parsedData.email);
+    // }
     console.log(userEmail, 'userEmail');
     // const fetchData = async () => {
     //   try {
