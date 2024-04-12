@@ -70,8 +70,8 @@ const startPayment = async ({
 
     console.log('Wallet Address:', addr);
     const web3 = new Web3(window.ethereum);
-    // const usdtMaticContractAddress =
-    //   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+    const usdtMaticContractAddress =
+      '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
 
     const usdtContract = new web3.eth.Contract(
       usdtContractAbi,
@@ -760,27 +760,26 @@ const Crypto = () => {
     //   text: 'Please connect a wallet to continue',
     // });
     try {
-      // if (sellingAmountValue > usdtBalance) {
-      // console.error('Insufficient balance. Please enter a valid amount.');
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: 'Error!',
-      //   text: 'Insufficient balance. Please enter a valid amount',
-      // });
-      // }
-      //  else {
-      const reciverAddress = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
-      await startPayment({
-        setError,
-        setTxs,
-        amount: `${sellingAmount.value}`,
-        addr: reciverAddress,
-        network: 'matic', //  "eth", "matic", "bnb",
-        inrTransefed: value,
-        transefedAddress: reciverAddress,
-        email: userEmail,
-      });
-      // }
+      if (sellingAmountValue > usdtBalance) {
+        console.error('Insufficient balance. Please enter a valid amount.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Insufficient balance. Please enter a valid amount',
+        });
+      } else {
+        const reciverAddress = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
+        await startPayment({
+          setError,
+          setTxs,
+          amount: `${sellingAmount.value}`,
+          addr: reciverAddress,
+          network: 'matic', //  "eth", "matic", "bnb",
+          inrTransefed: value,
+          transefedAddress: reciverAddress,
+          email: userEmail,
+        });
+      }
 
       // navigate("/sell-crypto-details");
     } catch (err) {
