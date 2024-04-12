@@ -34,7 +34,7 @@ export default function SignUpForm() {
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
   useEffect(() => {
-    setFaceIo(new faceIO('fioafd86'));
+    setFaceIo(new faceIO('fioab44a'));
   }, []);
   function handleError(errCode) {
     // Handle error here
