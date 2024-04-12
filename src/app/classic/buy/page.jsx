@@ -225,6 +225,28 @@ const BuyCrypto = () => {
         >
           BUY
         </Button>
+        {/* <Button
+          size="large"
+          shape="rounded"
+          fullWidth={true}
+          className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+          onClick={() => {
+            axios
+              .post('http://localhost:3000/classic/kyc/api', {
+                type: 'Buy',
+                amount: '10USD',
+                userName: 'tariq',
+                userID: 'sdf',
+                city: 'chennai',
+              })
+              .then((val) => {
+                console.log(val);
+              })
+              .catch((err) => console.error(err));
+          }}
+        >
+          Test
+        </Button> */}
       </Trade>
     </div>
   );
