@@ -15,10 +15,10 @@ import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
-import { db } from '../../lib/firebase';
+
 import dayjs from 'dayjs';
-// @ts-ignore
-import {doc,getDoc,updateDoc,onSnapshot} from 'firebase/firestore';
+
+import Swal from 'sweetalert2';
 
 const COLUMNS = [  
   {
@@ -45,11 +45,17 @@ const COLUMNS = [
     maxWidth: 200,
   },
   {
+    Header: 'Order Id',
+    accessor: 'orderId',
+    minWidth: 60,
+    maxWidth: 130,
+  },
+  {
     Header: () => <div>USDT Value</div>,
     accessor: 'usdtValue',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-      <div className="ltr:text-right rtl:text-left">{value}</div>
+      <div className="">{value}</div>
     ),
     minWidth: 80,
     maxWidth: 120,
@@ -59,7 +65,7 @@ const COLUMNS = [
     accessor: 'cryptoTrasnfer',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-      <div className="ltr:text-right rtl:text-left">{value}</div>
+      <div className="">{value}</div>
     ),
     minWidth: 100,
     maxWidth: 180,
@@ -69,37 +75,41 @@ const COLUMNS = [
     accessor: 'walletAddress',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-      <div className="flex items-center justify-end">
-        <LinkIcon className="h-[18px] w-[18px] ltr:mr-2 rtl:ml-2" /> {value}
+      <div className="flex items-center justify-start cursor-pointer" onClick={() => {typeof window != 'undefined' && navigator.clipboard.writeText(value)}}>
+        <LinkIcon className="h-[18px] w-[18px] ltr:mr-2 rtl:ml-2" /> {value.substring(0, 10)}
       </div>
     ),
-    minWidth: 220,
-    maxWidth: 280,
+    minWidth: 120,
+    maxWidth: 200,
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Amount</div>,
     accessor: 'totalAmount',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-        <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 lg:text-base 3xl:text-2xl">{value}</strong>
+        <strong className="mb-0.5 flex justify-center text-base md:mb-1.5 lg:text-base 3xl:text-2xl">{value}</strong>
     ),
-    minWidth: 200,
-    maxWidth: 300,
+    minWidth: 80,
+    maxWidth: 150,
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Action</div>,
     accessor: 'test',
     // @ts-ignore
-    Cell: ({ cell: { value } }) => <Button shape="rounded">Completed</Button>,
-    minWidth: 200,
+    Cell: ({ cell: { value } }) => <Button rounded variant='ghost' size="mini" className="flex justify-end" onClick={() => {
+        Swal.fire("Crypto Transfer Triggered...")
+    }}>Completed</Button>,
+    minWidth: 150,
     maxWidth: 300,
   },
 ];
 
-export default function TransactionTable() {
-  const data = useMemo(() => TransactionData, []);
+export default function TransactionTable({serverData}) {
+  
+  const data = useMemo(() => serverData, []);
   const columns = useMemo(() => COLUMNS, []);
-
+// console.log("buyData", buyData)
+console.log("data", data)
   const {
     getTableProps,
     getTableBodyProps,
@@ -125,15 +135,7 @@ export default function TransactionTable() {
     usePagination,
   );
 
-  const { pageIndex } = state;
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'allTransactions', 'Buy'), (doc: any) => {
-      const data = doc.data();
-      console.log('Buy data: ', data);
-      
-    //   setUsdtInrPrice(Number(sell));
-    });
-}, [])
+  const { pageIndex } = state;  
   return (
     <div className="">
       <div className="rounded-tl-lg rounded-tr-lg bg-white px-4 pt-6 dark:bg-light-dark md:px-8 md:pt-8">
