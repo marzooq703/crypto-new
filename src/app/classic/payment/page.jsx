@@ -87,7 +87,7 @@ const BuyPayment = () => {
       return;
     }
     axios
-      .post('http://localhost:3000/classic/kyc/api', {
+      .post('https://www.stablecrypto.in/classic/kyc/api', {
         amount: total,
         name: `${user?.firstName} ${user?.lastName}`,
         email: user?.email,
