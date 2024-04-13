@@ -33,6 +33,7 @@ const BuyPayment = () => {
   // };
   // validateAddress();
   useEffect(() => {
+    if(typeof window !== 'undefined'){
     const storedInrValue = localStorage.getItem('inrValue');
     const storedUsdtValue = localStorage.getItem('usdtValue');
     const tds = localStorage.getItem('tds-value');
@@ -55,6 +56,7 @@ const BuyPayment = () => {
     if (user) {
       setUser(JSON.parse(user));
     }
+  }
   }, []);
 
   const payWithCashFree = () => {
@@ -85,6 +87,9 @@ const BuyPayment = () => {
         text: 'It is for your security reasons, thanks for understanding!',
       });
       return;
+    }
+    if(typeof window !== 'undefined'){
+      localStorage.setItem("buy-wallet-address", walletAddress)
     }
     axios
       .post('https://www.stablecrypto.in/classic/kyc/api', {
