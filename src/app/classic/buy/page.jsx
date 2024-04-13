@@ -162,13 +162,15 @@ const BuyCrypto = () => {
           icon: 'error',
           title: 'Incorrect Price!',
         })
-        return;
+        return;      
       }
+      if(typeof window !== 'undefined'){
       localStorage.setItem('inrValue', inrValue);
       localStorage.setItem('usdtValue', usdtValue);
 
       localStorage.setItem('tds-value', (inrValue / 100));
       localStorage.setItem('total-value', Number(inrValue) + Number(inrValue / 100));
+      }
 
       // Navigate to the payment page
       router.push('/classic/payment');
