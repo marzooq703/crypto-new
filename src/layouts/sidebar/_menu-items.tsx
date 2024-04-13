@@ -18,11 +18,11 @@ export const defaultMenuItems = [
     icon: <HomeIcon />,
     href: routes.home,
   },
-  {
-    name: 'Live Pricing',
-    icon: <LivePricing />,
-    href: routes.livePricing,
-  },
+  // {
+  //   name: 'Live Pricing',
+  //   icon: <LivePricing />,
+  //   href: routes.livePricing,
+  // },
   // {
   //   name: 'Trading Bot',
   //   icon: <TradingBotIcon />,

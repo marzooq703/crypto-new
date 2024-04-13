@@ -71,8 +71,11 @@ export default function ClassicScreen() {
           </div>
         </div>
         <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
-          <ComparisonChart />
+        <TransactionTable />
         </div>
+        {/* <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
+          <ComparisonChart />
+        </div> */}
       </div>
 
       {/* <div className="my-8 sm:my-10">
@@ -81,7 +84,7 @@ export default function ClassicScreen() {
 
       <div className="flex flex-wrap">
         <div className="w-full mt-4">
-          <TransactionTable />
+          {/* <TransactionTable /> */}
         </div>
         {/* <div className="order-first mb-8 grid w-full grid-cols-1 gap-6 sm:mb-10 sm:grid-cols-2 lg:order-1 lg:mb-0 lg:flex lg:w-72 lg:flex-col 2xl:w-80 3xl:w-[358px]">
           <OverviewChart />
