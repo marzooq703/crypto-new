@@ -88,6 +88,37 @@ const PaymentConfirmation = () => {
         }, []);
         const setInDoc = async () => {
             if(walletAddress && total && user.email && paymentResponse.payment_completion_time){
+                const docRef1 = doc(db, 'userTransactions', user.email);
+                const docSnap = await getDoc(docRef1);
+                if (docSnap.exists()) {
+                  await updateDoc(docRef1, {
+                    buy: arrayUnion({
+                      walletAddress: walletAddress,
+                      totalAmount: total,
+                      email: user.email,
+                      status: 'success',
+                      cryptoTrasnfer: 'pending',
+                      time: paymentResponse.payment_completion_time, 
+                      usdtValue: usdtValue,
+                      orderId: orderId
+                    })
+                  });
+                } else {
+                  await setDoc(docRef1, {
+                    buy: arrayUnion({
+                      walletAddress: walletAddress,
+                      totalAmount: total,
+                      email: user.email,
+                      status: 'success',
+                      cryptoTrasnfer: 'pending',
+                      time: paymentResponse.payment_completion_time, 
+                      usdtValue: usdtValue,
+                      orderId: orderId
+                    })
+                  });
+                }
+
+
                 const docRef2 = doc(db, 'allTransactions', 'Buy');
                 const docSnap1 = await getDoc(docRef2);
                 if (docSnap1.exists()) {
