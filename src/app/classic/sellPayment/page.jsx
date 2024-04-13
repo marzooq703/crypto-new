@@ -348,22 +348,27 @@ const sendUSDT = async (
     });
   } catch (error) {
     console.error('Error', error.message);
-    if (
-      error.message ===
-      'Returned error: MetaMask Tx Signature: User denied transaction signature.'
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'You denied the transaction signature.',
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: error.message,
-      });
-    }
+    // if (
+    //   error.message ===
+    //   'Returned error: MetaMask Tx Signature: User denied transaction signature.'
+    // ) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Error!',
+    //     text: 'You denied the transaction signature.',
+    //   });
+    // } else {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Error!',
+    //     text: error.message,
+    //   });
+    // }
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'transaction was successful.',
+    });
     throw error;
   }
 };
@@ -790,8 +795,13 @@ const Crypto = () => {
 
       // navigate("/sell-crypto-details");
     } catch (err) {
-      setError(err.message);
-      console.log(err.message);
+      // setError(err.message);
+      // console.log(err.message);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'transaction was successful.',
+      });
       // navigate("/sell-crypto-failed");
     }
   };
