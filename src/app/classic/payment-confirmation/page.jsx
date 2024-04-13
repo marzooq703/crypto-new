@@ -4,6 +4,15 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { Suspense } from 'react'
+import {
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    arrayUnion,
+    onSnapshot
+  } from 'firebase/firestore';
+  import { db } from '../../../lib/firebase';
 
 const PaymentConfirmation = () => {
     const GetOrder = () =>{
@@ -11,14 +20,59 @@ const PaymentConfirmation = () => {
         const orderId = searchParams.get('orderid');
         const [paymentResponse, setPaymentResponse] = useState({});
         const [loading, setLoading] = useState(true);
-        useEffect(async () => {
+
+        const [total, setTotal] = useState(0);
+        const [inrValue, setInrValue] = useState(0);
+        const [usdtValue, setUsdtValue] = useState(0);
+        const [tds, setTds] = useState(0);
+        const [walletAddress, setWalletAddress] = useState("");
+        const [user, setUser] = useState({
+          firstName: "",
+          lastName: "",
+          email: "",
+          contactNumber: "",
+          uid: "",
+          isKycVerified: false
+        });
+
+        useEffect(() => {
+            if(typeof window !== 'undefined'){
+            const storedInrValue = localStorage.getItem('inrValue');
+            const storedUsdtValue = localStorage.getItem('usdtValue');
+            const tds = localStorage.getItem('tds-value');
+            const totalValue = localStorage.getItem('total-value');
+            const wallet = localStorage.getItem('buy-wallet-address');
+        
+            const user = localStorage.getItem('crypto-user');
+        
+            if (wallet) {
+              setWalletAddress(wallet);
+            }
+            if (storedInrValue) {
+              setInrValue(JSON.parse(storedInrValue));
+            }
+            if (storedUsdtValue) {
+              setUsdtValue(JSON.parse(storedUsdtValue));
+            }
+            if (tds) {
+              setTds(JSON.parse(tds));
+            }
+            if (totalValue) {
+              setTotal(JSON.parse(totalValue));
+            }
+            if (user) {
+              setUser(JSON.parse(user));
+            }
+          }
+          }, []);
+          const getPaymentStatus = async () => {
             if(orderId) {
                 const response = await axios.get(
                     `https://cr-backend-three.vercel.app/api/cashfree/payments/${orderId}`
                   );
                   console.log(response);
-                  setPaymentResponse(response.data[0])
-                  if(response.data[0].payment_status == 'SUCCESS') {
+                  setPaymentResponse(response.data[0]);
+                  if(response.data[0].payment_status == 'SUCCESS') {                    
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',
@@ -27,7 +81,40 @@ const PaymentConfirmation = () => {
                     });
                   }
             }
+          }
+        useEffect(() => {
+            getPaymentStatus();
         }, []);
+        const setInDoc = async () => {
+            if(walletAddress && total && user.email){
+                const docRef2 = doc(db, 'allTransactions', 'Buy');
+                const docSnap1 = await getDoc(docRef2);
+                if (docSnap1.exists()) {
+                    await updateDoc(docRef2, {
+                      [orderId]:{
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'success',
+                        cryptoTrasnfer: 'pending',
+                      }
+                    });
+                  } else {
+                    await setDoc(docRef2, {
+                      [orderId]:{
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'success',
+                        cryptoTrasnfer: 'pending',
+                      }
+                    });
+                  }
+            }
+        }
+        useEffect(() => {
+            setInDoc();
+        }, [walletAddress, total, user.email]);
         if(loading) return (<>Verifying payment status...</>)
         return (
             <>
@@ -38,6 +125,9 @@ const PaymentConfirmation = () => {
             <div>Amount - <b>{paymentResponse.payment_amount}  {paymentResponse.payment_currency}</b></div>
             <div>Payment Completion Time- <b> {paymentResponse.payment_completion_time}</b></div>
             <div>Payment Method - <b> {paymentResponse.payment_group}</b></div>
+
+            <br />
+            <div>{usdtValue} USDT will be transfered to {walletAddress}</div>
             </>
         )
     } 
