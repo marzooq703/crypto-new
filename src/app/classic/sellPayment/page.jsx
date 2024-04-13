@@ -837,7 +837,7 @@ const Crypto = () => {
             </div>
             <CoinInput2
               label={'To'}
-              exchangeRate={83.61}
+              exchangeRate={0.0}
               defaultCoinIndex={1}
               value={value}
               getCoinValue={(data) => setInrAmount(data)}
