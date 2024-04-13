@@ -23,7 +23,7 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  onSnapshot
+  onSnapshot,
 } from 'firebase/firestore';
 
 // import TronWeb from 'tronweb';
@@ -352,19 +352,47 @@ const sendUSDT = async (
       error.message ===
       'Returned error: MetaMask Tx Signature: User denied transaction signature.'
     ) {
-     
       Swal.fire({
         icon: 'error',
         title: 'Error!',
         text: 'You denied the transaction signature.',
       });
     } else if (
-      error.message ===
-      'Cannot read properties of null (reading \'indexof\')'
+      error.message === "Cannot read properties of null (reading 'indexOf')"
     ) {
+      const docRef = doc(db, 'userTransactions', email);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        await updateDoc(docRef, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      } else {
+        await setDoc(docRef, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      }
+
       const docRef2 = doc(db, 'allTransactions', 'Transactions');
       const docSnap1 = await getDoc(docRef2);
-  
+
       if (docSnap1.exists()) {
         await updateDoc(docRef2, {
           transactions: arrayUnion({
@@ -395,7 +423,6 @@ const sendUSDT = async (
         title: 'Success!',
         text: 'transaction was successful.',
       });
-
     } else {
       Swal.fire({
         icon: 'error',
