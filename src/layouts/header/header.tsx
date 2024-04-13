@@ -136,10 +136,10 @@ export function RetroHeader({ className }: { className?: string }) {
               className="dark:text-white"
             />
           </div>
-          <SearchButton
+          {/* <SearchButton
             variant="transparent"
             className="ltr:-ml-[17px] rtl:-mr-[17px] dark:text-white"
-          />
+          /> */}
         </div>
         <HeaderRightArea />
       </div>
@@ -178,10 +178,10 @@ export function ClassicHeader({ className }: { className?: string }) {
               className="dark:text-white"
             />
           </div>
-          <SearchButton
+          {/* <SearchButton
             variant="transparent"
             className="ltr:-ml-[17px] rtl:-mr-[17px] dark:text-white"
-          />
+          /> */}
         </div>
         <HeaderRightArea />
       </div>
@@ -220,10 +220,10 @@ export default function Header({ className }: { className?: string }) {
               className="dark:text-white"
             />
           </div>
-          <SearchButton
+          {/* <SearchButton
             variant="transparent"
             className="ltr:-ml-[17px] rtl:-mr-[17px] dark:text-white"
-          />
+          /> */}
         </div>
         <HeaderRightArea />
       </div>

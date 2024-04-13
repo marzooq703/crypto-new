@@ -26,7 +26,7 @@ if(buyData.length == 0) return (
     <div className="w-full">
       <Button variant={status == 'buy' ? "ghost" : "transparent"} onClick={() => setStatus('buy')}>Buy</Button>
       <Button variant={status == 'sell' ? "ghost" : "transparent"} onClick={() => setStatus('sell')}> Sell</Button>
-      {status == 'buy' ? <TransactionTable serverData={buyData} /> : <TransactionTableSell />}
+      {status == 'buy' ? <TransactionTable serverData={buyData} /> : <TransactionTableSell serverData={buyData} />}
     </div>
   );
 };
