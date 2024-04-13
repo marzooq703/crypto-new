@@ -163,17 +163,18 @@ const BuyCrypto = () => {
           title: 'Incorrect Price!',
         })
         return;      
+      } else {
+        if(typeof window !== 'undefined'){
+        localStorage.setItem('inrValue', inrValue);
+        localStorage.setItem('usdtValue', usdtValue);
+  
+        localStorage.setItem('tds-value', (inrValue / 100));
+        localStorage.setItem('total-value', Number(inrValue) + Number(inrValue / 100));
+        }
+  
+        // Navigate to the payment page
+        router.push('/classic/payment');
       }
-      if(typeof window !== 'undefined'){
-      localStorage.setItem('inrValue', inrValue);
-      localStorage.setItem('usdtValue', usdtValue);
-
-      localStorage.setItem('tds-value', (inrValue / 100));
-      localStorage.setItem('total-value', Number(inrValue) + Number(inrValue / 100));
-      }
-
-      // Navigate to the payment page
-      router.push('/classic/payment');
     } catch (error) {
       console.error('Error saving transaction:', error);
     }

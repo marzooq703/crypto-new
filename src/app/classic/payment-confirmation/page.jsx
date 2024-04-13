@@ -71,9 +71,12 @@ const PaymentConfirmation = () => {
                 const response = await axios.get(
                     `https://cr-backend-three.vercel.app/api/cashfree/payments/${orderId}`
                   );
+                  setLoading(false);
                   console.log(response);
-                  setPaymentResponse(response.data[0]);
-                  if(response.data[0].payment_status == 'SUCCESS') {                    
+                  console.log('response.data', response.data);
+                 if(response.data.length == 0) setPaymentResponse("paymentNotProcessed");
+                 else  if(response.data[0].payment_status == 'SUCCESS') {                    
+                    setPaymentResponse(response.data[0]);
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',
@@ -151,9 +154,11 @@ const PaymentConfirmation = () => {
             }
         }
         useEffect(() => {
-            setInDoc();
-        }, [walletAddress, total, user.email, paymentResponse.payment_completion_time]);
+          if(paymentResponse !== 'paymentNotProcessed') setInDoc();
+        }, [walletAddress, total, user.email, paymentResponse]);
+
         if(loading) return (<>Verifying payment status...</>)
+        if(paymentResponse == 'paymentNotProcessed') return (<>Payment not yet processed</>)
         return (
             <>
              <div>Payment Status - <b> {paymentResponse.payment_status}</b></div>
