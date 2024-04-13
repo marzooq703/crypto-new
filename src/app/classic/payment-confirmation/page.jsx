@@ -1,22 +1,19 @@
 "use client";
 import {  useSearchParams } from 'next/navigation';
-import axios from 'axios;';
+import axios from 'axios';
 import { useEffect } from 'react';
 
 const PaymentConfirmation = () => {
     const searchParams = useSearchParams();
     const orderId = searchParams.get('orderid');
-    // useEffect(async () => {
-    //     const response = await axios.get(
-    //         'https://api.coingecko.com/api/v3/simple/price',
-    //         {
-    //           params: {
-    //             ids: 'tether',
-    //             vs_currencies: toCurrency === 'inr' ? 'inr' : 'usd',
-    //           },
-    //         },
-    //       );
-    // }, [])
+    useEffect(async () => {
+        if(orderId) {
+            const response = await axios.get(
+                `https://cr-backend-three.vercel.app/api/cashfree/payments/${orderId}`
+              );
+              console.log(response)
+        }
+    }, []);
     return (
         <>
             <div>Payment Confirmation</div> - {orderId}
