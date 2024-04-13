@@ -33,7 +33,7 @@ export async function POST(req) {
         customer_email: email,
       },
       order_meta: {
-        return_url: `https://stablecrypto.in/payment-confirmation?orderid=${id}`,
+        return_url: `https://stablecrypto.in/classic/payment-confirmation?orderid=${id}`,
       },
     };
 

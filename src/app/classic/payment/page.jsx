@@ -42,16 +42,16 @@ const BuyPayment = () => {
     const user = localStorage.getItem('crypto-user');
 
     if (storedInrValue) {
-      setInrValue(JSON.parse(storedInrValue));
+      setInrValue(storedInrValue);
     }
     if (storedUsdtValue) {
-      setUsdtValue(JSON.parse(storedUsdtValue));
+      setUsdtValue(storedUsdtValue);
     }
     if (tds) {
-      setTds(JSON.parse(tds));
+      setTds(tds);
     }
     if (totalValue) {
-      setTotal(JSON.parse(totalValue));
+      setTotal(totalValue);
     }
     if (user) {
       setUser(JSON.parse(user));
