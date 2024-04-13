@@ -20,9 +20,6 @@ export async function POST(req) {
   try {
     const data = await req.json();
     const { amount, name, email, phone } = data;
-    const customerName = 'A';
-    const customerEmail = 'a@gmail.com';
-    const customerPhone = '9551212786';
     const id = `order_${generateOrderId(5)}`;
 
     const request = {
@@ -30,10 +27,10 @@ export async function POST(req) {
       order_currency: 'INR',
       order_id: id,
       customer_details: {
-        customer_id: customerName,
-        customer_phone: customerPhone,
-        customer_name: customerName,
-        customer_email: customerEmail,
+        customer_id: id,
+        customer_phone: phone,
+        customer_name: name,
+        customer_email: email,
       },
       order_meta: {
         return_url: `https://stablecrypto.in/orderid?=${id}`,

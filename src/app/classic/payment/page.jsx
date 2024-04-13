@@ -3,17 +3,23 @@
 import QRCode from 'react-qr-code';
 import { useEffect, useState } from 'react';
 import { db } from '../../../lib/firebase';
-// import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import { useRouter } from 'next/navigation'
 // import withReactContent from 'sweetalert2-react-content';
 
 // const MySwal = withReactContent(Swal);
 
 const BuyPayment = () => {
   const [coinValue, setCoinValue] = useState({});
-  const [inrValue, setInrValue] = useState('');
-  const [usdtValue, setUsdtValue] = useState('');
+  const [inrValue, setInrValue] = useState(0);
+  const [usdtValue, setUsdtValue] = useState(0);
   const [transactions, setTransaction] = useState(null);
+  const [walletAddress, setWalletAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  console.log(walletAddress)
 
+  const router = useRouter()
   // const validateAddress = (address) => {
 
   // };
@@ -32,36 +38,49 @@ const BuyPayment = () => {
     console.log(storedUsdtValue, 'USDT value');
   }, []);
 
-  useEffect(() => {
-    let storedValue;
-    if (typeof window !== 'undefined') {
-      storedValue = JSON.parse(localStorage.getItem('datas')) || { value: '' };
+  const payWithCashFree = () => {
+    setLoading(true);
+    if(!inrValue || inrValue == 0 || inrValue < 0|| !usdtValue|| usdtValue == 0 || usdtValue < 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Incorrect Price!',
+      }).then(() => {
+        router.push(`/classic/buy`);
+      })
+      setLoading(false);
+      return;
     }
-    setCoinValue(storedValue);
-  }, []); // Note the correct placement of the dependency array here
+    if (!walletAddress) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please enter a valid wallet address',
+      });
+      setLoading(false);
+      return;
+    }    
+    axios
+      .post('http://localhost:3000/classic/kyc/api', {
+        amount: '1',
+        name: 'Hassan Marzooq',
+        email: 'marzooq703@gmail.com',
+        phone: "8903528906"
+      })
+      .then((val) => {
+        const sessionId = val.data.response.payment_session_id
+        console.log(sessionId);
+        router.push(`https://dev.kazzefinserve.com/payment/?id=${sessionId}`);
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error processing your payment',
+        });
+        setLoading(false);
+        console.error(err);
+      });
 
-  useEffect(() => {
-    const fetchTransaction = async () => {
-      try {
-        // Retrieve the latest transaction from Firestore
-        const transactionSnapshot = await db
-          .collection('transactions')
-          .orderBy('timestamp', 'desc')
-          .limit(1)
-          .get();
 
-        if (!transactionSnapshot.empty) {
-          // Extract transaction data
-          const transactionData = transactionSnapshot.docs[0].data();
-          setTransaction(transactionData);
-        }
-      } catch (error) {
-        console.error('Error fetching transaction:', error);
-      }
-    };
-
-    fetchTransaction();
-  }, []);
+  }
   //-----------------------------------------------
 
   // useEffect(() => {
@@ -147,125 +166,24 @@ const BuyPayment = () => {
             <strong className="text-green-500">{usdtValue || 0} USDT</strong>
           </div>
         </div>
-      </div>
-
-      {/* Payment Details Box */}
-      <div className="border rounded p-6 bg-white shadow-md w-full">
-        {/* <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
-          Payment Details
-        </h2> */}
-
-        {/* List of Questions and Text Fields */}
-        <div className="space-y-4">
-          {/* Account Holder Name */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              Account Holder Name
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-
-          {/* Account Number */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              Account Number
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-
-          {/* IFSC Code */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              IFSC Code
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-
-          {/* Account Type */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              Account Type (Savings or Current)
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-
-          {/* Bank Name */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              Bank Name
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-
-          {/* Branch Name */}
-          {/* <div>
-            <label className="block text-md font-medium text-gray-600">
-              Account Opening Branch
-            </label>
-            <input
-              type="text"
-              className="form-input w-full border rounded-md"
-            />
-          </div> */}
-        </div>
-        {/* <div className="block text-md font-medium text-black text-center mt-6">
-          <p>or</p>
-        </div> */}
-
-        {/* QR Code */}
-        {/* <div className="text-center mt-6">
-          <label className="block text-md font-medium text-gray-600 mb-2">
-            Scan QR Code to Pay
-          </label>
-          // <img src="https://files.slack.com/files-pri/T05DPQAATK3-F06EVK88XSN/qr_test_5ka16sbzt3d42lm288.png" />
-          <QRCode value="Sample QR Code Content" />
-        </div> */}
-        {/* <div className="block text-md font-medium text-black text-center mt-6">
-          <p>or</p>
-        </div> */}
         <div>
-          <label className="block text-md font-medium text-gray-600">
-            Type or paste a valid address
+          <label className="block text-md font-medium text-gray-600 mt-3">
+            Type or paste a valid wallet address
           </label>
-          <input type="text" className="form-input w-full border rounded-md" />
+          <input type="text" className="form-input w-full border rounded-md" onChange={(e) => { 
+            console.log(e);
+            setWalletAddress(e.target.value) 
+            }} />
         </div>
-        <div className="block text-md font-medium text-black text-center mt-6">
-          <a
-            target="_blank"
-            href="https://buy.stripe.com/test_5kA16SbZT3d42Lm288"
-            rel="noopener noreferrer"
+        <div className="block w-full text-md font-medium text-black text-center mt-6">
+          <button
+            disabled={loading}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
+            onClick={payWithCashFree}
           >
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md  "
-              //   onClick={handlePayButtonClick}
-            >
-              Pay
-            </button>
-          </a>
+            Pay
+          </button>
         </div>
-
-        {/* Pay Button */}
-        {/* <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md mt-8 w-full"
-          //   onClick={handlePayButtonClick}
-        >
-          Pay
-        </button> */}
       </div>
     </div>
   );

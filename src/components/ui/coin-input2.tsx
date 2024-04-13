@@ -99,7 +99,7 @@ const CoinInput2: React.FC<CoinInputTypes> = ({
           <span className="font-xs px-3 text-gray-400">
             = $
             {exchangeRate
-              ? (parseFloat(value) * exchangeRate).toFixed(2)
+              ? (parseFloat(rest.value || 0) / exchangeRate).toFixed(2)
               : '0.00'}
           </span>
         </div>

@@ -12,6 +12,7 @@ import axios from 'axios';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import Swal from 'sweetalert2';
 // import {sendMessageToGroup} from "../../../lib/telegram"
 
 const BuyCrypto = () => {
@@ -152,6 +153,17 @@ const BuyCrypto = () => {
       // );
 
       // Store values in local storage
+      const numberInrVal = Number(inrValue);
+      const numberUSDTVal = Number(usdtValue);
+      if(numberInrVal == NaN || numberInrVal == 0 || numberUSDTVal == NaN || numberUSDTVal == 0) {
+        setInrValue(0);
+        setUsdtValue(0);
+        Swal.fire({
+          icon: 'error',
+          title: 'Incorrect Price!',
+        })
+        return;
+      }
       localStorage.setItem('inrValue', JSON.stringify(inrValue));
       localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
 
@@ -184,6 +196,7 @@ const BuyCrypto = () => {
                 onChange={handleInrInputChange}
                 placeholder="Enter INR value"
                 defaultCoinIndex={1}
+                exchangeRate={83.61}
               />
             </div>
             {/* <div className="mb-3">
@@ -212,7 +225,7 @@ const BuyCrypto = () => {
           {/* <TransactionInfo label={'Min. Received'} />
           <TransactionInfo label={'Rate'} />
           <TransactionInfo label={'Offered by'} /> */}
-          <TransactionInfo label={'TDS'} value={'1%'} />
+          <TransactionInfo label={'TDS - 1%'} value={`₹ ${123}`} />
           {/* <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} /> */}
         </div>
@@ -225,7 +238,7 @@ const BuyCrypto = () => {
         >
           BUY
         </Button>
-        <Button
+        {/* <Button
           size="large"
           shape="rounded"
           fullWidth={true}
@@ -233,7 +246,10 @@ const BuyCrypto = () => {
           onClick={() => {
             axios
               .post('http://localhost:3000/classic/kyc/api', {
-                amount: '1'
+                amount: '1',
+                name: 'Hassan Marzooq',
+                email: 'marzooq703@gmail.com',
+                phone: "8903528906"
               })
               .then((val) => {
                 console.log(val);
@@ -242,7 +258,7 @@ const BuyCrypto = () => {
           }}
         >
           Test
-        </Button>
+        </Button> */}
       </Trade>
     </div>
   );
