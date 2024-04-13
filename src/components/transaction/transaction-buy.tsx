@@ -16,43 +16,37 @@ import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
 import { db } from '../../lib/firebase';
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  onSnapshot
-} from 'firebase/firestore';
+import dayjs from 'dayjs';
+// @ts-ignore
+import {doc,getDoc,updateDoc,onSnapshot} from 'firebase/firestore';
 
-const COLUMNS = [
+const COLUMNS = [  
   {
-    Header: 'ID',
-    accessor: 'id',
-    minWidth: 60,
-    maxWidth: 80,
-  },
-  {
-    Header: 'Type',
-    accessor: 'transactionType',
-    minWidth: 60,
-    maxWidth: 80,
-  },
-  {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Date</div>,
-    accessor: 'createdAt',
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Payment Date</div>,
+    accessor: 'time',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-      <div className="ltr:text-right rtl:text-left">{value}</div>
+        <div className="-tracking-[1px] ltr:text-right rtl:text-left">
+        <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 lg:text-base 3xl:text-2xl">
+        {dayjs(value).format('MMM D, YYYY')}          
+        </strong>
+        <span className="text-gray-600 dark:text-gray-400">
+        {dayjs(value).format('hh:mm:ss')}
+        </span>
+      </div>      
     ),
     minWidth: 160,
     maxWidth: 220,
   },
   {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Asset</div>,
-    accessor: 'symbol',
+    Header: 'Email',
+    accessor: 'email',
+    minWidth: 60,
+    maxWidth: 200,
+  },
+  {
+    Header: () => <div>USDT Value</div>,
+    accessor: 'usdtValue',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <div className="ltr:text-right rtl:text-left">{value}</div>
@@ -61,8 +55,8 @@ const COLUMNS = [
     maxWidth: 120,
   },
   {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Status</div>,
-    accessor: 'status',
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Crypto Trasfer</div>,
+    accessor: 'cryptoTrasnfer',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <div className="ltr:text-right rtl:text-left">{value}</div>
@@ -71,8 +65,8 @@ const COLUMNS = [
     maxWidth: 180,
   },
   {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Address</div>,
-    accessor: 'address',
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Wallet Address</div>,
+    accessor: 'walletAddress',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <div className="flex items-center justify-end">
@@ -84,20 +78,10 @@ const COLUMNS = [
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Amount</div>,
-    accessor: 'amount',
+    accessor: 'totalAmount',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
-      <div className="-tracking-[1px] ltr:text-right rtl:text-left">
-        <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 md:text-lg lg:text-base 3xl:text-2xl">
-          {value.balance}
-          <span className="inline-block ltr:ml-1.5 rtl:mr-1.5 md:ltr:ml-2 md:rtl:mr-2">
-            USDT
-          </span>
-        </strong>
-        <span className="text-gray-600 dark:text-gray-400">
-          ${value.usdBalance}
-        </span>
-      </div>
+        <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 lg:text-base 3xl:text-2xl">{value}</strong>
     ),
     minWidth: 200,
     maxWidth: 300,
@@ -155,7 +139,7 @@ export default function TransactionTable() {
       <div className="rounded-tl-lg rounded-tr-lg bg-white px-4 pt-6 dark:bg-light-dark md:px-8 md:pt-8">
         <div className="flex flex-col items-center justify-between border-b border-dashed border-gray-200 pb-5 dark:border-gray-700 md:flex-row">
           <h2 className="mb-3 shrink-0 text-lg font-medium uppercase text-black dark:text-white sm:text-xl md:mb-0 md:text-2xl">
-            Transaction History
+            Buy Transaction History
           </h2>
         </div>
       </div>

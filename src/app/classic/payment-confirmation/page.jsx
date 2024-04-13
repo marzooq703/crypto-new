@@ -98,7 +98,9 @@ const PaymentConfirmation = () => {
                         email: user.email,
                         status: 'success',
                         cryptoTrasnfer: 'pending',
-                        time: paymentResponse.payment_completion_time
+                        time: paymentResponse.payment_completion_time, 
+                        usdtValue: usdtValue,
+                        orderId: orderId
                       }
                     });
                   } else {
@@ -109,7 +111,9 @@ const PaymentConfirmation = () => {
                         email: user.email,
                         status: 'success',
                         cryptoTrasnfer: 'pending',
-                        time: paymentResponse.payment_completion_time
+                        time: paymentResponse.payment_completion_time, 
+                        usdtValue: usdtValue,
+                        orderId: orderId
                       }
                     });
                   }
