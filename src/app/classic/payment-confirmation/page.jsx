@@ -2,6 +2,7 @@
 import {  useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const PaymentConfirmation = () => {
     const searchParams = useSearchParams();
@@ -13,15 +14,27 @@ const PaymentConfirmation = () => {
                 `https://cr-backend-three.vercel.app/api/cashfree/payments/${orderId}`
               );
               console.log(response);
-              setPaymentResponse(response[0])
-              if(response[0].payment_status == 'SUCCESS') {
-
+              setPaymentResponse(response.data[0])
+              if(response.data[0].payment_status == 'SUCCESS') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Thank you for your payment!',
+                });
               }
         }
     }, []);
     return (
         <>
-            <div>Payment Confirmation</div> - {orderId}
+            <div>Payment Status</div> - {paymentResponse.payment_status}
+            <div>Bank Reference</div> - {paymentResponse.bank_reference}
+            <div>CF Payment Id</div> - {paymentResponse.cf_payment_id}
+            <div>Order Id</div> - {paymentResponse.order_id}
+            <div>Amount</div> - {paymentResponse.payment_amount} {paymentResponse.payment_currency}
+            <div>Order Id</div> - {paymentResponse.order_id}
+            <div>Order Id</div> - {paymentResponse.order_id}
+            <div>Order Id</div> - {paymentResponse.order_id}
+            <div>Order Id</div> - {paymentResponse.order_id}
         </>
     )
 }

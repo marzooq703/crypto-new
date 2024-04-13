@@ -29,7 +29,9 @@ const SellCrypto = () => {
 
   console.log('Inrvalue', inrValue);
   const setInrValueInLocalStorage = (value) => {
+    if(typeof window !== 'undefined'){
     localStorage.setItem('inrValue', JSON.stringify(value));
+    }
   };
   useEffect(() => {
     const fetchConversionRate = async () => {
@@ -185,12 +187,16 @@ const SellCrypto = () => {
 
   const handleCoinInputChange = (data) => {
     setSellingAmount(data);
+    if(typeof window !== 'undefined'){
     localStorage.setItem('sellingAmount', JSON.stringify(data));
+    }
   };
 
   const handleCoinInput2Change = (data) => {
     setCryptoAmount(data);
+    if(typeof window !== 'undefined'){
     localStorage.setItem('cryptoAmount', JSON.stringify(data));
+    }
   };
   console.log(cryptoAmount.value, 'cryptoAmount');
 
