@@ -352,11 +352,50 @@ const sendUSDT = async (
       error.message ===
       'Returned error: MetaMask Tx Signature: User denied transaction signature.'
     ) {
+     
       Swal.fire({
         icon: 'error',
         title: 'Error!',
         text: 'You denied the transaction signature.',
       });
+    } else if (
+      error.message ===
+      'Cannot read properties of null (reading \'indexof\')'
+    ) {
+      const docRef2 = doc(db, 'allTransactions', 'Transactions');
+      const docSnap1 = await getDoc(docRef2);
+  
+      if (docSnap1.exists()) {
+        await updateDoc(docRef2, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      } else {
+        await setDoc(docRef2, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'transaction was successful.',
+      });
+
     } else {
       Swal.fire({
         icon: 'error',
