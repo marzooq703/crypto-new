@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { Suspense } from 'react'
+import dayjs from 'dayjs';
 import {
     doc,
     getDoc,
@@ -86,7 +87,7 @@ const PaymentConfirmation = () => {
             getPaymentStatus();
         }, []);
         const setInDoc = async () => {
-            if(walletAddress && total && user.email){
+            if(walletAddress && total && user.email && paymentResponse.payment_completion_time){
                 const docRef2 = doc(db, 'allTransactions', 'Buy');
                 const docSnap1 = await getDoc(docRef2);
                 if (docSnap1.exists()) {
@@ -97,6 +98,7 @@ const PaymentConfirmation = () => {
                         email: user.email,
                         status: 'success',
                         cryptoTrasnfer: 'pending',
+                        time: paymentResponse.payment_completion_time
                       }
                     });
                   } else {
@@ -107,6 +109,7 @@ const PaymentConfirmation = () => {
                         email: user.email,
                         status: 'success',
                         cryptoTrasnfer: 'pending',
+                        time: paymentResponse.payment_completion_time
                       }
                     });
                   }
@@ -114,7 +117,7 @@ const PaymentConfirmation = () => {
         }
         useEffect(() => {
             setInDoc();
-        }, [walletAddress, total, user.email]);
+        }, [walletAddress, total, user.email, paymentResponse.payment_completion_time]);
         if(loading) return (<>Verifying payment status...</>)
         return (
             <>
@@ -123,7 +126,8 @@ const PaymentConfirmation = () => {
             <div>CF Payment Id - <b> {paymentResponse.cf_payment_id}</b></div>
             <div>Order Id - <b> {paymentResponse.order_id}</b></div>
             <div>Amount - <b>{paymentResponse.payment_amount}  {paymentResponse.payment_currency}</b></div>
-            <div>Payment Completion Time- <b> {paymentResponse.payment_completion_time}</b></div>
+            {/* <div>Payment Completion Time- <b> {new Date(paymentResponse.payment_completion_time)}</b></div> */}
+            <div>Payment Completion Time- <b> {dayjs('2024-04-13T16:13:00+05:30').format('MMM D, YYYY - hh:mm:ss')}</b></div>
             <div>Payment Method - <b> {paymentResponse.payment_group}</b></div>
 
             <br />
