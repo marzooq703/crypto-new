@@ -6,38 +6,41 @@ import OverviewChart from '@/components/ui/chats/overview-chart';
 import ComparisonChart from '@/components/ui/chats/retro-comparision-chart';
 // import VolumeChart from '@/components/ui/chats/volume-chart';
 import TopPools from '@/components/ui/top-pools';
-import TransactionTable from '@/components/transaction/transaction-table';
+import TransactionTable from '@/components/transaction/transaction-user';
 import TopCurrencyTable from '@/components/top-currency/currency-table';
 // import { coinSlideData } from '@/data/static/coin-slide-data';
 import TransactCoin from '@/components/ui/transact-coin';
 import Avatar from '@/components/ui/avatar';
 import TopupButton from '@/components/ui/topup-button';
+import { useRouter } from 'next/navigation';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import { useEffect } from 'react';
+import { db } from '../../lib/firebase';
+// @ts-ignore
+import {doc, onSnapshot} from 'firebase/firestore';
+
 
 export default function ClassicScreen() {
-  const [coinData, setCoinData] = useState([]);
+  const router = useRouter();
+  const [buyData, setBuyData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price',
-        );
-        const data = await response.json();
-        setCoinData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  useEffect(() => {    
+    if(typeof window !== 'undefined'){
+      const user: any = localStorage.getItem('crypto-user');
+      const email = JSON.parse(user).email;
+    if(!email) router.push('/authentication');
+    const unsub = onSnapshot(doc(db, 'userTransactions', email), (doc: any) => {
+      const data = doc.data();
+      console.log('Buy data: ', data);
+      if(data.buy) setBuyData(Object.values(data.buy))
+      else setBuyData([])
+    //   setUsdtInrPrice(Number(sell));
+    setLoading(false);
+    });}
+  }, []);
 
-    fetchData();
-  }, [coinData]);
-
-  useEffect(() => {
-    console.log(coinData); // Log coinData after it's updated
-  }, [coinData]);
 
   return (
     <>
@@ -71,7 +74,7 @@ export default function ClassicScreen() {
           </div>
         </div>
         <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
-        <TransactionTable />
+        {!loading ? <TransactionTable serverData={buyData} /> : "Loading..."}
         </div>
         {/* <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
           <ComparisonChart />
