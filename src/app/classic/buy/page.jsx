@@ -164,8 +164,11 @@ const BuyCrypto = () => {
         })
         return;
       }
-      localStorage.setItem('inrValue', JSON.stringify(inrValue));
-      localStorage.setItem('usdtValue', JSON.stringify(usdtValue));
+      localStorage.setItem('inrValue', inrValue);
+      localStorage.setItem('usdtValue', usdtValue);
+
+      localStorage.setItem('tds-value', (inrValue / 100));
+      localStorage.setItem('total-value', Number(inrValue) + Number(inrValue / 100));
 
       // Navigate to the payment page
       router.push('/classic/payment');
@@ -225,7 +228,8 @@ const BuyCrypto = () => {
           {/* <TransactionInfo label={'Min. Received'} />
           <TransactionInfo label={'Rate'} />
           <TransactionInfo label={'Offered by'} /> */}
-          <TransactionInfo label={'TDS - 1%'} value={`₹ ${123}`} />
+          <TransactionInfo label={'TDS - 1%'} value={`₹ ${inrValue / 100}`} />
+          <TransactionInfo label={'Total'} value={`₹ ${Number(inrValue) + Number(inrValue / 100)}`} />
           {/* <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} /> */}
         </div>
