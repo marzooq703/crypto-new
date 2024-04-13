@@ -41,6 +41,10 @@ const COLUMNS = [
   {
     Header: 'Email',
     accessor: 'email',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <div className="cursor-pointer" onClick={() => {typeof window != 'undefined' && navigator.clipboard.writeText(value)}}>{value.substring(0, 17)}</div>
+    ),
     minWidth: 60,
     maxWidth: 200,
   },
