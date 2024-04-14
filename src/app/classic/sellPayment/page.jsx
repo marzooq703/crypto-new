@@ -238,6 +238,70 @@ const usdtContractAbi = [
   },
 ];
 
+const test = async () => {
+  try {
+    const email = 'care1@mahyan.in';
+    const docRef = doc(db, 'userTransactions', email);
+
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {
+        transactions: arrayUnion({
+          usdtSold: 10,
+          inrTransferred: 100,
+          fromAddress: 'abcd',
+          toAddress: 'efgh',
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
+      });
+    } else {
+      await setDoc(docRef, {
+        transactions: arrayUnion({
+          usdtSold: 10,
+          inrTransferred: 100,
+          fromAddress: 'abcd',
+          toAddress: 'efgh',
+          status: 'success',
+          isMoneyTransferred: false,
+          email: email,
+        }),
+      });
+    }
+
+    // const docRef2 = doc(db, 'allTransactions', 'Transactions');
+    // const docSnap1 = await getDoc(docRef2);
+
+    // if (docSnap1.exists()) {
+    //   await updateDoc(docRef2, {
+    //     transactions: arrayUnion({
+    //       usdtSold: amount,
+    //       inrTransferred: inrTransefed,
+    //       fromAddress: toAddress,
+    //       toAddress: fromAddress,
+    //       status: 'success',
+    //       isMoneyTransferred: false,
+    //       email: email,
+    //     }),
+    //   });
+    // } else {
+    //   await setDoc(docRef2, {
+    //     transactions: arrayUnion({
+    //       usdtSold: amount,
+    //       inrTransferred: inrTransefed,
+    //       fromAddress: toAddress,
+    //       toAddress: fromAddress,
+    //       status: 'success',
+    //       isMoneyTransferred: false,
+    //       email: email,
+    //     }),
+    //   });
+    // }
+  } catch (err) {
+    console.log('FIREBASE ERROR:', err);
+  }
+};
 const sendUSDT = async (
   signer,
   toAddress,
@@ -265,7 +329,7 @@ const sendUSDT = async (
       usdtContractAbi,
       usdtMaticContractAddress,
     );
-    console.log(email, 'aqeel1');
+    console.log(email);
 
     const amountWei = web3.utils.toWei(amount, 'ether'); //bnb
     const amountWei1 = web3.utils.toWei(amount, 'mwei'); // matic eth
@@ -279,65 +343,71 @@ const sendUSDT = async (
       gasLimit,
     });
 
-    console.log(gasPriceHex, 'gasPriceHex');
+    if (typeof window !== 'undefined') {
+      const localStorageData = localStorage.getItem('crypto-user');
+      const parsedData = JSON.parse(localStorageData);
+      const userEmail = parsedData.email;
+      // setUserEmail(parsedData.email);
+      console.log(gasPriceHex, 'gasPriceHex');
 
-    const docRef = doc(db, 'userTransactions', email);
+      const docRef = doc(db, 'userTransactions', userEmail);
 
-    const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      await updateDoc(docRef, {
-        transactions: arrayUnion({
-          usdtSold: amount,
-          inrTransferred: inrTransefed,
-          fromAddress: toAddress,
-          toAddress: fromAddress,
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
-    } else {
-      await setDoc(docRef, {
-        transactions: arrayUnion({
-          usdtSold: amount,
-          inrTransferred: inrTransefed,
-          fromAddress: toAddress,
-          toAddress: fromAddress,
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
-    }
+      if (docSnap.exists()) {
+        await updateDoc(docRef, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      } else {
+        await setDoc(docRef, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      }
 
-    const docRef2 = doc(db, 'allTransactions', 'Transactions');
-    const docSnap1 = await getDoc(docRef2);
+      const docRef2 = doc(db, 'allTransactions', 'Transactions');
+      const docSnap1 = await getDoc(docRef2);
 
-    if (docSnap1.exists()) {
-      await updateDoc(docRef2, {
-        transactions: arrayUnion({
-          usdtSold: amount,
-          inrTransferred: inrTransefed,
-          fromAddress: toAddress,
-          toAddress: fromAddress,
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
-    } else {
-      await setDoc(docRef2, {
-        transactions: arrayUnion({
-          usdtSold: amount,
-          inrTransferred: inrTransefed,
-          fromAddress: toAddress,
-          toAddress: fromAddress,
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
+      if (docSnap1.exists()) {
+        await updateDoc(docRef2, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      } else {
+        await setDoc(docRef2, {
+          transactions: arrayUnion({
+            usdtSold: amount,
+            inrTransferred: inrTransefed,
+            fromAddress: toAddress,
+            toAddress: fromAddress,
+            status: 'success',
+            isMoneyTransferred: false,
+            email: email,
+          }),
+        });
+      }
     }
     console.log(amount, toAddress, inrTransefed, fromAddress);
 
@@ -361,72 +431,10 @@ const sendUSDT = async (
       error.message === "Cannot read properties of null (reading 'indexOf')"
     ) {
       Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'transaction was successful.',
+        icon: 'error',
+        title: 'Database Error',
+        text: 'Please check with our support team',
       });
-      try {
-        const docRef = doc(db, 'userTransactions', email);
-
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          await updateDoc(docRef, {
-            transactions: arrayUnion({
-              usdtSold: amount,
-              inrTransferred: inrTransefed,
-              fromAddress: toAddress,
-              toAddress: fromAddress,
-              status: 'success',
-              isMoneyTransferred: false,
-              email: email,
-            }),
-          });
-        } else {
-          await setDoc(docRef, {
-            transactions: arrayUnion({
-              usdtSold: amount,
-              inrTransferred: inrTransefed,
-              fromAddress: toAddress,
-              toAddress: fromAddress,
-              status: 'success',
-              isMoneyTransferred: false,
-              email: email,
-            }),
-          });
-        }
-
-        const docRef2 = doc(db, 'allTransactions', 'Transactions');
-        const docSnap1 = await getDoc(docRef2);
-
-        if (docSnap1.exists()) {
-          await updateDoc(docRef2, {
-            transactions: arrayUnion({
-              usdtSold: amount,
-              inrTransferred: inrTransefed,
-              fromAddress: toAddress,
-              toAddress: fromAddress,
-              status: 'success',
-              isMoneyTransferred: false,
-              email: email,
-            }),
-          });
-        } else {
-          await setDoc(docRef2, {
-            transactions: arrayUnion({
-              usdtSold: amount,
-              inrTransferred: inrTransefed,
-              fromAddress: toAddress,
-              toAddress: fromAddress,
-              status: 'success',
-              isMoneyTransferred: false,
-              email: email,
-            }),
-          });
-        }
-      } catch (err) {
-        console.log('FIREBASE ERROR:', err);
-      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -743,15 +751,16 @@ const Crypto = () => {
       const sell = data.current;
       setUsdtInrPrice(Number(sell));
     });
-    // const localStorageData = localStorage.getItem('crypto-user');
-    // if (localStorageData) {
-    //   const parsedData = JSON.parse(localStorageData);
-    //   if (typeof window !== 'undefined') {
-    //     const sell = localStorage.getItem('sell');
-    //     setUsdtInrPrice(Number(sell));
-    //   }
-    //   setUserEmail(parsedData.email);
-    // }
+    if (typeof window !== 'undefined') {
+      const localStorageData = localStorage.getItem('crypto-user');
+      if (localStorageData) {
+        const parsedData = JSON.parse(localStorageData);
+        setUserEmail(parsedData.email);
+
+        const sell = localStorage.getItem('sell');
+        setUsdtInrPrice(Number(sell));
+      }
+    }
     console.log(userEmail, 'userEmail');
     // const fetchData = async () => {
     //   try {
@@ -931,6 +940,7 @@ const Crypto = () => {
         >
           Sell
         </Button>
+        <button onClick={test}>test</button>
       </Trade>
     </div>
   );
