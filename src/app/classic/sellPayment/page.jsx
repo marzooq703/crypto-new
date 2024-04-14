@@ -816,7 +816,7 @@ const Crypto = () => {
   };
   const [showMinutesMessage, setShowMinutesMessage] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setShowMinutesMessage(true), 15000);
+    const timer = setTimeout(() => setShowMinutesMessage(true), 20000);
     return () => clearTimeout(timer);
   }, []);
   return (

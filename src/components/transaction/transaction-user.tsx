@@ -188,26 +188,6 @@ const COLUMNS_SELL = [
     minWidth: 80,
     maxWidth: 150,
   },
-  {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Action</div>,
-    accessor: 'test',
-    // @ts-ignore
-    Cell: ({ cell: { value } }) => (
-      <Button
-        rounded
-        variant="ghost"
-        size="mini"
-        className="flex justify-end"
-        onClick={() => {
-          Swal.fire('Crypto Transfer Triggered...');
-        }}
-      >
-        Completed
-      </Button>
-    ),
-    minWidth: 150,
-    maxWidth: 300,
-  },
 ];
 export default function TransactionTable({ serverData, isSell = false }) {
   const data = useMemo(() => serverData, [isSell]);
