@@ -15,6 +15,8 @@ import { ethers } from 'ethers';
 import Web3 from 'web3';
 import Swal from 'sweetalert2';
 import { db } from '../../../lib/firebase';
+import Stack from '@mui/material/Stack';
+import LinearProgress from '@mui/material/LinearProgress';
 import {
   collection,
   addDoc,
@@ -43,6 +45,7 @@ const startPayment = async ({
   transefedAddress,
   email,
   usdtBalance,
+  setStartTransaction,
 }) => {
   try {
     if (!window.ethereum) {
@@ -111,6 +114,7 @@ const startPayment = async ({
           inrTransefed,
           transefedAddress,
           email,
+          setStartTransaction,
         );
       } else if (useUSDC) {
         await sendUSDC(signer, addr, amount);
@@ -238,70 +242,6 @@ const usdtContractAbi = [
   },
 ];
 
-const test = async () => {
-  try {
-    const email = 'care1@mahyan.in';
-    const docRef = doc(db, 'userTransactions', email);
-
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      await updateDoc(docRef, {
-        transactions: arrayUnion({
-          usdtSold: 10,
-          inrTransferred: 100,
-          fromAddress: 'abcd',
-          toAddress: 'efgh',
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
-    } else {
-      await setDoc(docRef, {
-        transactions: arrayUnion({
-          usdtSold: 10,
-          inrTransferred: 100,
-          fromAddress: 'abcd',
-          toAddress: 'efgh',
-          status: 'success',
-          isMoneyTransferred: false,
-          email: email,
-        }),
-      });
-    }
-
-    // const docRef2 = doc(db, 'allTransactions', 'Transactions');
-    // const docSnap1 = await getDoc(docRef2);
-
-    // if (docSnap1.exists()) {
-    //   await updateDoc(docRef2, {
-    //     transactions: arrayUnion({
-    //       usdtSold: amount,
-    //       inrTransferred: inrTransefed,
-    //       fromAddress: toAddress,
-    //       toAddress: fromAddress,
-    //       status: 'success',
-    //       isMoneyTransferred: false,
-    //       email: email,
-    //     }),
-    //   });
-    // } else {
-    //   await setDoc(docRef2, {
-    //     transactions: arrayUnion({
-    //       usdtSold: amount,
-    //       inrTransferred: inrTransefed,
-    //       fromAddress: toAddress,
-    //       toAddress: fromAddress,
-    //       status: 'success',
-    //       isMoneyTransferred: false,
-    //       email: email,
-    //     }),
-    //   });
-    // }
-  } catch (err) {
-    console.log('FIREBASE ERROR:', err);
-  }
-};
 const sendUSDT = async (
   signer,
   toAddress,
@@ -309,6 +249,7 @@ const sendUSDT = async (
   inrTransefed,
   fromAddress,
   email,
+  setStartTransaction,
 ) => {
   try {
     const web3 = new Web3(window.ethereum);
@@ -410,7 +351,7 @@ const sendUSDT = async (
       }
     }
     console.log(amount, toAddress, inrTransefed, fromAddress);
-
+    setStartTransaction(false);
     Swal.fire({
       icon: 'success',
       title: 'Success!',
@@ -418,6 +359,7 @@ const sendUSDT = async (
     });
   } catch (error) {
     console.error('Error', error.message);
+    setStartTransaction(false);
     if (
       error.message ===
       'Returned error: MetaMask Tx Signature: User denied transaction signature.'
@@ -427,6 +369,7 @@ const sendUSDT = async (
         title: 'Error!',
         text: 'You denied the transaction signature.',
       });
+      return;
     } else if (
       error.message === "Cannot read properties of null (reading 'indexOf')"
     ) {
@@ -435,6 +378,7 @@ const sendUSDT = async (
         title: 'Database Error',
         text: 'Please check with our support team',
       });
+      return;
     } else {
       Swal.fire({
         icon: 'error',
@@ -740,6 +684,7 @@ const Crypto = () => {
   const [, setTxs] = useState([]);
   const [userEmail, setUserEmail] = useState(null);
   const [value, setValue] = useState('');
+  const [startTransaction, setStartTransaction] = useState(false);
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
 
@@ -837,6 +782,7 @@ const Crypto = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setStartTransaction(true);
     const sellingAmountValue = parseFloat(sellingAmount.value);
     console.log(sellingAmountValue, 'sellingAmountValue');
     console.log(usdtBalance, 'usdtBalance');
@@ -864,6 +810,7 @@ const Crypto = () => {
           inrTransefed: value,
           transefedAddress: reciverAddress,
           email: userEmail,
+          setStartTransaction,
         });
       }
 
@@ -887,6 +834,11 @@ const Crypto = () => {
   const clickSell = () => {
     router.push('/classic/sellPayment');
   };
+  const [showMinutesMessage, setShowMinutesMessage] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowMinutesMessage(true), 15000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div>
       <Trade>
@@ -931,16 +883,27 @@ const Crypto = () => {
           <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} />
         </div> */}
-        <Button
-          size="large"
-          shape="rounded"
-          fullWidth={true}
-          className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-          onClick={handleSubmit}
-        >
-          Sell
-        </Button>
-        <button onClick={test}>test</button>
+        {startTransaction ? (
+          <>
+            <Stack sx={{ width: '100%', color: '#2A52BE' }} spacing={2}>
+              <LinearProgress color="inherit" />
+            </Stack>
+            <div>Transaction in progress...</div>
+            <div>Please do not close the tab/browser</div>
+            <div>Complete the transaction by approving it in your Wallet</div>
+            {showMinutesMessage && <div>It may take Few Minutes</div>}
+          </>
+        ) : (
+          <Button
+            size="large"
+            shape="rounded"
+            fullWidth={true}
+            className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+            onClick={handleSubmit}
+          >
+            Sell
+          </Button>
+        )}
       </Trade>
     </div>
   );
