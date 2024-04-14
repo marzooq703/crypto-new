@@ -164,7 +164,8 @@ const BuyCrypto = () => {
         }
         setAuthenticating(true);
         // Autenticate User
-        authenticateUser();
+        // authenticateUser();
+        router.push('/classic/payment');
       }
     } catch (error) {
       console.error('Error saving transaction:', error);
@@ -174,7 +175,7 @@ const BuyCrypto = () => {
   useEffect(() => {
     fetchConversionRate();
   }, [inrValue]);
-  if (authenticating) return 'Authenticate your face to continue';
+  // if (authenticating) return 'Authenticate your face to continue';
   return (
     <div>
       <Trade>
