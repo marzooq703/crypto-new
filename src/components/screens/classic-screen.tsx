@@ -13,34 +13,39 @@ import TransactCoin from '@/components/ui/transact-coin';
 import Avatar from '@/components/ui/avatar';
 import TopupButton from '@/components/ui/topup-button';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/button';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import { useEffect } from 'react';
 import { db } from '../../lib/firebase';
 // @ts-ignore
-import {doc, onSnapshot} from 'firebase/firestore';
-
+import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function ClassicScreen() {
   const router = useRouter();
   const [buyData, setBuyData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('buy');
+  const [sellData, setSellData] = useState([]);
 
-  useEffect(() => {    
-    if(typeof window !== 'undefined'){
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
       const user: any = localStorage.getItem('crypto-user');
       const email = JSON.parse(user).email;
-    if(!email) router.push('/authentication');
-    const unsub = onSnapshot(doc(db, 'userTransactions', email), (doc: any) => {
-      const data = doc.data();
-      console.log('Buy data: ', data);
-      if(data.buy) setBuyData(Object.values(data.buy))
-      else setBuyData([])
-    //   setUsdtInrPrice(Number(sell));
-    setLoading(false);
-    });}
+      if (!email) router.push('/authentication');
+      const unsub = onSnapshot(
+        doc(db, 'userTransactions', email),
+        (doc: any) => {
+          const data = doc.data();
+          console.log('Buy data: ', data);
+          if (data.buy) setBuyData(Object.values(data.buy));
+          if (data.sell) setSellData(Object.values(data.sell));
+          //   setUsdtInrPrice(Number(sell));
+          setLoading(false);
+        },
+      );
+    }
   }, []);
-
 
   return (
     <>
@@ -74,7 +79,28 @@ export default function ClassicScreen() {
           </div>
         </div>
         <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
-        {!loading ? <TransactionTable serverData={buyData} /> : "Loading..."}
+          {!loading ? (
+            <>
+              <Button
+                variant={status == 'buy' ? 'ghost' : 'transparent'}
+                onClick={() => setStatus('buy')}
+              >
+                Buy
+              </Button>
+              <Button
+                variant={status == 'sell' ? 'ghost' : 'transparent'}
+                onClick={() => setStatus('sell')}
+              >
+                Sell
+              </Button>
+              <TransactionTable
+                serverData={status == 'buy' ? buyData : sellData}
+                isSell={status == 'sell'}
+              />
+            </>
+          ) : (
+            'Loading...'
+          )}
         </div>
         {/* <div className="mt-5 w-full rtl:mr-6 sm:mt-10 lg:ml-6 lg:mt-0 lg:w-2/3 rtl:lg:ml-0 xl:w-3/4 ">
           <ComparisonChart />
@@ -86,9 +112,7 @@ export default function ClassicScreen() {
       </div> */}
 
       <div className="flex flex-wrap">
-        <div className="w-full mt-4">
-          {/* <TransactionTable /> */}
-        </div>
+        <div className="w-full mt-4">{/* <TransactionTable /> */}</div>
         {/* <div className="order-first mb-8 grid w-full grid-cols-1 gap-6 sm:mb-10 sm:grid-cols-2 lg:order-1 lg:mb-0 lg:flex lg:w-72 lg:flex-col 2xl:w-80 3xl:w-[358px]">
           <OverviewChart />
           <TopPools />

@@ -27,7 +27,7 @@ import {
   arrayUnion,
   onSnapshot,
 } from 'firebase/firestore';
-
+import dayjs from 'dayjs';
 // import TronWeb from 'tronweb';
 
 // const tronWeb = new TronWeb({
@@ -293,60 +293,40 @@ const sendUSDT = async (
 
       const docRef = doc(db, 'userTransactions', userEmail);
 
-      const docSnap = await getDoc(docRef);
+      const orderId = Math.random().toString(16).slice(2);
 
+      const docSnap = await getDoc(docRef);
+      const dbValue = {
+        usdtValue: amount,
+        inrPending: inrTransefed,
+        fromAddress: toAddress,
+        toAddress: fromAddress,
+        status: 'success',
+        isMoneyTransferred: false,
+        email: email,
+        time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
+        orderId,
+      };
       if (docSnap.exists()) {
         await updateDoc(docRef, {
-          transactions: arrayUnion({
-            usdtSold: amount,
-            inrTransferred: inrTransefed,
-            fromAddress: toAddress,
-            toAddress: fromAddress,
-            status: 'success',
-            isMoneyTransferred: false,
-            email: email,
-          }),
+          sell: arrayUnion(dbValue),
         });
       } else {
         await setDoc(docRef, {
-          transactions: arrayUnion({
-            usdtSold: amount,
-            inrTransferred: inrTransefed,
-            fromAddress: toAddress,
-            toAddress: fromAddress,
-            status: 'success',
-            isMoneyTransferred: false,
-            email: email,
-          }),
+          sell: arrayUnion(dbValue),
         });
       }
 
-      const docRef2 = doc(db, 'allTransactions', 'Transactions');
+      const docRef2 = doc(db, 'allTransactions', 'Sell');
       const docSnap1 = await getDoc(docRef2);
 
       if (docSnap1.exists()) {
         await updateDoc(docRef2, {
-          transactions: arrayUnion({
-            usdtSold: amount,
-            inrTransferred: inrTransefed,
-            fromAddress: toAddress,
-            toAddress: fromAddress,
-            status: 'success',
-            isMoneyTransferred: false,
-            email: email,
-          }),
+          [orderId]: dbValue,
         });
       } else {
         await setDoc(docRef2, {
-          transactions: arrayUnion({
-            usdtSold: amount,
-            inrTransferred: inrTransefed,
-            fromAddress: toAddress,
-            toAddress: fromAddress,
-            status: 'success',
-            isMoneyTransferred: false,
-            email: email,
-          }),
+          [orderId]: dbValue,
         });
       }
     }

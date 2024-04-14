@@ -97,10 +97,121 @@ const COLUMNS = [
     maxWidth: 150,
   },
 ];
-
-export default function TransactionTable({ serverData }) {
-  const data = useMemo(() => serverData, []);
-  const columns = useMemo(() => COLUMNS, []);
+const COLUMNS_SELL = [
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Payment Date</div>,
+    accessor: 'time',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <div className="-tracking-[1px] ltr:text-right rtl:text-left">
+        <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 lg:text-base 3xl:text-2xl">
+          {dayjs(value).format('MMM D, YYYY')}
+        </strong>
+        <span className="text-gray-600 dark:text-gray-400">
+          {dayjs(value).format('hh:mm:ss')}
+        </span>
+      </div>
+    ),
+    minWidth: 160,
+    maxWidth: 220,
+  },
+  {
+    Header: 'Email',
+    accessor: 'email',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <div
+        className="cursor-pointer"
+        onClick={() => {
+          typeof window != 'undefined' && navigator.clipboard.writeText(value);
+        }}
+      >
+        {value?.substring(0, 17)}
+      </div>
+    ),
+    minWidth: 60,
+    maxWidth: 200,
+  },
+  {
+    Header: 'Order Id',
+    accessor: 'orderId',
+    minWidth: 60,
+    maxWidth: 130,
+  },
+  {
+    Header: () => <div>Got USDT</div>,
+    accessor: 'usdtValue',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => <div className="">{value}</div>,
+    minWidth: 80,
+    maxWidth: 120,
+  },
+  {
+    Header: () => (
+      <div className="ltr:ml-auto rtl:mr-auto">Money Transfered?</div>
+    ),
+    accessor: 'isMoneyTransferred',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <div className="">{value ? 'Yes' : 'No'}</div>
+    ),
+    minWidth: 100,
+    maxWidth: 180,
+  },
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Wallet Address</div>,
+    accessor: 'fromAddress',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <div
+        className="flex items-center justify-start cursor-pointer"
+        onClick={() => {
+          typeof window != 'undefined' && navigator.clipboard.writeText(value);
+        }}
+      >
+        <LinkIcon className="h-[18px] w-[18px] ltr:mr-2 rtl:ml-2" />{' '}
+        {value?.substring(0, 10)}
+      </div>
+    ),
+    minWidth: 120,
+    maxWidth: 200,
+  },
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Amount</div>,
+    accessor: 'inrPending',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <strong className="mb-0.5 flex justify-center text-base md:mb-1.5 lg:text-base 3xl:text-2xl">
+        {value}
+      </strong>
+    ),
+    minWidth: 80,
+    maxWidth: 150,
+  },
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Action</div>,
+    accessor: 'test',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <Button
+        rounded
+        variant="ghost"
+        size="mini"
+        className="flex justify-end"
+        onClick={() => {
+          Swal.fire('Crypto Transfer Triggered...');
+        }}
+      >
+        Completed
+      </Button>
+    ),
+    minWidth: 150,
+    maxWidth: 300,
+  },
+];
+export default function TransactionTable({ serverData, isSell = false }) {
+  const data = useMemo(() => serverData, [isSell]);
+  const columns = useMemo(() => (isSell ? COLUMNS_SELL : COLUMNS), [isSell]);
   // console.log("buyData", buyData)
   console.log('data', data);
   const {

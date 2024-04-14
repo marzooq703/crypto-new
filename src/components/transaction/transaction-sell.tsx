@@ -62,7 +62,7 @@ const COLUMNS = [
     maxWidth: 130,
   },
   {
-    Header: () => <div>USDT Value</div>,
+    Header: () => <div>Got USDT</div>,
     accessor: 'usdtValue',
     // @ts-ignore
     Cell: ({ cell: { value } }) => <div className="">{value}</div>,
@@ -70,16 +70,20 @@ const COLUMNS = [
     maxWidth: 120,
   },
   {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Crypto Trasfer</div>,
-    accessor: 'cryptoTrasnfer',
+    Header: () => (
+      <div className="ltr:ml-auto rtl:mr-auto">Money Transfered?</div>
+    ),
+    accessor: 'isMoneyTransferred',
     // @ts-ignore
-    Cell: ({ cell: { value } }) => <div className="">{value}</div>,
+    Cell: ({ cell: { value } }) => (
+      <div className="">{value ? 'Yes' : 'No'}</div>
+    ),
     minWidth: 100,
     maxWidth: 180,
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Wallet Address</div>,
-    accessor: 'walletAddress',
+    accessor: 'fromAddress',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <div
@@ -97,7 +101,7 @@ const COLUMNS = [
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Amount</div>,
-    accessor: 'totalAmount',
+    accessor: 'inrPending',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <strong className="mb-0.5 flex justify-center text-base md:mb-1.5 lg:text-base 3xl:text-2xl">
@@ -214,33 +218,37 @@ export default function TransactionTable({ serverData }) {
                   </tr>
                 ))}
               </thead>
-              <tbody
-                {...getTableBodyProps()}
-                className="text-xs font-medium text-gray-900 dark:text-white 3xl:text-sm"
-              >
-                {page.map((row, idx) => {
-                  prepareRow(row);
-                  return (
-                    <tr
-                      {...row.getRowProps()}
-                      key={idx}
-                      className="mb-3 items-center rounded-lg bg-white uppercase shadow-card last:mb-0 dark:bg-light-dark"
-                    >
-                      {row.cells.map((cell, idx) => {
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-                            key={idx}
-                            className="px-2 py-4 tracking-[1px] ltr:first:pl-4 ltr:last:pr-4 rtl:first:pr-8 rtl:last:pl-8 md:px-4 md:py-6 md:ltr:first:pl-8 md:ltr:last:pr-8 3xl:py-5"
-                          >
-                            {cell.render('Cell')}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
+              {serverData.length > 0 ? (
+                <tbody
+                  {...getTableBodyProps()}
+                  className="text-xs font-medium text-gray-900 dark:text-white 3xl:text-sm"
+                >
+                  {page.map((row, idx) => {
+                    prepareRow(row);
+                    return (
+                      <tr
+                        {...row.getRowProps()}
+                        key={idx}
+                        className="mb-3 items-center rounded-lg bg-white uppercase shadow-card last:mb-0 dark:bg-light-dark"
+                      >
+                        {row.cells.map((cell, idx) => {
+                          return (
+                            <td
+                              {...cell.getCellProps()}
+                              key={idx}
+                              className="px-2 py-4 tracking-[1px] ltr:first:pl-4 ltr:last:pr-4 rtl:first:pr-8 rtl:last:pl-8 md:px-4 md:py-6 md:ltr:first:pl-8 md:ltr:last:pr-8 3xl:py-5"
+                            >
+                              {cell.render('Cell')}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              ) : (
+                'No transactions found'
+              )}
             </table>
           </div>
         </Scrollbar>
