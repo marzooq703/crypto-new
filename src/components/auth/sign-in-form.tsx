@@ -81,7 +81,7 @@ export default function SignInForm() {
         locale: 'auto', // Default user locale
       });
 
-      router.push('/');
+      router.push('/classic');
       console.log('Success, user identified');
       // Grab the facial ID linked to this particular user which will be same
       // for each of his successful future authentication. FACEIO recommend

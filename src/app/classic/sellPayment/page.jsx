@@ -27,6 +27,7 @@ import {
   arrayUnion,
   onSnapshot,
 } from 'firebase/firestore';
+import faceIO from '@faceio/fiojs';
 import dayjs from 'dayjs';
 // import TronWeb from 'tronweb';
 
@@ -667,6 +668,72 @@ const Crypto = () => {
   const [startTransaction, setStartTransaction] = useState(false);
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
+  const [faceIo, setFaceIo] = useState({});
+  const [authenticating, setAuthenticating] = useState(false);
+
+  function handleError(errCode) {
+    // Handle error here
+    // Log all possible error codes during user interaction..
+    // Refer to: https://faceio.net/integration-guide#error-codes
+    // for a detailed overview when these errors are triggered.
+    const fioErrs = faceIo.fetchAllErrorCodes();
+    switch (errCode) {
+      case fioErrs.PERMISSION_REFUSED:
+        console.log('Access to the Camera stream was denied by the end user');
+        break;
+      case fioErrs.NO_FACES_DETECTED:
+        console.log(
+          'No faces were detected during the enroll or authentication process',
+        );
+        break;
+      case fioErrs.UNRECOGNIZED_FACE:
+        console.log("Unrecognized face on this application's Facial Index");
+        break;
+      case fioErrs.MANY_FACES:
+        console.log('Two or more faces were detected during the scan process');
+        break;
+      case fioErrs.FACE_DUPLICATION:
+        console.log(
+          'User enrolled previously (facial features already recorded). Cannot enroll again!',
+        );
+        break;
+      case fioErrs.MINORS_NOT_ALLOWED:
+        console.log('Minors are not allowed to enroll on this application!');
+        break;
+      case fioErrs.PAD_ATTACK:
+        console.log(
+          'Presentation (Spoof) Attack (PAD) detected during the scan process',
+        );
+        break;
+      case fioErrs.FACE_MISMATCH:
+        console.log(
+          'Calculated Facial Vectors of the user being enrolled do not match',
+        );
+        break;
+      case fioErrs.WRONG_PIN_CODE:
+        console.log('Wrong PIN code supplied by the user being authenticated');
+        break;
+      // ...
+      // Refer to the boilerplate at: https://gist.github.com/symisc/34203d2811a39f2a871373abc6dd1ce9
+      // for the list of all possible error codes.
+    }
+  }
+  async function authenticateUser() {
+    try {
+      setAuthenticating(true);
+      const userData = await faceIo.authenticate({
+        locale: 'auto', // Default user locale
+      });
+      setAuthenticating(false);
+      handleSubmit();
+    } catch (error) {
+      handleError(error.code);
+    }
+  }
+
+  useEffect(() => {
+    setFaceIo(new faceIO('fioab44a'));
+  }, []);
 
   // console.log(userEmail);
   useEffect(() => {
@@ -819,6 +886,7 @@ const Crypto = () => {
     const timer = setTimeout(() => setShowMinutesMessage(true), 20000);
     return () => clearTimeout(timer);
   }, []);
+  if (authenticating) return 'Authenticate your face to continue';
   return (
     <div>
       <Trade>
@@ -879,7 +947,7 @@ const Crypto = () => {
             shape="rounded"
             fullWidth={true}
             className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-            onClick={handleSubmit}
+            onClick={authenticateUser}
           >
             Sell
           </Button>

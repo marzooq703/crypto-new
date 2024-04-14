@@ -14,11 +14,76 @@ import { db } from '../../../lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Swal from 'sweetalert2';
 // import {sendMessageToGroup} from "../../../lib/telegram"
+import faceIO from '@faceio/fiojs';
 
 const BuyCrypto = () => {
   const [inrValue, setInrValue] = useState('');
   const [usdtValue, setUsdtValue] = useState(0);
   const [userEmail, setUserEmail] = useState(null);
+  const [faceIo, setFaceIo] = useState({});
+  const [authenticating, setAuthenticating] = useState(false);
+
+  function handleError(errCode) {
+    // Handle error here
+    // Log all possible error codes during user interaction..
+    // Refer to: https://faceio.net/integration-guide#error-codes
+    // for a detailed overview when these errors are triggered.
+    const fioErrs = faceIo.fetchAllErrorCodes();
+    switch (errCode) {
+      case fioErrs.PERMISSION_REFUSED:
+        console.log('Access to the Camera stream was denied by the end user');
+        break;
+      case fioErrs.NO_FACES_DETECTED:
+        console.log(
+          'No faces were detected during the enroll or authentication process',
+        );
+        break;
+      case fioErrs.UNRECOGNIZED_FACE:
+        console.log("Unrecognized face on this application's Facial Index");
+        break;
+      case fioErrs.MANY_FACES:
+        console.log('Two or more faces were detected during the scan process');
+        break;
+      case fioErrs.FACE_DUPLICATION:
+        console.log(
+          'User enrolled previously (facial features already recorded). Cannot enroll again!',
+        );
+        break;
+      case fioErrs.MINORS_NOT_ALLOWED:
+        console.log('Minors are not allowed to enroll on this application!');
+        break;
+      case fioErrs.PAD_ATTACK:
+        console.log(
+          'Presentation (Spoof) Attack (PAD) detected during the scan process',
+        );
+        break;
+      case fioErrs.FACE_MISMATCH:
+        console.log(
+          'Calculated Facial Vectors of the user being enrolled do not match',
+        );
+        break;
+      case fioErrs.WRONG_PIN_CODE:
+        console.log('Wrong PIN code supplied by the user being authenticated');
+        break;
+      // ...
+      // Refer to the boilerplate at: https://gist.github.com/symisc/34203d2811a39f2a871373abc6dd1ce9
+      // for the list of all possible error codes.
+    }
+  }
+  async function authenticateUser() {
+    try {
+      const userData = await faceIo.authenticate({
+        locale: 'auto', // Default user locale
+      });
+      router.push('/classic/payment');
+    } catch (error) {
+      handleError(error.code);
+    }
+  }
+
+  useEffect(() => {
+    setFaceIo(new faceIO('fioab44a'));
+  }, []);
 
   console.log(userEmail, 'email');
   console.log(usdtValue, 'usdtValue');
@@ -26,30 +91,14 @@ const BuyCrypto = () => {
 
   useEffect(() => {
     // Fetch user email if not already fetched
-    const fetchUserEmail = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('crypto-user');
       if (!user) {
-        // Handle the case where the user is not logged in
-        console.error('User is not logged in');
-        return;
+        router.push('/authentication');
+      } else {
+        setUserEmail(JSON.parse(user).email);
       }
-
-      try {
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          setUserEmail(userData.email);
-        } else {
-          console.error('User document does not exist');
-        }
-      } catch (error) {
-        console.error('Error fetching user document:', error);
-      }
-    };
-
-    fetchUserEmail();
+    }
   }, []);
 
   const fetchConversionRate = async () => {
@@ -64,31 +113,6 @@ const BuyCrypto = () => {
           parseFloat(inrValue || 0) / parseFloat(conversionRate);
         setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
       });
-
-      // const response = await axios.get(
-      //   'https://api.coingecko.com/api/v3/simple/price',
-      //   {
-      //     params: {
-      //       ids: 'tether',
-      //       vs_currencies: 'inr',
-      //     },
-      //   },
-      // );
-      // if (
-      //   !response.data ||
-      //   !response.data.tether ||
-      //   !response.data.tether.inr
-      // ) {
-      //   throw new Error('Invalid response or missing data');
-      // }
-      // const conversionRate = response.data.tether.inr;
-      // const calculatedUsdtValue =
-      //   parseFloat(inrValue) / parseFloat(conversionRate);
-      // setUsdtValue(calculatedUsdtValue.toFixed(2)); // Rounded to 2 decimal places
-
-      // // Log the conversion rate and the calculated USDT value
-      // console.log('Conversion Rate:', conversionRate);
-      // console.log('Calculated USDT Value:', calculatedUsdtValue.toFixed(2));
     } catch (error) {
       console.error('Error fetching conversion rate:', error);
     }
@@ -111,85 +135,46 @@ const BuyCrypto = () => {
 
   const handleSubmit = async () => {
     try {
-      // Fetch user email if not already fetched
-      //-----------------------------------------------------------------------------------------
-      //  axios
-      //     .post('http://localhost:3000/classic/telegram/api', {
-      //       type: 'Buy',
-      //       amount: '10USD',
-      //       userName: 'tariq',
-      //       userID: 'sdf',
-      //       city: 'chennai',
-      //     })
-      //     .then((val) => {
-      //       console.log(val)
-      //     }).catch((err) => console.error(err));
-
-      // TODO: Commented by Marzooq to use it in the next page in the future.
-      // const auth = getAuth();
-      // const user = auth.currentUser;
-      // if (!userEmail && user) {
-      //   setUserEmail(user.email);
-      // }
-
-      // Ensure user email is available
-      // if (!userEmail) {
-      //   console.error('User email is not available');
-      //   return;
-      // }
-
-      // Create a transaction data object
-      // const transactionData = {
-      //   currency: 'INR',
-      //   amount: inrValue,
-      //   equivalentUSDT: usdtValue,
-      //   timestamp: new Date().toISOString(), // Convert date to ISO string format
-      // };
-
-      // Add the transaction data to the Firestore collection
-      // await setDoc(
-      //   doc(db, 'transactions', generateTransactionId(userEmail)),
-      //   transactionData,
-      // );
-
       // Store values in local storage
       const numberInrVal = Number(inrValue);
       const numberUSDTVal = Number(usdtValue);
-      if(numberInrVal == NaN || numberInrVal == 0 || numberUSDTVal == NaN || numberUSDTVal == 0) {
+      if (
+        numberInrVal == NaN ||
+        numberInrVal == 0 ||
+        numberUSDTVal == NaN ||
+        numberUSDTVal == 0
+      ) {
         setInrValue(0);
         setUsdtValue(0);
         Swal.fire({
           icon: 'error',
           title: 'Incorrect Price!',
-        })
-        return;      
+        });
+        return;
       } else {
-        if(typeof window !== 'undefined'){
-        localStorage.setItem('inrValue', inrValue);
-        localStorage.setItem('usdtValue', usdtValue);
-  
-        localStorage.setItem('tds-value', (inrValue / 100));
-        localStorage.setItem('total-value', Number(inrValue) + Number(inrValue / 100));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('inrValue', inrValue);
+          localStorage.setItem('usdtValue', usdtValue);
+
+          localStorage.setItem('tds-value', inrValue / 100);
+          localStorage.setItem(
+            'total-value',
+            Number(inrValue) + Number(inrValue / 100),
+          );
         }
-  
-        // Navigate to the payment page
-        router.push('/classic/payment');
+        setAuthenticating(true);
+        // Autenticate User
+        authenticateUser();
       }
     } catch (error) {
       console.error('Error saving transaction:', error);
     }
   };
 
-  const generateTransactionId = (userEmail) => {
-    const timestamp = new Date().getTime(); // Using getTime() to get the number of milliseconds since the Unix epoch
-    const transactionId = `${userEmail}`;
-    return transactionId;
-  };
-
   useEffect(() => {
     fetchConversionRate();
   }, [inrValue]);
-
+  if (authenticating) return 'Authenticate your face to continue';
   return (
     <div>
       <Trade>
@@ -232,7 +217,10 @@ const BuyCrypto = () => {
           <TransactionInfo label={'Rate'} />
           <TransactionInfo label={'Offered by'} /> */}
           <TransactionInfo label={'TDS - 1%'} value={`₹ ${inrValue / 100}`} />
-          <TransactionInfo label={'Total'} value={`₹ ${Number(inrValue) + Number(inrValue / 100)}`} />
+          <TransactionInfo
+            label={'Total'}
+            value={`₹ ${Number(inrValue) + Number(inrValue / 100)}`}
+          />
           {/* <TransactionInfo label={'Network Fee'} />
           <TransactionInfo label={'Criptic Fee'} /> */}
         </div>
