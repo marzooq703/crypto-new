@@ -25,27 +25,22 @@ const TransactCoin = ({ className, transactionType }: TransactCoinProps) => {
   const inrToUsdtRate = 0.014;
 
   useEffect(() => {
-    const fetchConversionRate = async () => {
-      try {
-        const unsub = onSnapshot(doc(db, 'currentPricing', 'Buy'), (doc) => {
-          const data = doc.data();
-          console.log('Current data: ', data);
-          const buy = data?.current;
-          setBuyValue(buy);
-        });
-        const sellValue = onSnapshot(
-          doc(db, 'currentPricing', 'Sell'),
-          (doc) => {
-            const data = doc.data();
-            console.log('Current data: ', data);
-            const sell = data?.current;
-            setSellValue(sell);
-          },
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    try {
+      const unsub = onSnapshot(doc(db, 'currentPricing', 'Buy'), (doc) => {
+        const data = doc.data();
+        console.log('Current data: ', data);
+        const buy = data?.current;
+        setBuyValue(buy);
+      });
+      const sellValue = onSnapshot(doc(db, 'currentPricing', 'Sell'), (doc) => {
+        const data = doc.data();
+        console.log('Current data: ', data);
+        const sell = data?.current;
+        setSellValue(sell);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }, []); // Update conversion rate when transaction type or currency changes
 
   // Update the handleOnChangeFirstCoin function to ensure it only accepts valid numerical values
