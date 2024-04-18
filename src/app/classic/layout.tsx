@@ -1,3 +1,4 @@
+'use client';
 import ClassicLayout from '@/layouts/classic/layout';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
