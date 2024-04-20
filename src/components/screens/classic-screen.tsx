@@ -61,12 +61,12 @@ export default function ClassicScreen() {
           <CoinSlider coins={coinData} />
         </div> */}
       </div>
-      <div>
+      {/* <div>
       <button style={{color:"white",backgroundColor:"black", borderRadius:"5px", border:"grey solid 2px", padding:"5px"}} onClick={generatePDF}>Generate PDF</button>
       {PDFGenerated && <MyPDFdoc generatePDF={PDFGenerated} />}
+ */}
 
-
-      </div>
+      {/* </div> */}
       <div className="flex w-full flex-col sm:mt-8 lg:mt-8 lg:flex-row">
         <div className="flex w-full rounded-lg bg-white p-6 shadow-card dark:bg-light-dark md:col-span-1 md:h-[678px] lg:col-span-5 lg:h-[644px] lg:w-1/3 xl:col-span-3 xl:row-start-1 xl:row-end-2 xl:h-auto xl:w-1/4 2xl:col-span-3  2xl:h-[715px] 2xl:p-6 3xl:col-span-3 3xl:h-[730px] 3xl:p-8 4xl:h-[815px]">
           <div className="w-full">
