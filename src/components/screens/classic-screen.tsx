@@ -31,19 +31,21 @@ export default function ClassicScreen() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const user: any = localStorage.getItem('crypto-user');
-      const email = JSON.parse(user).email;
-      if (!email) router.push('/authentication');
-      const unsub = onSnapshot(
-        doc(db, 'userTransactions', email),
-        (doc: any) => {
-          const data = doc.data();
-          console.log('Buy data: ', data);
-          if (data.buy) setBuyData(Object.values(data.buy));
-          if (data.sell) setSellData(Object.values(data.sell));
-          //   setUsdtInrPrice(Number(sell));
-          setLoading(false);
-        },
-      );
+      if (!user) router.push('/authentication');
+      else {
+        const email = JSON.parse(user).email;
+        const unsub = onSnapshot(
+          doc(db, 'userTransactions', email),
+          (doc: any) => {
+            const data = doc.data();
+            console.log('Buy data: ', data);
+            if (data.buy) setBuyData(Object.values(data.buy));
+            if (data.sell) setSellData(Object.values(data.sell));
+            //   setUsdtInrPrice(Number(sell));
+            setLoading(false);
+          },
+        );
+      }
     }
   }, []);
 
