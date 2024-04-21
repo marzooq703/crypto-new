@@ -15,11 +15,44 @@ import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
+import { generatePDF } from '@/app/classic/jsPDF/page';
 
 import dayjs from 'dayjs';
 
 import Swal from 'sweetalert2';
 
+const handlePDF = () => {
+  const orderNumber = "123456";
+  const matchTime = "2024-04-21 10:00:00";
+  const receiptGenerated = "Your Company Name";
+  const stableCrypto = "Stable Crypto";
+  const coinTraded = "BTC";
+  const currency = "USD";
+  const totalCrypto = "1.5";
+  const cryptoPrice = "50000";
+  const totalTradedAmount = "75000";
+  const orderDate = "2024-04-21";
+  const paymentType = "Credit Card";
+  const paymentMethod = "Visa";
+  const paymentDetails = "Success";
+
+  generatePDF(
+    orderNumber,
+    matchTime,
+    receiptGenerated,
+    stableCrypto,
+    coinTraded,
+    currency,
+    totalCrypto,
+    cryptoPrice,
+    totalTradedAmount,
+    orderDate,
+    paymentType,
+    paymentMethod,
+    paymentDetails
+  );
+
+}
 const COLUMNS = [
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Payment Date</div>,
@@ -117,9 +150,11 @@ const COLUMNS = [
         variant="ghost"
         size="mini"
         className="flex justify-end"
-        onClick={() => {
-          Swal.fire('Crypto Transfer Triggered...');
-        }}
+        onClick={handlePDF}
+        // onClick={() => {
+        //   // Swal.fire('Crypto Transfer Triggered...');
+          
+        // }}
       >
         Completed
       </Button>
@@ -130,6 +165,7 @@ const COLUMNS = [
 ];
 
 export default function TransactionTable({ serverData }) {
+
   const data = useMemo(() => serverData, []);
   const columns = useMemo(() => COLUMNS, []);
   // console.log("buyData", buyData)
