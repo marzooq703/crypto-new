@@ -27,6 +27,7 @@ export default function SignInForm() {
   const [password, setPassword] = useState('');
   const [signInStatus, setSignInStatus] = useState<SignInStatus>(null); // Track sign-in status
   const [faceIo, setFaceIo] = useState({});
+  const [tempFace, setTempFace] = useState(0);
 
   function handleError(errCode) {
     // Handle error here
@@ -93,6 +94,10 @@ export default function SignInForm() {
       console.log('Payload: ' + JSON.stringify(userData.payload)); // {"whoami": 123456, "email": "john.doe@example.com"} from the enroll() example above
     } catch (error) {
       handleError(error.code);
+      console.log('post error');
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     }
   }
 
