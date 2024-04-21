@@ -372,6 +372,8 @@ const BuyPayment = () => {
                     icon: 'question',
                     title: 'Payment under verification',
                     text: 'You will receive a email notification when the payment is verified by our team!',
+                  }).then(() => {
+                    router.push(`/classic/buy`);
                   });
                 }}
               >
