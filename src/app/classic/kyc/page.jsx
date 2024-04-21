@@ -1,5 +1,7 @@
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
 const KYC = () => {
+  const router = useRouter();
   return (
     <>
       <b>KYC</b>
