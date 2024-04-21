@@ -194,9 +194,9 @@ const BuyPayment = () => {
       router.push(`/authentication`);
       return;
     }
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('buy-wallet-address', walletAddress);
-    }
+    // if (typeof window !== 'undefined') {
+    //   localStorage.setItem('buy-wallet-address', walletAddress);
+    // }
     setPayByAccount(true);
   };
   //-----------------------------------------------
