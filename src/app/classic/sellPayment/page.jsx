@@ -665,6 +665,9 @@ const Crypto = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [value, setValue] = useState('');
   const [startTransaction, setStartTransaction] = useState(false);
+  const [hashId, setHashId] = useState('');
+
+  const [isTransferById, setIsTransferById] = useState(false);
 
   const cryptowalletAmount = JSON.stringify(cryptoAmount.amount);
 
@@ -822,39 +825,31 @@ const Crypto = () => {
   return (
     <div>
       <Trade>
-        <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
-          <div
-            className={cn(
-              'relative flex gap-3',
-              toggleCoin ? 'flex-col-reverse' : 'flex-col',
-            )}
-          >
-            <CoinInput
-              label={'From'}
-              exchangeRate={0.0}
-              defaultCoinIndex={0}
-              getCoinValue={(data) => setSellingAmount(data)}
-            />
-            <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600">
-              {/* <Button
-                size="mini"
-                color="gray"
-                shape="circle"
-                variant="transparent"
-                onClick={() => setToggleCoin(!toggleCoin)}
-              >
-                <SwapIcon className="h-auto w-3" />
-              </Button> */}
+        <>
+          <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
+            <div
+              className={cn(
+                'relative flex gap-3',
+                toggleCoin ? 'flex-col-reverse' : 'flex-col',
+              )}
+            >
+              <CoinInput
+                label={'From'}
+                exchangeRate={0.0}
+                defaultCoinIndex={0}
+                getCoinValue={(data) => setSellingAmount(data)}
+              />
+              <div className="absolute left-1/2 top-1/2 z-[1] -ml-4 -mt-4 rounded-full bg-white shadow-large dark:bg-gray-600"></div>
+              <CoinInput2
+                label={'To'}
+                exchangeRate={0.0}
+                defaultCoinIndex={1}
+                value={value}
+                getCoinValue={(data) => setInrAmount(data)}
+              />
             </div>
-            <CoinInput2
-              label={'To'}
-              exchangeRate={0.0}
-              defaultCoinIndex={1}
-              value={value}
-              getCoinValue={(data) => setInrAmount(data)}
-            />
           </div>
-        </div>
+        </>
         {/* <div className="flex flex-col gap-4 xs:gap-[18px]">
           <TransactionInfo label={'Min. Received'} />
           <TransactionInfo label={'Rate'} />
@@ -873,16 +868,107 @@ const Crypto = () => {
             <div>Complete the transaction by approving it in your Wallet</div>
             {showMinutesMessage && <div>It may take Few Minutes</div>}
           </>
+        ) : isTransferById ? (
+          <>
+            <div>
+              Transfer {sellingAmount?.value} USDT to
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  typeof window != 'undefined' &&
+                    navigator.clipboard.writeText(
+                      '0xd47B761874B2941e9976B2469F04a3A3D8F830D1',
+                    );
+                }}
+              >
+                0xd47B761874B2941e9976B2469F04a3A3D8F830D1
+              </div>
+              <input
+                type="text"
+                placeholder="Transaction Hash"
+                value={hashId}
+                onChange={(e) => setHashId(e.target.value)}
+                className="w-full py-2 px-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              />
+              <Button
+                size="large"
+                shape="rounded"
+                fullWidth={true}
+                className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+                onClick={async () => {
+                  const docRef = doc(db, 'userTransactions', userEmail);
+                  const orderId = Math.random().toString(16).slice(2);
+
+                  const docSnap = await getDoc(docRef);
+                  const dbValue = {
+                    usdtValue: sellingAmount?.value,
+                    inrPending: value,
+                    fromAddress: '0xd47B761874B2941e9976B2469F04a3A3D8F830D1',
+                    toAddress: '0xd47B761874B2941e9976B2469F04a3A3D8F830D1',
+                    status: 'pending',
+                    isMoneyTransferred: false,
+                    email: userEmail,
+                    time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
+                    orderId,
+                  };
+                  if (docSnap.exists()) {
+                    await updateDoc(docRef, {
+                      sell: arrayUnion(dbValue),
+                    });
+                  } else {
+                    await setDoc(docRef, {
+                      sell: arrayUnion(dbValue),
+                    });
+                  }
+
+                  const docRef2 = doc(db, 'allTransactions', 'Sell');
+                  const docSnap1 = await getDoc(docRef2);
+
+                  if (docSnap1.exists()) {
+                    await updateDoc(docRef2, {
+                      [orderId]: dbValue,
+                    });
+                  } else {
+                    await setDoc(docRef2, {
+                      [orderId]: dbValue,
+                    });
+                  }
+
+                  Swal.fire({
+                    icon: 'question',
+                    title: 'Transaction under verification',
+                    text: 'You will receive a email notification when the payment is verified by our team!',
+                  });
+                  if (hashId) setIsTransferById(false);
+                }}
+              >
+                Verify transaction
+              </Button>
+            </div>
+          </>
         ) : (
-          <Button
-            size="large"
-            shape="rounded"
-            fullWidth={true}
-            className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
-            onClick={handleSubmit}
-          >
-            Sell
-          </Button>
+          <>
+            <Button
+              size="large"
+              shape="rounded"
+              fullWidth={true}
+              className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+              onClick={() => {
+                setIsTransferById(true);
+              }}
+            >
+              Transfer to Wallet (for Trust Wallet)
+            </Button>
+            <Button
+              size="large"
+              shape="rounded"
+              fullWidth={true}
+              className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+              onClick={handleSubmit}
+            >
+              Connect Wallet (for Meta Mask)
+            </Button>
+          </>
         )}
       </Trade>
     </div>

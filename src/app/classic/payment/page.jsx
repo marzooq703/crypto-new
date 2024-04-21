@@ -6,6 +6,16 @@ import { db } from '../../../lib/firebase';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/button';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  onSnapshot,
+} from 'firebase/firestore';
+import dayjs from 'dayjs';
 // import withReactContent from 'sweetalert2-react-content';
 
 // const MySwal = withReactContent(Swal);
@@ -17,6 +27,7 @@ const BuyPayment = () => {
   const [tds, setTds] = useState(0);
   const [walletAddress, setWalletAddress] = useState('');
   const [loading, setLoading] = useState(false);
+  const [payByAccount, setPayByAccount] = useState(false);
   const [user, setUser] = useState({
     firstName: '',
     lastName: '',
@@ -99,6 +110,7 @@ const BuyPayment = () => {
         title: 'Please login again',
         text: 'It is for your security reasons, thanks for understanding!',
       });
+      router.push(`/authentication`);
       return;
     }
     if (typeof window !== 'undefined') {
@@ -125,8 +137,67 @@ const BuyPayment = () => {
         console.error(err);
       });
   };
+  function makeid(length) {
+    let result = 'order_id_';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
   const payWithAccountTransfer = () => {
-    router.push('/classic/account-payment');
+    // router.push('/classic/account-payment');
+    setLoading(true);
+    // TODO: Hassan - Refactor this
+    if (
+      !inrValue ||
+      inrValue == 0 ||
+      inrValue < 0 ||
+      !usdtValue ||
+      usdtValue == 0 ||
+      usdtValue < 0 ||
+      !tds ||
+      tds == 0 ||
+      tds < 0 ||
+      !total ||
+      total == 0 ||
+      total < 0
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Incorrect Price!',
+      }).then(() => {
+        router.push(`/classic/buy`);
+      });
+      setLoading(false);
+      return;
+    }
+    if (!walletAddress) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please enter a valid wallet address',
+      });
+      setLoading(false);
+      return;
+    }
+    if (!user?.email) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please login again',
+        text: 'It is for your security reasons, thanks for understanding!',
+      });
+      router.push(`/authentication`);
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('buy-wallet-address', walletAddress);
+    }
+    setPayByAccount(true);
   };
   //-----------------------------------------------
 
@@ -218,37 +289,133 @@ const BuyPayment = () => {
             <strong className="text-green-500">{usdtValue || 0} USDT</strong>
           </div>
         </div>
-        <div>
-          <label className="block text-md font-medium text-gray-600 mt-3">
-            Type or paste a valid wallet address
-          </label>
-          <input
-            type="text"
-            className="form-input w-full border rounded-md"
-            onChange={(e) => {
-              console.log(e);
-              setWalletAddress(e.target.value);
-            }}
-          />
-        </div>
-        <div className="block w-full text-md font-medium text-black text-center mt-6">
-          <button
-            disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
-            onClick={payWithCashFree}
-          >
-            Pay with UPI
-          </button>
-        </div>
-        <div className="block w-full text-md font-medium text-black text-center mt-6">
-          <button
-            disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
-            onClick={payWithAccountTransfer}
-          >
-            Account Transfer
-          </button>
-        </div>
+        {payByAccount ? (
+          <>
+            <div>
+              <div>Account Payment</div>
+              <b>
+                Transfer the amount {total} to the following account and confirm
+                here
+              </b>
+              <div>A/c No: 924020010563000</div>
+              <div>Name: Kazze Finserve Private Limited</div>
+              <div>IFSC: UTIB0000046</div>
+              <div>Name of Bank: Axis Bank</div>
+              <Button
+                shape="rounded"
+                className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+                onClick={async () => {
+                  const time = dayjs('2024-04-13T16:13:00+05:30').format(
+                    'MMM D, YYYY - hh:mm:ss',
+                  );
+                  const orderId = makeid(6);
+                  const docRef1 = doc(db, 'userTransactions', user.email);
+                  const docSnap = await getDoc(docRef1);
+                  if (docSnap.exists()) {
+                    await updateDoc(docRef1, {
+                      buy: arrayUnion({
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'pending',
+                        cryptoTrasnfer: 'pending',
+                        time,
+                        usdtValue: usdtValue,
+                        orderId: orderId,
+                      }),
+                    });
+                  } else {
+                    await setDoc(docRef1, {
+                      buy: arrayUnion({
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'pending',
+                        cryptoTrasnfer: 'pending',
+                        time,
+                        usdtValue: usdtValue,
+                        orderId: orderId,
+                      }),
+                    });
+                  }
+
+                  const docRef2 = doc(db, 'allTransactions', 'Buy');
+                  const docSnap1 = await getDoc(docRef2);
+                  if (docSnap1.exists()) {
+                    await updateDoc(docRef2, {
+                      [orderId]: {
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'pending',
+                        cryptoTrasnfer: 'pending',
+                        time,
+                        usdtValue: usdtValue,
+                        orderId: orderId,
+                      },
+                    });
+                  } else {
+                    await setDoc(docRef2, {
+                      [orderId]: {
+                        walletAddress: walletAddress,
+                        totalAmount: total,
+                        email: user.email,
+                        status: 'pending',
+                        cryptoTrasnfer: 'pending',
+                        time,
+                        usdtValue: usdtValue,
+                        orderId: orderId,
+                      },
+                    });
+                  }
+                  Swal.fire({
+                    icon: 'question',
+                    title: 'Payment under verification',
+                    text: 'You will receive a email notification when the payment is verified by our team!',
+                  }).then(() => {
+                    router.push(`/classic/buy`);
+                  });
+                }}
+              >
+                Confirm Payment
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <label className="block text-md font-medium text-gray-600 mt-3">
+                Type or paste a valid wallet address
+              </label>
+              <input
+                type="text"
+                className="form-input w-full border rounded-md"
+                onChange={(e) => {
+                  console.log(e);
+                  setWalletAddress(e.target.value);
+                }}
+              />
+            </div>
+            <div className="block w-full text-md font-medium text-black text-center mt-6">
+              <button
+                disabled={loading}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
+                onClick={payWithCashFree}
+              >
+                Pay with UPI
+              </button>
+            </div>
+            <div className="block w-full text-md font-medium text-black text-center mt-6">
+              <button
+                disabled={loading}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
+                onClick={payWithAccountTransfer}
+              >
+                Account Transfer
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
