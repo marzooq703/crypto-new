@@ -15,7 +15,7 @@ import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
-import { generatePDF } from '@/app/classic/jsPDF';
+// import { generatePDF } from '@/app/classic/jsPDF';
 
 import dayjs from 'dayjs';
 
@@ -36,21 +36,21 @@ const handlePDF = () => {
   const paymentMethod = 'UPI';
   const paymentDetails = 'Success';
 
-  generatePDF(
-    orderNumber,
-    matchTime,
-    receiptGenerated,
-    stableCrypto,
-    coinTraded,
-    currency,
-    totalCrypto,
-    cryptoPrice,
-    totalTradedAmount,
-    orderDate,
-    paymentType,
-    paymentMethod,
-    paymentDetails,
-  );
+  // generatePDF(
+  //   orderNumber,
+  //   matchTime,
+  //   receiptGenerated,
+  //   stableCrypto,
+  //   coinTraded,
+  //   currency,
+  //   totalCrypto,
+  //   cryptoPrice,
+  //   totalTradedAmount,
+  //   orderDate,
+  //   paymentType,
+  //   paymentMethod,
+  //   paymentDetails,
+  // );
 };
 const COLUMNS = [
   {
@@ -159,7 +159,7 @@ const COLUMNS = [
     maxWidth: 300,
   },
 ];
-
+//@ts-ignore
 export default function TransactionTable({ serverData }) {
   const data = useMemo(() => serverData, []);
   const columns = useMemo(() => COLUMNS, []);
