@@ -145,15 +145,12 @@ const COLUMNS = [
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <Button
-        rounded
         variant="ghost"
         size="mini"
         className="flex justify-end"
-        onClick={handlePDF}
-        // onClick={() => {
-        //   // Swal.fire('Crypto Transfer Triggered...');
-
-        // }}
+        onClick={() => {
+          // handlePDF()
+        }}
       >
         Completed
       </Button>
