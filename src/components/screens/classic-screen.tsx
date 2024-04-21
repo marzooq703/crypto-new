@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import { db } from '../../lib/firebase';
 // @ts-ignore
 import { doc, onSnapshot } from 'firebase/firestore';
-import MyPDFdoc from '@/app/classic/jsPDF/page';
+// import MyPDFdoc from '@/app/classic/jsPDF/page';
 
 export default function ClassicScreen() {
   const router = useRouter();
