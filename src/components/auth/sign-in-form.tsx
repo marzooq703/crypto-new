@@ -95,9 +95,9 @@ export default function SignInForm() {
     } catch (error) {
       handleError(error.code);
       console.log('post error');
-      if (typeof window !== 'undefined') {
-        window.location.reload();
-      }
+      // if (typeof window !== 'undefined') {
+      //   window.location.reload();
+      // }
     }
   }
 
