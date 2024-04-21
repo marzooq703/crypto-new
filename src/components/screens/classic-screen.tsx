@@ -41,8 +41,8 @@ export default function ClassicScreen() {
           (doc: any) => {
             const data = doc.data();
             console.log('Buy data: ', data);
-            if (data.buy) setBuyData(Object.values(data.buy));
-            if (data.sell) setSellData(Object.values(data.sell));
+            if (data?.buy) setBuyData(Object.values(data.buy));
+            if (data?.sell) setSellData(Object.values(data.sell));
             //   setUsdtInrPrice(Number(sell));
             setLoading(false);
           },
@@ -51,9 +51,9 @@ export default function ClassicScreen() {
     }
   }, []);
 
-  const generatePDF =()=>{
+  const generatePDF = () => {
     setPdfGenerated(true);
-  }
+  };
   return (
     <>
       <div className="flex flex-wrap">
