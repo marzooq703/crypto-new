@@ -22,18 +22,18 @@ import dayjs from 'dayjs';
 import Swal from 'sweetalert2';
 
 const handlePDF = () => {
-  const orderNumber = '123456';
+  const orderNumber = 'order_Jbs3e';
   const matchTime = '2024-04-21 10:00:00';
-  const receiptGenerated = 'Your Company Name';
+  const receiptGenerated = 'Care Mahyan';
   const stableCrypto = 'Stable Crypto';
-  const coinTraded = 'BTC';
-  const currency = 'USD';
+  const coinTraded = 'USDT';
+  const currency = 'INR';
   const totalCrypto = '1.5';
-  const cryptoPrice = '50000';
-  const totalTradedAmount = '75000';
+  const cryptoPrice = '92';
+  const totalTradedAmount = '123';
   const orderDate = '2024-04-21';
-  const paymentType = 'Credit Card';
-  const paymentMethod = 'Visa';
+  const paymentType = 'UPI';
+  const paymentMethod = 'UPI';
   const paymentDetails = 'Success';
 
   generatePDF(
