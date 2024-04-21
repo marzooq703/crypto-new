@@ -9,7 +9,7 @@ const KYC = () => {
       <div>
         Please send your orginal Aadhar card and Pan card details to
         onboard@stablecrypto.in and verify your account
-      </div>{' '}
+      </div>
       <Button
         onClick={() => {
           router.push('/classic');

@@ -31,7 +31,6 @@ export default function SignUpAdditionalInfoModal({ user }) {
       //     }),
       //   );
       // }
-      router.push('/authentication/face-verification/verify');
     } catch (error) {
       console.error('Error saving additional information:', error);
     }

@@ -122,7 +122,6 @@ export default function SignInForm() {
         });
       }
       authenticateUser();
-      // router.push('/authentication/face-verification/verify');
     } catch (error) {
       console.error(error);
       setSignInStatus('failed');
