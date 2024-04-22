@@ -15,6 +15,7 @@ import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
+import DownloadIcon from '@mui/icons-material/Download';
 // import { generatePDF } from '@/app/classic/jsPDF';
 
 import dayjs from 'dayjs';
@@ -141,7 +142,7 @@ const COLUMNS = [
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Action</div>,
-    accessor: 'test',
+    accessor: 'completed',
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <Button
@@ -153,6 +154,26 @@ const COLUMNS = [
         }}
       >
         Completed
+      </Button>
+    ),
+    minWidth: 150,
+    maxWidth: 300,
+  },
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Invoice</div>,
+    accessor: 'invoice',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <Button
+        variant="ghost"
+        size="mini"
+        shape="pill"
+        className="flex justify-end"
+        onClick={() => {
+          // handlePDF()
+        }}
+      >
+        <DownloadIcon />
       </Button>
     ),
     minWidth: 150,
