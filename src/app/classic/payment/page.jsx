@@ -5,7 +5,17 @@ import { useEffect, useState } from 'react';
 import { db } from '../../../lib/firebase';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/button';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  onSnapshot,
+} from 'firebase/firestore';
+import dayjs from 'dayjs';
 // import withReactContent from 'sweetalert2-react-content';
 
 // const MySwal = withReactContent(Swal);
@@ -15,60 +25,73 @@ const BuyPayment = () => {
   const [inrValue, setInrValue] = useState(0);
   const [usdtValue, setUsdtValue] = useState(0);
   const [tds, setTds] = useState(0);
-  const [walletAddress, setWalletAddress] = useState("");
+  const [walletAddress, setWalletAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    contactNumber: "",
-    uid: "",
-    isKycVerified: false
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactNumber: '',
+    uid: '',
+    isKycVerified: false,
   });
-  console.log(walletAddress)
+  console.log(walletAddress);
 
-  const router = useRouter()
+  const router = useRouter();
   // const validateAddress = (address) => {
 
   // };
   // validateAddress();
   useEffect(() => {
-    if(typeof window !== 'undefined'){
-    const storedInrValue = localStorage.getItem('inrValue');
-    const storedUsdtValue = localStorage.getItem('usdtValue');
-    const tds = localStorage.getItem('tds-value');
-    const totalValue = localStorage.getItem('total-value');
+    if (typeof window !== 'undefined') {
+      const storedInrValue = localStorage.getItem('inrValue');
+      const storedUsdtValue = localStorage.getItem('usdtValue');
+      const tds = localStorage.getItem('tds-value');
+      const totalValue = localStorage.getItem('total-value');
 
-    const user = localStorage.getItem('crypto-user');
+      const user = localStorage.getItem('crypto-user');
 
-    if (storedInrValue) {
-      setInrValue(storedInrValue);
+      if (storedInrValue) {
+        setInrValue(storedInrValue);
+      }
+      if (storedUsdtValue) {
+        setUsdtValue(storedUsdtValue);
+      }
+      if (tds) {
+        setTds(tds);
+      }
+      if (totalValue) {
+        setTotal(totalValue);
+      }
+      if (user) {
+        setUser(JSON.parse(user));
+      }
     }
-    if (storedUsdtValue) {
-      setUsdtValue(storedUsdtValue);
-    }
-    if (tds) {
-      setTds(tds);
-    }
-    if (totalValue) {
-      setTotal(totalValue);
-    }
-    if (user) {
-      setUser(JSON.parse(user));
-    }
-  }
   }, []);
 
   const payWithCashFree = () => {
     setLoading(true);
     // TODO: Hassan - Refactor this
-    if (!inrValue || inrValue == 0 || inrValue < 0 || !usdtValue || usdtValue == 0 || usdtValue < 0 || !tds || tds == 0 || tds < 0 || !total || total == 0 || total < 0) {
+    if (
+      !inrValue ||
+      inrValue == 0 ||
+      inrValue < 0 ||
+      !usdtValue ||
+      usdtValue == 0 ||
+      usdtValue < 0 ||
+      !tds ||
+      tds == 0 ||
+      tds < 0 ||
+      !total ||
+      total == 0 ||
+      total < 0
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Incorrect Price!',
       }).then(() => {
         router.push(`/classic/buy`);
-      })
+      });
       setLoading(false);
       return;
     }
@@ -80,26 +103,27 @@ const BuyPayment = () => {
       setLoading(false);
       return;
     }
-    if(!user?.email) {
+    if (!user?.email) {
       Swal.fire({
         icon: 'error',
         title: 'Please login again',
         text: 'It is for your security reasons, thanks for understanding!',
       });
+      router.push(`/authentication`);
       return;
     }
-    if(typeof window !== 'undefined'){
-      localStorage.setItem("buy-wallet-address", walletAddress)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('buy-wallet-address', walletAddress);
     }
     axios
-      .post('https://www.stablecrypto.in/classic/kyc/api', {
+      .post('https://www.app.stablecrypto.in/classic/kyc/api', {
         amount: total,
         name: `${user?.firstName} ${user?.lastName}`,
         email: user?.email,
-        phone: user?.contactNumber
+        phone: user?.contactNumber,
       })
       .then((val) => {
-        const sessionId = val.data.response.payment_session_id
+        const sessionId = val.data.response.payment_session_id;
         console.log(sessionId);
         router.push(`https://dev.kazzefinserve.com/payment/?id=${sessionId}`);
       })
@@ -111,9 +135,20 @@ const BuyPayment = () => {
         setLoading(false);
         console.error(err);
       });
-
-
+  };
+  function makeid(length) {
+    let result = 'order_id_';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
   }
+
   //-----------------------------------------------
 
   // useEffect(() => {
@@ -181,8 +216,9 @@ const BuyPayment = () => {
         <p className="text-sm text-center mb-6 text-gray-600">
           You are about to receive{' '}
           <strong className="text-green-500">{usdtValue || 0} USDT</strong> for{' '}
-          ₹{inrValue || 0} + ₹{tds || 0} (TDS - 1%) = <strong className="text-red-500"> ₹{total || 0} INR</strong> in
-          your wallet.
+          ₹{inrValue || 0} + ₹{tds || 0} (TDS - 1%) ={' '}
+          <strong className="text-red-500"> ₹{total || 0} INR</strong> in your
+          wallet.
         </p>
 
         {/* Medium size box showing two things */}
@@ -207,10 +243,14 @@ const BuyPayment = () => {
           <label className="block text-md font-medium text-gray-600 mt-3">
             Type or paste a valid wallet address
           </label>
-          <input type="text" className="form-input w-full border rounded-md" onChange={(e) => {
-            console.log(e);
-            setWalletAddress(e.target.value)
-          }} />
+          <input
+            type="text"
+            className="form-input w-full border rounded-md"
+            onChange={(e) => {
+              console.log(e);
+              setWalletAddress(e.target.value);
+            }}
+          />
         </div>
         <div className="block w-full text-md font-medium text-black text-center mt-6">
           <button
@@ -218,7 +258,7 @@ const BuyPayment = () => {
             className="bg-blue-500 text-white px-4 py-2 rounded-md  w-full"
             onClick={payWithCashFree}
           >
-            Pay
+            Proceed to payment
           </button>
         </div>
       </div>

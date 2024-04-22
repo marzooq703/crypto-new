@@ -163,7 +163,6 @@ export default function SignUpForm() {
         }
         setSignUpStatus('success');
         enrollNewUser();
-        // router.push('/authentication/face-verification');
       })
       // .then((val) => {
       //   console.log('AUTH DA', val);
