@@ -14,11 +14,46 @@ import { ChevronDown } from '@/components/icons/chevron-down';
 import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
-import { TransactionData } from '@/data/static/transaction-data';
+import DownloadIcon from '@mui/icons-material/Download';
+import { generatePDF } from '@/hooks/useJspdf';
 
 import dayjs from 'dayjs';
 
 import Swal from 'sweetalert2';
+
+const handlePDF = () => {
+  const orderNumber = 'order_Jbs3e';
+  const matchTime = '2024-04-21 10:00:00';
+  const receiptGenerated = 'Care Mahyan';
+  const stableCrypto = 'Stable Crypto';
+  const coinTraded = 'USDT';
+  const currency = 'INR';
+  const totalCrypto = '1.5';
+  const cryptoPrice = '92';
+  const totalTradedAmount = '123';
+  const orderDate = '2024-04-21';
+  const paymentType = 'UPI';
+  const paymentMethod = 'UPI';
+  const paymentDetails = 'Success';
+  const generatedTime = '2024-04-21 10:00:00';
+
+  generatePDF(
+    orderNumber,
+    matchTime,
+    receiptGenerated,
+    stableCrypto,
+    coinTraded,
+    currency,
+    totalCrypto,
+    cryptoPrice,
+    totalTradedAmount,
+    orderDate,
+    paymentType,
+    paymentMethod,
+    paymentDetails,
+    generatedTime,
+  );
+};
 
 const COLUMNS = [
   {
@@ -126,6 +161,26 @@ const COLUMNS = [
         }}
       >
         Completed
+      </Button>
+    ),
+    minWidth: 150,
+    maxWidth: 300,
+  },
+  {
+    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Invoice</div>,
+    accessor: 'invoice',
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <Button
+        variant="ghost"
+        size="mini"
+        shape="pill"
+        className="flex justify-end"
+        onClick={() => {
+          handlePDF()
+        }}
+      >
+        <DownloadIcon />
       </Button>
     ),
     minWidth: 150,

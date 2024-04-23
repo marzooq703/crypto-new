@@ -167,6 +167,7 @@ const COLUMNS = [
     // @ts-ignore
     Cell: ({ cell: { value } }) => (
       <Button
+      style={{display:'flex',alignItems:'right',justifyContent:'right'}}
         variant="ghost"
         size="mini"
         shape="pill"
