@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useConnect, useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import {
+  useConnect,
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { polygon } from 'viem/chains';
 import { useBalance } from 'wagmi';
@@ -35,7 +40,7 @@ import dayjs from 'dayjs';
 const Crypto = () => {
   const [toggleCoin, setToggleCoin] = useState(false);
   const [sellingAmount, setSellingAmount] = useState(0);
-  const [inrAmount, setInrAmount] = useState(0); 
+  const [inrAmount, setInrAmount] = useState(0);
   const [usdtInrPrice, setUsdtInrPrice] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
   const [value, setValue] = useState('');
@@ -46,22 +51,24 @@ const Crypto = () => {
   const { isLoading, isSuccess, error } = useWaitForTransactionReceipt({
     hash: hashs,
   });
+  const reciverWalletAdd = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
   const price = 0.1;
-console.log(sellingAmount,"aqeel")
+  console.log(sellingAmount, 'aqeel');
   const handlePayment = async () => {
     try {
       setStarted(true);
       if (!address) {
         await connectAsync({ chainId: polygon.id, connector: injected() });
       }
+      console.log(address, 'address');
       const data = await writeContractAsync({
         chainId: polygon.id,
         address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
         functionName: 'transfer',
         abi: [
-  {
+          {
             constant: true,
             inputs: [],
             name: 'name',
@@ -280,16 +287,92 @@ console.log(sellingAmount,"aqeel")
             ],
             name: 'Transfer',
             type: 'event',
-          },        ],
-        args: ['0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B', sellingAmount.value * 1000000],
+          },
+        ],
+        args: [reciverWalletAdd, sellingAmount.value * 1000000],
       });
       setCompleted(true);
       setHashs(data);
+      console.log(isLoading, 'isLoading');
+      console.log(isSuccess, 'isSuccess');
+      if (isSuccess) {
+        if (typeof window !== 'undefined') {
+          const localStorageData = localStorage.getItem('crypto-user');
+          const parsedData = JSON.parse(localStorageData);
+          const userEmail = parsedData.email;
+          // setUserEmail(parsedData.email);
+          const docRef = doc(db, 'userTransactions', userEmail);
+
+          const orderId = Math.random().toString(16).slice(2);
+
+          const docSnap = await getDoc(docRef);
+          const dbValue = {
+            usdtValue: sellingAmount.value,
+            inrPending: value,
+            fromAddress: address,
+            toAddress: reciverWalletAdd,
+            status: 'success',
+            tranhash: `https://polygonscan.com/tx/${data}`,
+            isMoneyTransferred: false,
+            email: userEmail,
+            time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
+            orderId,
+          };
+          if (docSnap.exists()) {
+            await updateDoc(docRef, {
+              sell: arrayUnion(dbValue),
+            });
+          } else {
+            await setDoc(docRef, {
+              sell: arrayUnion(dbValue),
+            });
+          }
+
+          const docRef2 = doc(db, 'allTransactions', 'Sell');
+          const docSnap1 = await getDoc(docRef2);
+
+          if (docSnap1.exists()) {
+            await updateDoc(docRef2, {
+              [orderId]: dbValue,
+            });
+          } else {
+            await setDoc(docRef2, {
+              [orderId]: dbValue,
+            });
+          }
+        }
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'transaction was successful.',
+        });
+      }
+      if (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: error,
+        });
+      }
       console.log(`https://polygonscan.com/tx/${data}`);
       console.log(hashs);
       console.log(data);
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
+      if (err.message.includes('User rejected the request.')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'User denied the transaction signature.',
+        });
+      }
+      if (err.message.includes('ERC20: transfer amount exceeds balance')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'User does not have enough balance to perform the transaction',
+        });
+      }
       setStarted(false);
       setCompleted(false);
     }
@@ -314,6 +397,46 @@ console.log(sellingAmount,"aqeel")
     return () => unsub();
   }, []);
 
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'currentPricing', 'Sell'), (doc) => {
+      const data = doc.data();
+      console.log('Current data: ', data);
+      const sell = data.current;
+      setUsdtInrPrice(Number(sell));
+    });
+    if (typeof window !== 'undefined') {
+      const localStorageData = localStorage.getItem('crypto-user');
+      if (localStorageData) {
+        const parsedData = JSON.parse(localStorageData);
+        setUserEmail(parsedData.email);
+
+        const sell = localStorage.getItem('sell');
+        setUsdtInrPrice(Number(sell));
+      }
+    }
+    console.log(userEmail, 'userEmail');
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=inr',
+    //     );
+    //     const usdtInrPrice = response.data.tether.inr;
+    //     setUsdtInrPrice(usdtInrPrice);
+    //     console.log(usdtInrPrice);
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
+    // fetchData();
+  }, []);
+  useEffect(() => {
+    const calculatedValue =
+      parseFloat(sellingAmount.value) * parseFloat(usdtInrPrice);
+    const sanitizedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+
+    setValue(sanitizedValue.toFixed(2)); // Round to 2 decimal places
+  }, [sellingAmount, usdtInrPrice]);
+  console.log(value);
   const [showMinutesMessage, setShowMinutesMessage] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setShowMinutesMessage(true), 20000);
@@ -389,10 +512,10 @@ console.log(sellingAmount,"aqeel")
           Sell
         </Button>
         {/*)}
-        */}
+         */}
       </Trade>
     </div>
   );
 };
 
-export default Crypto
+export default Crypto;
