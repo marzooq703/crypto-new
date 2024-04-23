@@ -812,7 +812,7 @@ const Crypto = () => {
 
     setValue(sanitizedValue.toFixed(2)); // Round to 2 decimal places
   }, [sellingAmount, usdtInrPrice]);
-  console.log(value);
+  console.log(value,"aqeel");
 
   const clickSell = () => {
     router.push('/classic/sellPayment');
