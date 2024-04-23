@@ -16,7 +16,7 @@ import { LongArrowLeft } from '@/components/icons/long-arrow-left';
 import { LinkIcon } from '@/components/icons/link-icon';
 import { TransactionData } from '@/data/static/transaction-data';
 import DownloadIcon from '@mui/icons-material/Download';
-// import { generatePDF } from '@/app/classic/jsPDF';
+import { generatePDF } from '@/hooks/useJspdf';
 
 import dayjs from 'dayjs';
 
@@ -36,22 +36,24 @@ const handlePDF = () => {
   const paymentType = 'UPI';
   const paymentMethod = 'UPI';
   const paymentDetails = 'Success';
+  const generatedTime = '2024-04-21 10:00:00';
 
-  // generatePDF(
-  //   orderNumber,
-  //   matchTime,
-  //   receiptGenerated,
-  //   stableCrypto,
-  //   coinTraded,
-  //   currency,
-  //   totalCrypto,
-  //   cryptoPrice,
-  //   totalTradedAmount,
-  //   orderDate,
-  //   paymentType,
-  //   paymentMethod,
-  //   paymentDetails,
-  // );
+  generatePDF(
+    orderNumber,
+    matchTime,
+    receiptGenerated,
+    stableCrypto,
+    coinTraded,
+    currency,
+    totalCrypto,
+    cryptoPrice,
+    totalTradedAmount,
+    orderDate,
+    paymentType,
+    paymentMethod,
+    paymentDetails,
+    generatedTime,
+  );
 };
 const COLUMNS = [
   {
@@ -170,7 +172,7 @@ const COLUMNS = [
         shape="pill"
         className="flex justify-end"
         onClick={() => {
-          // handlePDF()
+          handlePDF()
         }}
       >
         <DownloadIcon />
