@@ -22,21 +22,23 @@ import dayjs from 'dayjs';
 
 import Swal from 'sweetalert2';
 
-const handlePDF = () => {
-  const orderNumber = 'order_Jbs3e';
-  const matchTime = '2024-04-21 10:00:00';
-  const receiptGenerated = 'Care Mahyan';
+
+const handlePDF = (values: any) => {
+  console.log('jspdf',values)
+  const orderNumber = values.orderId;
+  const matchTime = values.time;
+  const receiptGenerated = 'Care Mahyan'; // WHOS RECIEPT GENERATED FOR
   const stableCrypto = 'Stable Crypto';
-  const coinTraded = 'USDT';
+  const coinTraded = 'USDT'; //COIN TRADED
   const currency = 'INR';
-  const totalCrypto = '1.5';
-  const cryptoPrice = '92';
-  const totalTradedAmount = '123';
-  const orderDate = '2024-04-21';
-  const paymentType = 'UPI';
-  const paymentMethod = 'UPI';
-  const paymentDetails = 'Success';
-  const generatedTime = '2024-04-21 10:00:00';
+  const totalCrypto = values.totalAmount;
+  const cryptoPrice = values.usdtValue;
+  const totalTradedAmount = values.totalAmount;
+  const orderDate = '2024-04-21';//NEED DATE
+  const paymentType = 'Buy';//PAYMENT TYPE 
+  const paymentMethod = 'UPI';//PAYMENT METHOD
+  const paymentDetails = values.status;
+  const generatedTime = values.time;
 
   generatePDF(
     orderNumber,
@@ -55,6 +57,7 @@ const handlePDF = () => {
     generatedTime,
   );
 };
+
 const COLUMNS = [
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Payment Date</div>,
@@ -165,7 +168,7 @@ const COLUMNS = [
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Invoice</div>,
     accessor: 'invoice',
     // @ts-ignore
-    Cell: ({ cell: { value } }) => (
+    Cell: ({ cell }) => (
       <Button
       style={{display:'flex',alignItems:'right',justifyContent:'right'}}
         variant="ghost"
@@ -173,7 +176,7 @@ const COLUMNS = [
         shape="pill"
         className="flex justify-end"
         onClick={() => {
-          handlePDF()
+          handlePDF(cell?.row.original);
         }}
       >
         <DownloadIcon />
