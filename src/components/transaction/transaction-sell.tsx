@@ -32,7 +32,7 @@ const handlePDF = () => {
   const cryptoPrice = '92';
   const totalTradedAmount = '123';
   const orderDate = '2024-04-21';
-  const paymentType = 'UPI';
+  const paymentType = 'Sell';
   const paymentMethod = 'UPI';
   const paymentDetails = 'Success';
   const generatedTime = '2024-04-21 10:00:00';
