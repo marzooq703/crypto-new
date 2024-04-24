@@ -23,6 +23,10 @@ export async function POST(request) {
 
     // Send message to group via Telegram after KYC request is made
     const groupChatId = '-4140541763'; // Replace with your group chat ID
+    
+    //const groupChatId = '-4149325831' // Sell Group
+    //const groupChatId = '-4169590277' // Buy Group
+    //const groupChatId = '-4100024424' // Boarding Group
     const message = `${type} request has been raised for the amount of ${amount} for ${userName}[${userID}] from ${city}`;
     const finalResp = await sendMessageToGroup(groupChatId, message);
 
