@@ -54,8 +54,70 @@ const Crypto = () => {
   const reciverWalletAdd = '0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B';
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
+  console.log(isLoading, 'isLoading');
+  console.log(isSuccess, 'isSuccess');
   const price = 0.1;
   console.log(sellingAmount, 'aqeel');
+  async function transferSuccess() {
+    try {
+      if (typeof window !== 'undefined') {
+        const localStorageData = localStorage.getItem('crypto-user');
+        const parsedData = JSON.parse(localStorageData);
+        const userEmail = parsedData.email;
+
+        const docRef = doc(db, 'userTransactions', userEmail);
+        const orderId = Math.random().toString(16).slice(2);
+
+        const docSnap = await getDoc(docRef);
+        const dbValue = {
+          usdtValue: sellingAmount.value,
+          inrPending: value,
+          fromAddress: address,
+          toAddress: reciverWalletAdd,
+          status: 'success',
+          tranhash: `https://polygonscan.com/tx/${hashs}`,
+          isMoneyTransferred: false,
+          email: userEmail,
+          time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
+          orderId,
+        };
+
+        if (docSnap.exists()) {
+          await updateDoc(docRef, {
+            sell: arrayUnion(dbValue),
+          });
+        } else {
+          await setDoc(docRef, {
+            sell: arrayUnion(dbValue),
+          });
+        }
+
+        const docRef2 = doc(db, 'allTransactions', 'Sell');
+        const docSnap1 = await getDoc(docRef2);
+
+        if (docSnap1.exists()) {
+          await updateDoc(docRef2, {
+            [orderId]: dbValue,
+          });
+        } else {
+          await setDoc(docRef2, {
+            [orderId]: dbValue,
+          });
+        }
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Transaction was successful.',
+      });
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
+  if (isSuccess) {
+    transferSuccess();
+    setHashs('');
+  }
   const handlePayment = async () => {
     try {
       setStarted(true);
@@ -295,58 +357,7 @@ const Crypto = () => {
       setHashs(data);
       console.log(isLoading, 'isLoading');
       console.log(isSuccess, 'isSuccess');
-      if (isSuccess) {
-        if (typeof window !== 'undefined') {
-          const localStorageData = localStorage.getItem('crypto-user');
-          const parsedData = JSON.parse(localStorageData);
-          const userEmail = parsedData.email;
-          // setUserEmail(parsedData.email);
-          const docRef = doc(db, 'userTransactions', userEmail);
 
-          const orderId = Math.random().toString(16).slice(2);
-
-          const docSnap = await getDoc(docRef);
-          const dbValue = {
-            usdtValue: sellingAmount.value,
-            inrPending: value,
-            fromAddress: address,
-            toAddress: reciverWalletAdd,
-            status: 'success',
-            tranhash: `https://polygonscan.com/tx/${data}`,
-            isMoneyTransferred: false,
-            email: userEmail,
-            time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
-            orderId,
-          };
-          if (docSnap.exists()) {
-            await updateDoc(docRef, {
-              sell: arrayUnion(dbValue),
-            });
-          } else {
-            await setDoc(docRef, {
-              sell: arrayUnion(dbValue),
-            });
-          }
-
-          const docRef2 = doc(db, 'allTransactions', 'Sell');
-          const docSnap1 = await getDoc(docRef2);
-
-          if (docSnap1.exists()) {
-            await updateDoc(docRef2, {
-              [orderId]: dbValue,
-            });
-          } else {
-            await setDoc(docRef2, {
-              [orderId]: dbValue,
-            });
-          }
-        }
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'transaction was successful.',
-        });
-      }
       if (error) {
         Swal.fire({
           icon: 'error',
