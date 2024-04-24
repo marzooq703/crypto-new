@@ -9,11 +9,12 @@ import Input from '@/components/ui/forms/input';
 import { db, auth } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
 import { setDoc, doc, updateDoc } from 'firebase/firestore';
-
+import axios from 'axios';
+import Swal from 'sweetalert2';
 // import icons
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 
 type SignUpStatus = 'success' | 'failed' | null;
 
@@ -31,6 +32,9 @@ export default function SignUpForm() {
   const [error, setError] = useState('');
   const [agreeChecked, setAgreeChecked] = useState(false);
   const [allFieldsFilled, setAllFieldsFilled] = useState(false);
+  const [isSignupOTPSend, setIsSignupOTPSend] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [typingOtp, setTypingOtp] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
   useEffect(() => {
@@ -93,7 +97,9 @@ export default function SignUpForm() {
           email: email,
         },
       });
-      router.push('/classic/kyc');
+      setTimeout(() => {
+        router.push('/classic/kyc');
+      }, 2000);
       // alert(
       //   `User Successfully Enrolled! Details:
       //       Unique Facial ID: ${userInfo.facialId}
@@ -106,6 +112,36 @@ export default function SignUpForm() {
     }
   }
 
+  const verifyEmail = () => {
+    // Construct the email link credential from the current URL.
+    const auth = getAuth();
+    console.log(auth.currentUser.email);
+    const otp = Math.floor(Math.random() * 90000) + 10000;
+    setOtp(otp);
+    axios
+      .post('http://localhost:3000/classic/send-email', {
+        otp: otp,
+        email: auth.currentUser.email,
+      })
+      .then((val) => {
+        Swal.fire({
+          icon: 'success',
+          title: `OTP send to ${auth.currentUser.email}`,
+        }).then(() => {
+          setIsSignupOTPSend(true);
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error Sending Email',
+        });
+        // setLoading(false);
+        console.error(err);
+      });
+
+    // enrollNewUser();
+  };
   const signUp = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -162,7 +198,7 @@ export default function SignUpForm() {
           });
         }
         setSignUpStatus('success');
-        enrollNewUser();
+        verifyEmail();
       })
       // .then((val) => {
       //   console.log('AUTH DA', val);
@@ -197,107 +233,146 @@ export default function SignUpForm() {
   //   console.log(e);
   // }
 
-  return (
-    <form noValidate onSubmit={signUp} className="grid grid-cols-1 gap-4">
-      {/* Display success or failure message */}
-      {signUpStatus === 'success' && (
-        <div className="text-green-500">Sign Up successful!</div>
-      )}
-      {signUpStatus === 'failed' && (
-        <div className="text-red-500">
-          {error || 'Sign-up failed. Please check your credentials.'}
+  if (isSignupOTPSend)
+    return (
+      <>
+        <div>Enter OTP</div>
+        <div>
+          <Input
+            type="text"
+            placeholder="12345"
+            inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+            value={typingOtp}
+            onChange={(e) => {
+              setTypingOtp(e.target.value);
+            }}
+          />
         </div>
-      )}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
-        <Input
-          type="text"
-          placeholder="First Name"
-          inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value);
-            handleInputChange();
+        <Button
+          onClick={() => {
+            console.log(otp);
+            if (otp == typingOtp) {
+              Swal.fire({
+                icon: 'success',
+                title: `OTP Verified successfully, please enroll your face`,
+              });
+              enrollNewUser();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Incorrect OTP',
+              });
+            }
           }}
-        />
-        <Input
-          type="text"
-          placeholder="Last Name"
-          inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-          value={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value);
-            handleInputChange();
-          }}
-        />
-      </div>
-      <Input
-        type="text"
-        placeholder="Contact Number"
-        inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-        value={contactNumber}
-        onChange={(e) => {
-          setContactNumber(e.target.value), handleInputChange();
-        }}
-      />
-      <Input
-        type="email"
-        placeholder="Email"
-        inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-          handleInputChange();
-        }}
-      />
-      <div className="relative">
-        <Input
-          type={state ? 'text' : 'password'}
-          placeholder="Password"
-          inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value), handleInputChange();
-          }}
-        />
-        <span
-          className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
-          onClick={() => setState(!state)}
+          className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
         >
-          {state ? (
-            <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-          ) : (
-            <EyeSlashIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-          )}
-        </span>
-      </div>
-      <Checkbox
-        iconClassName="bg-[#4B5563] rounded mt-0.5"
-        label={
-          <>
-            I’ve read and agree with
-            <AnchorLink
-              href={'#'}
-              className="ml-2 font-medium tracking-[0.5px] underline dark:text-gray-300"
-            >
-              Terms of Service and our Privacy Policy
-            </AnchorLink>
-          </>
-        }
-        labelPlacement="end"
-        labelClassName="ml-1.5 text-[#4B5563] !t   ext-xs dark:text-gray-300 tracking-[0.5px] !leading-7"
-        containerClassName="!items-start"
-        inputClassName="mt-1 focus:!ring-offset-[1px]"
-        size="sm"
-        checked={agreeChecked}
-        onChange={(e) => setAgreeChecked(e.target.checked)}
-        disabled={!allFieldsFilled}
-      />
-      <Button
-        type="submit"
-        className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-      >
-        sign up
-      </Button>
-    </form>
+          Verify OTP
+        </Button>
+      </>
+    );
+  return (
+    <>
+      <form noValidate onSubmit={signUp} className="grid grid-cols-1 gap-4">
+        {/* Display success or failure message */}
+        {signUpStatus === 'success' && (
+          <div className="text-green-500">Sign Up successful!</div>
+        )}
+        {signUpStatus === 'failed' && (
+          <div className="text-red-500">
+            {error || 'Sign-up failed. Please check your credentials.'}
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
+          <Input
+            type="text"
+            placeholder="First Name"
+            inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              handleInputChange();
+            }}
+          />
+          <Input
+            type="text"
+            placeholder="Last Name"
+            inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              handleInputChange();
+            }}
+          />
+        </div>
+        <Input
+          type="text"
+          placeholder="Contact Number"
+          inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={contactNumber}
+          onChange={(e) => {
+            setContactNumber(e.target.value), handleInputChange();
+          }}
+        />
+        <Input
+          type="email"
+          placeholder="Email"
+          inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            handleInputChange();
+          }}
+        />
+        <div className="relative">
+          <Input
+            type={state ? 'text' : 'password'}
+            placeholder="Password"
+            inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value), handleInputChange();
+            }}
+          />
+          <span
+            className="absolute bottom-3 right-4 cursor-pointer text-[#6B7280] rtl:left-4 rtl:right-auto sm:bottom-3.5"
+            onClick={() => setState(!state)}
+          >
+            {state ? (
+              <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+            ) : (
+              <EyeSlashIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+            )}
+          </span>
+        </div>
+        <Checkbox
+          iconClassName="bg-[#4B5563] rounded mt-0.5"
+          label={
+            <>
+              I’ve read and agree with
+              <AnchorLink
+                href={'#'}
+                className="ml-2 font-medium tracking-[0.5px] underline dark:text-gray-300"
+              >
+                Terms of Service and our Privacy Policy
+              </AnchorLink>
+            </>
+          }
+          labelPlacement="end"
+          labelClassName="ml-1.5 text-[#4B5563] !t   ext-xs dark:text-gray-300 tracking-[0.5px] !leading-7"
+          containerClassName="!items-start"
+          inputClassName="mt-1 focus:!ring-offset-[1px]"
+          size="sm"
+          checked={agreeChecked}
+          onChange={(e) => setAgreeChecked(e.target.checked)}
+          disabled={!allFieldsFilled}
+        />
+        <Button
+          type="submit"
+          className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
+        >
+          sign up
+        </Button>
+      </form>
+    </>
   );
 }
