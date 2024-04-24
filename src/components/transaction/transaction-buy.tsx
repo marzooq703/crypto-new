@@ -34,9 +34,9 @@ const handlePDF = (values: any) => {
   const cryptoPrice = values.usdtValue;
   const totalTradedAmount = values.totalAmount;
   const orderDate = '2024-04-21';//NEED DATE
-  const paymentType = 'UPI';//PAYMENT TYPE 
+  const paymentType = 'Buy';//PAYMENT TYPE 
   const paymentMethod = 'UPI';//PAYMENT METHOD
-  const paymentDetails = values.cryptoTransfer;
+  const paymentDetails = values.status;
   const generatedTime = values.time;
 
   generatePDF(

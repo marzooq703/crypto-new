@@ -41,13 +41,24 @@ const normalFontSize = 12;
 doc.setFontSize(normalFontSize);
 
 doc.text(`Order Number: ${orderNumber}`, 10, 30);   
-doc.text(`Match Time: : ${matchTime}`, 10, 37);
+doc.text(`Time:  ${matchTime}`, 10, 37);
 doc.text(`Receipt Generated For:`, 10, 50);
-doc.text(`User Side: MAKER_BUYER`,10, 66);
+
+if(paymentType ==='Buy'){
+  doc.text(`User Side: MAKER_BUYER`,10, 66);
+}else if(paymentType==='Sell'){
+doc.text(`User Side: TAKER_SELLER`,10, 66);
+}
+
 
 
 doc.text(`Trade with:`,10, 82);
+
+if(paymentType ==='Buy'){
+  doc.text(`User Side: TAKER_BUYER`,10, 97);
+}else if(paymentType==='Sell'){
 doc.text(`User Side: MAKER_SELLER`,10, 97);
+}
 
 //table 1
 // const columns = ["Item Name", "Total"];
