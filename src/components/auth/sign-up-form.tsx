@@ -33,11 +33,12 @@ export default function SignUpForm() {
   const [error, setError] = useState('');
   const [agreeChecked, setAgreeChecked] = useState(false);
   const [allFieldsFilled, setAllFieldsFilled] = useState(false);
-  const [isSignupOTPSend, setIsSignupOTPSend] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [isSignupOTPSend, setIsSignupOTPSend] = useState(true);
+  const [otp, setOtp] = useState('12345');
   const [typingOtp, setTypingOtp] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
+  console.log(typingOtp)
   useEffect(() => {
     setFaceIo(new faceIO('fioab44a'));
   }, []);
@@ -119,6 +120,7 @@ export default function SignUpForm() {
     console.log(auth.currentUser.email);
     const otp = Math.floor(Math.random() * 90000) + 10000;
     setOtp(otp);
+    console.log(otp);
     axios
       .post('http://localhost:3000/classic/send-email', {
         otp: otp,

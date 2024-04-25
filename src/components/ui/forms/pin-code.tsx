@@ -159,6 +159,7 @@ export default function PinCode({
     const inputValues = event.target.value.split('');
     inputRefs.current[index].value = inputValues[inputValues.length - 1];
     if (index < length - 1) inputRefs.current[index + 1].focus();
+    console.log(inputValues);
     setPinValue();
   }
 
