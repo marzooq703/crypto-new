@@ -33,8 +33,8 @@ export default function SignUpForm() {
   const [error, setError] = useState('');
   const [agreeChecked, setAgreeChecked] = useState(false);
   const [allFieldsFilled, setAllFieldsFilled] = useState(false);
-  const [isSignupOTPSend, setIsSignupOTPSend] = useState(true);
-  const [otp, setOtp] = useState('12345');
+  const [isSignupOTPSend, setIsSignupOTPSend] = useState(false);
+  const [otp, setOtp] = useState('');
   const [typingOtp, setTypingOtp] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
