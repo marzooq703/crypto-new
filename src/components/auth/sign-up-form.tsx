@@ -261,7 +261,6 @@ export default function SignUpForm() {
         </div>
         <Button
           onClick={() => {
-            console.log(otp);
             if (otp == typingOtp) {
               Swal.fire({
                 icon: 'success',

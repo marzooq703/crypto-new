@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import Logo from '@/components/ui/logo';
 import Image from '@/components/ui/image';
 import ResetPinForm from '@/components/auth/reset-pin-form';
@@ -6,7 +7,13 @@ import ResetPinForm from '@/components/auth/reset-pin-form';
 import BitcoinImg from '@/assets/images/bit-coin.png';
 
 export default function ResetPin() {
+  // const [isOTPSent, setIsOTPSent] = useState(false);
+// if(isOTPSent)
+//   return (<>
+//   <div>
+//     Enter PIN:</div></>)
   return (
+    
     <div className="grid flex-grow grid-cols-1 gap-0 lg:grid-cols-[1fr_40%] 3xl:grid-cols-2">
       <div className="flex flex-grow items-center justify-center py-14">
         <div className="w-full max-w-[494px] px-4 text-center">
