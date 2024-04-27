@@ -1,9 +1,13 @@
+"use client";
+import { useState } from 'react';
 import Logo from '@/components/ui/logo';
 import Image from '@/components/ui/image';
 import ForgetPasswordForm from '@/components/auth/forget-password-form';
-
-// import images and icons
+import ResetPinForm from '@/components/auth/reset-pin-form';
 import BitcoinImg from '@/assets/images/bit-coin.png';
+
+
+
 
 export default function ForgetPassword() {
   return (

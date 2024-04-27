@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import { EyeIcon } from '@/components/icons/eye';
 import { EyeSlashIcon } from '@/components/icons/eyeslash';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import PinCode from '../ui/forms/pin-code';
 
 type SignUpStatus = 'success' | 'failed' | null;
 
@@ -37,6 +38,7 @@ export default function SignUpForm() {
   const [typingOtp, setTypingOtp] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
+  console.log(typingOtp)
   useEffect(() => {
     setFaceIo(new faceIO('fioab44a'));
   }, []);
@@ -118,6 +120,7 @@ export default function SignUpForm() {
     console.log(auth.currentUser.email);
     const otp = Math.floor(Math.random() * 90000) + 10000;
     setOtp(otp);
+    console.log(otp);
     axios
       .post('http://localhost:3000/classic/send-email', {
         otp: otp,
@@ -238,7 +241,7 @@ export default function SignUpForm() {
       <>
         <div>Enter OTP</div>
         <div>
-          <Input
+          {/* <Input
             type="text"
             placeholder="12345"
             inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
@@ -246,11 +249,18 @@ export default function SignUpForm() {
             onChange={(e) => {
               setTypingOtp(e.target.value);
             }}
-          />
+          /> */}
+          <PinCode
+        length={5}
+        type="number"
+        placeholder="-"
+        inputClassName="reset-password-pin-code border-[#E3E8ED] focus:border-[#111827] focus:ring-gray-900 dark:focus:ring-gray-200 dark:focus:ring-1 !text-lg lg:!text-2xl 2xl:!text-[32px] w-12 h-14 lg:w-14 lg:h-16 2xl:w-16 2xl:h-[72px] !mr-0 focus:!ring-opacity-0 dark:focus:!ring-opacity-100"
+        setValue={setTypingOtp}
+        className=" gap-3 sm:gap-4 2xl:mb-12 2xl:gap-6"
+      />
         </div>
         <Button
           onClick={() => {
-            console.log(otp);
             if (otp == typingOtp) {
               Swal.fire({
                 icon: 'success',
