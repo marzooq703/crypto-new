@@ -10,15 +10,18 @@ function ForgotPinButton() {
   const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         'https://api.faceio.net/setfacialidpincode',
         {
-          fid: fid,
-          pin: pin,
+          fid: 'c1b1777604da49899accf04d54bf5feffioab44a',
+          pin: '1111',
           key: '528a47e0a05dc3a24c52548e61ae5cdb',
+        },
+        {
+          params: {
+            key: '528a47e0a05dc3a24c52548e61ae5cdb',
+          },
         },
       );
 
@@ -40,27 +43,25 @@ function ForgotPinButton() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="fid">Facial ID:</label>
-          <input
-            type="text"
-            id="fid"
-            value={fid}
-            onChange={(e) => setFid(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="pin">New PIN:</label>
-          <input
-            type="text"
-            id="pin"
-            value={pin}
-            onChange={(e) => setPin(e.target.value)}
-          />
-        </div>
-        <button type="submit">Forgot Pin</button>
-      </form>
+      <div>
+        <label htmlFor="fid">Facial ID:</label>
+        <input
+          type="text"
+          id="fid"
+          value={fid}
+          onChange={(e) => setFid(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="pin">New PIN:</label>
+        <input
+          type="text"
+          id="pin"
+          value={pin}
+          onChange={(e) => setPin(e.target.value)}
+        />
+      </div>
+      <button onClick={handleSubmit}>Forgot Pin</button>
       {error && <p>{error}</p>}
       {success && <p>{success}</p>}
     </div>
