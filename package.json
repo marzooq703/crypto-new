@@ -49,7 +49,7 @@
     "next": "^14.0.1",
     "next-sitemap": "^4.2.3",
     "next-themes": "^0.2.1",
-    "node-telegram-bot-api": "^0.64.0",
+    "node-telegram-bot-api": "^0.65.1",
     "overlayscrollbars": "^2.4.4",
     "overlayscrollbars-react": "^0.5.3",
     "pino-pretty": "^10.2.3",
