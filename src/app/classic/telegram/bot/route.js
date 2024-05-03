@@ -1,0 +1,40 @@
+// bot token('6409043178:AAHpfO7hZweTHtuvUVO__4KfMNxWZIiP97U',
+// group chat id'-4118435421';
+
+
+var axios = require('axios').default;
+
+const TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot('6409043178:AAHpfO7hZweTHtuvUVO__4KfMNxWZIiP97U', {
+  polling: true,
+});
+const sendMessageToGroup = async (groupChatId, message) => {
+  try {
+    await bot.sendMessage(groupChatId, message);
+    console.log('Message sent successfully to group');
+    return 'Message sent successfully to group';
+  } catch (error) {
+    console.error('Error sending message to group:', error);
+    return 'error';
+  }
+};
+
+export async function POST(request) {
+  try {
+    const data = await request.json();
+    console.log(data);
+    const {  amount } = data;
+
+    // Send message to group via Telegram after KYC request is made
+    const groupChatId = '-4118435421'; // Replace with your group chat ID
+ 
+    const message = `The amount has been changed to ${amount}.`;
+    const finalResp = await sendMessageToGroup(groupChatId, message);
+
+    return Response.json({ data: finalResp });
+  } catch (error) {
+    console.error('Error initiating telegram request:', error);
+    return Response.error({ message: error.message });
+  }
+  //   return Response.json({ name: 'tariq' });
+}
