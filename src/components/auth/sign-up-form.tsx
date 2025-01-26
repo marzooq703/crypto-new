@@ -38,9 +38,9 @@ export default function SignUpForm() {
   const [typingOtp, setTypingOtp] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<SignUpStatus>(null); // Track sign-in status
 
-  console.log(typingOtp)
+  console.log(typingOtp);
   useEffect(() => {
-    setFaceIo(new faceIO('fioab44a'));
+    setFaceIo(new faceIO('fioac704'));
   }, []);
   function handleError(errCode) {
     // Handle error here
@@ -90,28 +90,88 @@ export default function SignUpForm() {
     }
   }
   async function enrollNewUser() {
-    try {
-      const userInfo = await faceIo.enroll({
+    // try {
+    //   faceIo
+    //     .enroll({
+    //       locale: 'auto', // Default user locale
+    //       payload: {
+    //         /* The payload we want to associate with this particular user which is forwarded back to us upon future authentication of this user.*/
+    //         uid: 12312312312312312312, // Dummy ID linked to this particular user
+    //         email: 'test12hassan@test.com',
+    //       },
+    //     })
+    //     .then((userInfo) => {
+    //       // User Successfully Enrolled!
+    //       alert(
+    //         `User Successfully Enrolled! Details:
+    //         Unique Facial ID: ${userInfo.facialId}
+    //         Enrollment Date: ${userInfo.timestamp}
+    //         Gender: ${userInfo.details.gender}
+    //         Age Approximation: ${userInfo.details.age}`,
+    //       );
+    //       console.log(userInfo);
+    //       // handle success, save the facial ID, redirect to dashboard...
+    //     })
+    //     .catch((errCode) => {
+    //       // handle enrollment failure. Visit:
+    //       // https://faceio.net/integration-guide#error-codes
+    //       // for the list of all possible error codes
+    //       console.log(errCode);
+    //       handleError(errCode.code);
+    //     });
+    //   // setTimeout(() => {
+    //   //   router.push('/classic/kyc');
+    //   // }, 2000);
+    //   // alert(
+    //   //   `User Successfully Enrolled! Details:
+    //   //       Unique Facial ID: ${userInfo.facialId}
+    //   //       Enrollment Date: ${userInfo.timestamp}
+    //   //       Gender: ${userInfo.details.gender}
+    //   //       Age Approximation: ${userInfo.details.age}`,
+    //   // );
+    // } catch (error) {
+    //   console.log(error);
+    //   handleError(error.code);
+    // }
+    faceIo
+      .enroll({
         locale: 'auto', // Default user locale
+        userConsent: false, // Set to true if you have already collected user consent
         payload: {
-          /* The payload we want to associate with this particular user which is forwarded back to us upon future authentication of this user.*/
-          uid: 123423, // Dummy ID linked to this particular user
-          email: email,
+          /* The payload we want to associate with this particular user
+           * which is forwarded back to us on each of his future authentication...
+           */
+          whoami: 123456, // Example of dummy ID linked to this particular user
+          email: 'john.doe@example.com',
         },
+      })
+      .then((userInfo) => {
+        // User Successfully Enrolled!
+        alert(
+          `User Successfully Enrolled! Details:
+			Unique Facial ID: ${userInfo.facialId}
+			Enrollment Date: ${userInfo.timestamp}
+			Gender: ${userInfo.details.gender}
+			Age Approximation: ${userInfo.details.age}`,
+        );
+        setTimeout(() => {
+          router.push('/classic/kyc');
+        }, 2000);
+        console.log(userInfo);
+        // handle success, save the facial ID, redirect to dashboard...
+        //
+        // faceIO.restartSession() let you enroll another user again (without reloading the entire HTML page)
+      })
+      .catch((errCode) => {
+        // handle enrollment failure. Visit:
+        // https://faceIO.net/integration-guide#error-codes
+        // for the list of all possible error codes
+        handleError(errCode);
+
+        // If you want to restart the session again without refreshing the current TAB. Just call:
+        faceIo.restartSession();
+        // restartSession() let you enroll the same or another user again (in case of failure) without refreshing the entire page.
       });
-      setTimeout(() => {
-        router.push('/classic/kyc');
-      }, 2000);
-      // alert(
-      //   `User Successfully Enrolled! Details:
-      //       Unique Facial ID: ${userInfo.facialId}
-      //       Enrollment Date: ${userInfo.timestamp}
-      //       Gender: ${userInfo.details.gender}
-      //       Age Approximation: ${userInfo.details.age}`,
-      // );
-    } catch (error) {
-      handleError(error.code);
-    }
   }
 
   const verifyEmail = () => {
@@ -251,13 +311,13 @@ export default function SignUpForm() {
             }}
           /> */}
           <PinCode
-        length={5}
-        type="number"
-        placeholder="-"
-        inputClassName="reset-password-pin-code border-[#E3E8ED] focus:border-[#111827] focus:ring-gray-900 dark:focus:ring-gray-200 dark:focus:ring-1 !text-lg lg:!text-2xl 2xl:!text-[32px] w-12 h-14 lg:w-14 lg:h-16 2xl:w-16 2xl:h-[72px] !mr-0 focus:!ring-opacity-0 dark:focus:!ring-opacity-100"
-        setValue={setTypingOtp}
-        className=" gap-3 sm:gap-4 2xl:mb-12 2xl:gap-6"
-      />
+            length={5}
+            type="number"
+            placeholder="-"
+            inputClassName="reset-password-pin-code border-[#E3E8ED] focus:border-[#111827] focus:ring-gray-900 dark:focus:ring-gray-200 dark:focus:ring-1 !text-lg lg:!text-2xl 2xl:!text-[32px] w-12 h-14 lg:w-14 lg:h-16 2xl:w-16 2xl:h-[72px] !mr-0 focus:!ring-opacity-0 dark:focus:!ring-opacity-100"
+            setValue={setTypingOtp}
+            className=" gap-3 sm:gap-4 2xl:mb-12 2xl:gap-6"
+          />
         </div>
         <Button
           onClick={() => {
@@ -278,6 +338,7 @@ export default function SignUpForm() {
         >
           Verify OTP
         </Button>
+        <Button onClick={enrollNewUser}>Test</Button>
       </>
     );
   return (
