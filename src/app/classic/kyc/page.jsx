@@ -8,7 +8,7 @@ const KYC = () => {
       <b>KYC</b>
       <div>
         Please send your orginal Aadhar card and Pan card details to
-        onboard@stablecrypto.in and verify your account
+        care@zuthod.com and verify your account
       </div>
       <Button
         onClick={() => {

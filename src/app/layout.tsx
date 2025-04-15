@@ -43,6 +43,7 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1 maximum-scale=1"
         />
+        <title>Zuthod - Safe and Reliable StableCrypto Broker in India</title>
       </head>
       <body>
         <QueryClientProvider>

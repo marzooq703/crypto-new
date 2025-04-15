@@ -22,21 +22,20 @@ import dayjs from 'dayjs';
 
 import Swal from 'sweetalert2';
 
-
 const handlePDF = (values: any) => {
-  console.log('jspdf',values)
+  console.log('jspdf', values);
   const orderNumber = values.orderId;
   const matchTime = values.time;
   const receiptGenerated = 'Care Mahyan'; // WHOS RECIEPT GENERATED FOR
-  const stableCrypto = 'Stable Crypto';
+  const stableCrypto = 'Zuthod';
   const coinTraded = 'USDT'; //COIN TRADED
   const currency = 'INR';
   const totalCrypto = values.totalAmount;
   const cryptoPrice = values.usdtValue;
   const totalTradedAmount = values.totalAmount;
-  const orderDate = '2024-04-21';//NEED DATE
-  const paymentType = 'Buy';//PAYMENT TYPE 
-  const paymentMethod = 'UPI';//PAYMENT METHOD
+  const orderDate = '2024-04-21'; //NEED DATE
+  const paymentType = 'Buy'; //PAYMENT TYPE
+  const paymentMethod = 'UPI'; //PAYMENT METHOD
   const paymentDetails = values.status;
   const generatedTime = values.time;
 
@@ -170,7 +169,11 @@ const COLUMNS = [
     // @ts-ignore
     Cell: ({ cell }) => (
       <Button
-      style={{display:'flex',alignItems:'right',justifyContent:'right'}}
+        style={{
+          display: 'flex',
+          alignItems: 'right',
+          justifyContent: 'right',
+        }}
         variant="ghost"
         size="mini"
         shape="pill"

@@ -25,7 +25,7 @@ const handlePDF = () => {
   const orderNumber = 'order_Jbs3e';
   const matchTime = '2024-04-21 10:00:00';
   const receiptGenerated = 'Care Mahyan';
-  const stableCrypto = 'Stable Crypto';
+  const stableCrypto = 'Zuthod';
   const coinTraded = 'USDT';
   const currency = 'INR';
   const totalCrypto = '1.5';
@@ -177,7 +177,7 @@ const COLUMNS = [
         shape="pill"
         className="flex justify-end"
         onClick={() => {
-          handlePDF()
+          handlePDF();
         }}
       >
         <DownloadIcon />

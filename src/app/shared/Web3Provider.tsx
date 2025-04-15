@@ -22,11 +22,11 @@ const config = createConfig(
     walletConnectProjectId: '4b8c8cbd08646956222234798e7abedf',
 
     // Required App Info
-    appName: 'Stable Crypto',
+    appName: 'Zuthod',
 
     // Optional App Info
     appDescription: 'Safest crypto exchange',
-    appUrl: 'https://app.stablecrypto.in', // your app's url
+    appUrl: 'https://app.zuthod.com', // your app's url
     appIcon:
       'https://res.cloudinary.com/djt8hcdtb/image/upload/v1712953953/Stable_Crypto_Logo_x8u28l.png', // your app's icon, no bigger than 1024x1024px (max. 1MB)
   }),

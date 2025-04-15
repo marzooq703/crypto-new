@@ -8,10 +8,10 @@ export async function POST(request) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {
       to: email, // Change to your recipient
-      from: 'tech@stablecrypto.in', // Change to your verified sender
-      subject: 'StableCrypto SignUp OTP',
-      text: 'Use the below OTP to sign up to stablecrypto.in',
-      html: `<div><h2>Signup OTP!</h2>Please enter the following OPT to complete your Profile at StableCrypto.in
+      from: 'tech@zuthod.com', // Change to your verified sender
+      subject: 'Zuthod SignUp OTP',
+      text: 'Use the below OTP to sign up to zuthod',
+      html: `<div><h2>Signup OTP!</h2>Please enter the following OPT to complete your Profile at Zuthod
             <h2>OTP: ${otp}</h2></div>`,
     };
     sgMail

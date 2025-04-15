@@ -116,7 +116,7 @@ const BuyPayment = () => {
       localStorage.setItem('buy-wallet-address', walletAddress);
     }
     axios
-      .post('https://www.app.stablecrypto.in/classic/kyc/api', {
+      .post('https://www.app.zuthod.com/classic/kyc/api', {
         amount: total,
         name: `${user?.firstName} ${user?.lastName}`,
         email: user?.email,

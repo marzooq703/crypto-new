@@ -34,7 +34,7 @@ export async function POST(request) {
         customer_email: customerEmail,
       },
       order_meta: {
-        return_url: 'https://app.stablecrypto.in/payment?success=true',
+        return_url: 'https://app.zuthod.com/payment?success=true',
       },
     };
 
