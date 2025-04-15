@@ -34,6 +34,7 @@ const KYCComponent = () => {
   const [showWalletDetails, setShowWalletDetails] = useState(false);
   const [isDeclarationAccepted, setIsDeclarationAccepted] = useState(false);
   const [showDeclaration, setShowDeclaration] = useState(false);
+  const [isKYCComplete, setIsKYCComplete] = useState(false);
 
   // Aadhar validation: 12 digits
   const validateAadhar = (value) => {
@@ -563,8 +564,12 @@ const KYCComponent = () => {
   const handleDeclarationSubmit = (e) => {
     e.preventDefault();
     if (isDeclarationAccepted) {
-      handleCompleteKYC();
+      setIsKYCComplete(true);
     }
+  };
+
+  const handleLoginRedirect = () => {
+    router.push('/authentication');
   };
 
   return (
@@ -985,6 +990,37 @@ const KYCComponent = () => {
           <div className="mt-6">
             <Button onClick={handleProceedToDeclaration} className="w-full">
               Proceed to Declaration
+            </Button>
+          </div>
+        </div>
+      ) : isKYCComplete ? (
+        <div className="text-center">
+          <div className="mb-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold mb-2">
+              KYC Submitted Successfully!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              We will review your application and send you an email within 2
+              business days with the verification results.
+            </p>
+            <Button onClick={handleLoginRedirect} className="w-full">
+              Go to Login
             </Button>
           </div>
         </div>
