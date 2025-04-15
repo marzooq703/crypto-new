@@ -26,7 +26,10 @@ export default function Logo({ className }: LogoPropTypes) {
           pathname:
             routes.home + (layout === LAYOUT_OPTIONS.MODERN ? '' : layout),
         }}
-        className={cn('flex w-48 outline-none sm:w-32 4xl:w-36', className)}
+        className={cn(
+          'flex w-28 outline-none sm:w-32 md:w-44 4xl:w-64',
+          className,
+        )}
       >
         <span className="relative flex overflow-hidden">
           {/* {isDarkMode && (
@@ -36,8 +39,8 @@ export default function Logo({ className }: LogoPropTypes) {
             <Image
               src={lightLogo}
               alt="Criptic"
-              height={400}
-              width={400}
+              height={200}
+              width={200}
               priority
             />
           )}

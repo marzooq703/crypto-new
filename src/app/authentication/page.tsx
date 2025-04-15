@@ -55,7 +55,7 @@ export default function SignIn() {
       <div className="flex flex-col items-center justify-center py-14">
         <div className="grid w-full max-w-[408px] grid-cols-1 gap-4 px-4">
           <div className="mx-auto mb-2 w-20 lg:ml-0 xl:w-24">
-            <Logo className="!w-full" />
+            <Logo className="w-full" />
           </div>
           <div className="mb-5 text-center lg:text-left">
             <h2 className="mb-2 text-xl font-medium uppercase dark:text-white lg:text-2xl">
