@@ -40,7 +40,7 @@ export default function SignUpForm() {
 
   console.log(typingOtp);
   useEffect(() => {
-    setFaceIo(new faceIO('fioac704'));
+    setFaceIo(new faceIO('fioac70d'));
   }, []);
   function handleError(errCode) {
     // Handle error here

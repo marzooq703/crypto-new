@@ -82,7 +82,7 @@ const BuyCrypto = () => {
   }
 
   useEffect(() => {
-    setFaceIo(new faceIO('fioac704'));
+    setFaceIo(new faceIO('fioac70d'));
   }, []);
 
   console.log(userEmail, 'email');

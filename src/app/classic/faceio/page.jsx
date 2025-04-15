@@ -10,7 +10,7 @@ const API_KEY = 'fioab44a';
 function App() {
   let faceio;
   useEffect(() => {
-    faceio = new faceIO('fioac704');
+    faceio = new faceIO('fioac70d');
   }, []);
   // const faceio = new faceIO('fioab44a');
   async function authenticateUser() {
