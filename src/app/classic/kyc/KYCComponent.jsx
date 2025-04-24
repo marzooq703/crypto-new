@@ -5,7 +5,7 @@ import Button from '@/components/ui/button';
 
 const KYCComponent = () => {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(1);
   const [aadharNumber, setAadharNumber] = useState('');
   const [panNumber, setPanNumber] = useState('');
   const [panFullName, setPanFullName] = useState('');
