@@ -19,6 +19,9 @@ const KYCComponent = () => {
     bankIfsc: '',
   });
   const [aadhaarData, setAadhaarData] = useState(null);
+  const [aadhaarFrontImage, setAadhaarFrontImage] = useState(null);
+  const [aadhaarBackImage, setAadhaarBackImage] = useState(null);
+  const [aadhaarImageError, setAadhaarImageError] = useState('');
   const [panData, setPanData] = useState(null);
   const [showAadhaarDetails, setShowAadhaarDetails] = useState(false);
   const [showPanDetails, setShowPanDetails] = useState(false);
@@ -254,11 +257,52 @@ const KYCComponent = () => {
     }
   };
 
+  const handleAadhaarImageChange = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file type
+      if (!file.type.includes('image')) {
+        setAadhaarImageError('Please upload an image file');
+        if (type === 'front') {
+          setAadhaarFrontImage(null);
+        } else {
+          setAadhaarBackImage(null);
+        }
+        return;
+      }
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setAadhaarImageError('File size should be less than 5MB');
+        if (type === 'front') {
+          setAadhaarFrontImage(null);
+        } else {
+          setAadhaarBackImage(null);
+        }
+        return;
+      }
+
+      setAadhaarImageError('');
+      if (type === 'front') {
+        setAadhaarFrontImage(file);
+      } else {
+        setAadhaarBackImage(file);
+      }
+    }
+  };
+
   const handleNext = async () => {
     if (currentStep === 1) {
       const aadharError = validateAadhar(aadharNumber);
       if (aadharError) {
         setValidationErrors((prev) => ({ ...prev, aadhar: aadharError }));
+        return;
+      }
+
+      if (!aadhaarFrontImage || !aadhaarBackImage) {
+        setAadhaarImageError(
+          'Please upload both front and back images of your Aadhaar card',
+        );
         return;
       }
 
@@ -1088,29 +1132,118 @@ const KYCComponent = () => {
         </form>
       ) : (
         <form onSubmit={handleSubmit}>
-          {currentStep === 1 ? (
-            <div className="mb-4">
-              <label className="block mb-2">Aadhar Number</label>
-              <input
-                type="text"
-                value={aadharNumber}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 12);
-                  setAadharNumber(value);
-                }}
-                placeholder="Enter 12-digit Aadhar number"
-                className={`w-full p-2 border rounded ${
-                  validationErrors.aadhar ? 'border-red-500' : 'border-gray-300'
-                }`}
-                maxLength={12}
-                required
-              />
-              {validationErrors.aadhar && (
-                <p className="text-red-500 text-sm mt-1">
-                  {validationErrors.aadhar}
-                </p>
+          {currentStep === 1 && !showAadhaarDetails ? (
+            <form onSubmit={handleNext}>
+              <div className="mb-4">
+                <label className="block mb-2">Aadhar Number</label>
+                <input
+                  type="text"
+                  value={aadharNumber}
+                  onChange={(e) => {
+                    const value = e.target.value
+                      .replace(/\D/g, '')
+                      .slice(0, 12);
+                    setAadharNumber(value);
+                  }}
+                  placeholder="Enter 12-digit Aadhar number"
+                  className={`w-full p-2 border rounded ${
+                    validationErrors.aadhar
+                      ? 'border-red-500'
+                      : 'border-gray-300'
+                  }`}
+                  maxLength={12}
+                  required
+                />
+                {validationErrors.aadhar && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {validationErrors.aadhar}
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Aadhaar Front Image</label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleAadhaarImageChange(e, 'front')}
+                    className="hidden"
+                    id="aadhaarFront"
+                    required
+                  />
+                  <label
+                    htmlFor="aadhaarFront"
+                    className="flex-1 p-2 border rounded border-gray-300 cursor-pointer hover:bg-gray-50 text-center"
+                  >
+                    {aadhaarFrontImage
+                      ? aadhaarFrontImage.name
+                      : 'Choose front image'}
+                  </label>
+                  {aadhaarFrontImage && (
+                    <button
+                      type="button"
+                      onClick={() => setAadhaarFrontImage(null)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Aadhaar Back Image</label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleAadhaarImageChange(e, 'back')}
+                    className="hidden"
+                    id="aadhaarBack"
+                    required
+                  />
+                  <label
+                    htmlFor="aadhaarBack"
+                    className="flex-1 p-2 border rounded border-gray-300 cursor-pointer hover:bg-gray-50 text-center"
+                  >
+                    {aadhaarBackImage
+                      ? aadhaarBackImage.name
+                      : 'Choose back image'}
+                  </label>
+                  {aadhaarBackImage && (
+                    <button
+                      type="button"
+                      onClick={() => setAadhaarBackImage(null)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {aadhaarImageError && (
+                <p className="text-red-500 text-sm mb-4">{aadhaarImageError}</p>
               )}
-            </div>
+
+              <p className="text-sm text-gray-500 mb-4">
+                Please upload clear images of both front and back of your
+                Aadhaar card (max 5MB each)
+              </p>
+
+              <Button
+                type="submit"
+                disabled={
+                  !!validationErrors.aadhar ||
+                  !aadhaarFrontImage ||
+                  !aadhaarBackImage
+                }
+                className="w-full"
+              >
+                Verify Aadhaar
+              </Button>
+            </form>
           ) : (
             <div className="mb-6">
               <label className="block mb-2">PAN Number</label>

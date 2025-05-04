@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import LogoIcon from '@/components/ui/logo-icon';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useWindowScroll } from '@/lib/hooks/use-window-scroll';
 import { FlashIcon } from '@/components/icons/flash';
 import Hamburger from '@/components/ui/hamburger';
@@ -19,6 +20,7 @@ import { sideBarMenuItems } from '../sidebar/_expandable';
 import { LockIcon } from '@/components/icons/lock-icon';
 // import { getAuth, signOut } from 'firebase/auth';
 import ConnectWallet from './ConnectWallet';
+import Button from '@/components/ui/button';
 
 function NotificationButton() {
   const { layout } = useLayout();
@@ -94,10 +96,36 @@ function AuthenticationDropdown() {
   );
 }
 
+const SignOutButton = () => {
+  const router = useRouter();
+  return (
+    <Button
+      shape="circle"
+      color="gray"
+      onClick={() => {
+        router.push('/authentication');
+        // TODO: complete this signout and handle firebase signout here
+        // Reference:
+        // signOut(auth)
+        //   .then(() => {
+        //     // Sign-out successful.
+        // router.push('/authentication');
+        //   })
+        //   .catch((error) => {
+        //     // An error happened.
+        //   });
+      }}
+    >
+      <LogoutIcon />
+    </Button>
+  );
+};
+
 function HeaderRightArea() {
   return (
     <div className="relative order-last flex shrink-0 items-center gap-4 sm:gap-6 lg:gap-8">
-      <AuthenticationDropdown />
+      {/* <AuthenticationDropdown /> */}
+      <SignOutButton />
       <ConnectWallet />
       {/* <NotificationButton /> */}
       {/* <WalletConnect /> */}
